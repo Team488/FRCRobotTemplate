@@ -9,7 +9,7 @@ public class Robot extends BaseRobot {
 
     @Override
     protected void initializeSystems() {
-        super.initializeSystems(); 
+        super.initializeSystems();
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
     }

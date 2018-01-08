@@ -3,4 +3,6 @@ jdk:
   - oraclejdk8
 script: 
   - cd CompetitionTemplate
-  - ant check -f travis-build.xml
+  - chmod +x gradlew
+  - ./gradlew assemble
+  - ./gradlew build -x test

@@ -1,0 +1,69 @@
+plugins {
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.07"
+}
+
+def TEAM = 488
+def ROBOT_CLASS = "competition.Robot"
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+            targets << "roborio"
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    
+    maven {
+        url "https://mvnrepository.com/artifact/com.google.inject/guice"
+        url "http://first.wpi.edu/FRC/roborio/maven/release"
+        
+        //http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/
+    }
+    
+    flatDir {
+       dirs '/../SeriouslyCommonLib/lib'
+   }
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Toolsuite (Talon SRX)
+// and NavX.
+dependencies {
+    compile wpilib()
+    compile ctre()
+    compile navx()
+    compile openrio.powerup.matchData()
+    
+    testCompile 'junit:junit:4.12'
+   
+    compile group: 'com.google.inject', name: 'guice', version: '3.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '3.0'
+    
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    
+    compile project(':SeriouslyCommonLib')
+}
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}

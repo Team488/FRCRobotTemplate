@@ -15,6 +15,6 @@ public class DriveSubsystemTest extends BaseWPITest {
         assertEquals(1, driveSubsystem.leftFrontDrive.getMotorOutputPercent(), 0.001);
         assertEquals(1, driveSubsystem.leftRearDrive.getMotorOutputPercent(), 0.001);
         assertEquals(1, driveSubsystem.rightFrontDrive.getMotorOutputPercent(), 0.001);
-        assertEquals(1, driveSubsystem.rightRearDrive.getMotorOutputPercent(), 0.001);
+        assertEquals(0, driveSubsystem.rightRearDrive.getMotorOutputPercent(), 0.001);
     }
 }

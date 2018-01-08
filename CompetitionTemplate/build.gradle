@@ -3,6 +3,7 @@ plugins {
     id "eclipse"
     id "idea"
     id "jaci.openrio.gradle.GradleRIO" version "2018.01.07"
+    id 'org.hidetake.ssh' version "2.9.0"
 }
 
 def TEAM = 488
@@ -22,6 +23,8 @@ deploy {
         }
     }
 }
+
+
 
 repositories {
     jcenter()
@@ -56,6 +59,32 @@ dependencies {
     compile project(':SeriouslyCommonLib')
 }
 
+
+ 
+remotes {
+    rio {
+        host = 'roboRIO-488-frc.local'
+        user = 'lvuser'
+        knownHosts = allowAnyHosts
+    }
+}
+
+task('copyResources') {
+    doLast {
+        ssh.run {
+            session(remotes.rio) {
+                /*
+                execute 'mkdir ~/449_resources', ignoreError: true
+                execute 'mkdir ~/logs', ignoreError: true
+                put from: fileTree('src/main/resources'), into: './449_resources/'
+                execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
+                */
+            }
+        }
+    }
+}
+
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
@@ -67,3 +96,4 @@ jar {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
 }
+

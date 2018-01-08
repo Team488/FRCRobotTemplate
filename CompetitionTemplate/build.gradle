@@ -54,7 +54,7 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
     
     compile files('/../SeriouslyCommonLib/build/libs/SeriouslyCommonLib.jar')
-    //compile project(':SeriouslyCommonLib')
+    compile project(':SeriouslyCommonLib')
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

@@ -6,4 +6,3 @@ script:
   - chmod +x gradlew
   - gradle wrapper
   - ./gradlew assemble
-  - ./gradlew build -x test

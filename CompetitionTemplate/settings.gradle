@@ -2,4 +2,4 @@ rootProject.name = 'Template'
 /*include ':SeriouslyCommonLib'
 project(':SeriouslyCommonLib').projectDir = new File(settingsDir, '../SeriouslyCommonLib')*/
 
-includeFlat 'SeriouslyCommonLib'
+//includeFlat 'SeriouslyCommonLib'

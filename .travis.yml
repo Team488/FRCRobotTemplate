@@ -4,5 +4,6 @@ jdk:
 script: 
   - cd CompetitionTemplate
   - chmod +x gradlew
+  - gradle wrapper
   - ./gradlew assemble
   - ./gradlew build -x test

@@ -64,7 +64,7 @@ dependencies {
 remotes {
     rio {
         host = 'roboRIO-488-frc.local'
-        user = 'lvuser'
+        user = 'admin'
         knownHosts = allowAnyHosts
     }
 }
@@ -73,17 +73,14 @@ task('copyResources') {
     doLast {
         ssh.run {
             session(remotes.rio) {
-                /*
-                execute 'mkdir ~/449_resources', ignoreError: true
-                execute 'mkdir ~/logs', ignoreError: true
-                put from: fileTree('src/main/resources'), into: './449_resources/'
+                // execute 'mkdir ~/449_resources', ignoreError: true
+                // execute 'mkdir /488Logs', ignoreError: true
+                put from: fileTree('../SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
                 execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
-                */
             }
         }
     }
 }
-
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib

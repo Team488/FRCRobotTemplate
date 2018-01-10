@@ -94,3 +94,10 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.4'
 }
 
+tasks.withType(Test) {
+    testLogging.showStandardStreams = true
+    
+    afterTest { desc, result -> 
+        logger.quiet "Executed test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}

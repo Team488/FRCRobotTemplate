@@ -14,4 +14,4 @@ script:
   - cd CompetitionTemplate
   - chmod +x gradlew
   - gradle wrapper
-  - ./gradlew build --info --debug
+  - ./gradlew build

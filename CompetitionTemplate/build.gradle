@@ -76,7 +76,7 @@ task('copyResources') {
                 // execute 'mkdir ~/449_resources', ignoreError: true
                 // execute 'mkdir /488Logs', ignoreError: true
                 put from: fileTree('../SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
-                execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
+                //execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
             }
         }
     }

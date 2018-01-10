@@ -13,5 +13,4 @@ before_script:
 script: 
   - cd CompetitionTemplate
   - chmod +x gradlew
-  - gradle wrapper
   - ./gradlew build

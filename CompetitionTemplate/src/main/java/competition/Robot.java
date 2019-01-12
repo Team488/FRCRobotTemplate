@@ -13,4 +13,9 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
     }
+
+    @Override
+    protected void setupInjectionModule() {
+        this.injectionModule = new CompetitionModule(true);
+    }
 }

@@ -15,28 +15,28 @@ import xbot.common.properties.XPropertyManager;
 public class DriveSubsystem extends BaseSubsystem {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
 
-    public final XCANTalon leftFrontDrive;
-    public final XCANTalon leftRearDrive;
-    public final XCANTalon rightFrontDrive;
-    public final XCANTalon rightRearDrive;
+    public final XCANTalon leftMaster;
+    public final XCANTalon leftFollower;
+    public final XCANTalon rightMaster;
+    public final XCANTalon rightFollower;
 
     @Inject
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
 
-        this.leftFrontDrive = factory.createCANTalon(0);
-        this.leftRearDrive = factory.createCANTalon(2);
+        this.leftMaster = factory.createCANTalon(34);
+        this.leftFollower = factory.createCANTalon(35);
+        this.rightMaster = factory.createCANTalon(21);
+        this.rightFollower = factory.createCANTalon(20);
 
-        this.rightFrontDrive = factory.createCANTalon(1);
-        this.rightFrontDrive.setInverted(true);
-        this.rightRearDrive = factory.createCANTalon(3);
-        this.rightRearDrive.setInverted(true);
+        XCANTalon.configureMotorTeam("LeftDrive", "LeftMaster", leftMaster, leftFollower, 
+        true, true, false);
+        XCANTalon.configureMotorTeam("RightDrive", "RightMaster", rightMaster, rightFollower, 
+        false, false, false);
     }
 
     public void tankDrive(double leftPower, double rightPower) {
-        this.leftFrontDrive.set(ControlMode.PercentOutput, leftPower);
-        this.leftRearDrive.set(ControlMode.PercentOutput, leftPower);
-        this.rightFrontDrive.set(ControlMode.PercentOutput, rightPower);
-        this.rightRearDrive.set(ControlMode.PercentOutput, rightPower);
+        this.leftMaster.simpleSet(leftPower);
+        this.rightMaster.simpleSet(rightPower);
     }
 }

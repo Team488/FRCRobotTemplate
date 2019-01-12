@@ -1,32 +1,45 @@
 plugins {
     id "java"
-    id "eclipse"
-    id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.07"
-    id 'org.hidetake.ssh' version "2.9.0"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
 }
 
-def TEAM = 488
-def ROBOT_CLASS = "competition.Robot"
+def ROBOT_MAIN_CLASS = "competition.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
-            team = TEAM
+        roboRIO("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = frc.getTeamNumber()
         }
     }
     artifacts {
-        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+        frcJavaArtifact('frcJava') {
             targets << "roborio"
+            // Debug can be overridden by command line, for use with VSCode
+            debug = frc.getDebugOrDefault(false)
+        }
+        // Built in artifact to deploy arbitrary files to the roboRIO.
+        fileTreeArtifact('frcStaticFileDeploy') {
+            // The directory below is the local directory to deploy
+            files = fileTree(dir: 'src/main/deploy')
+            // Deploy to RoboRIO target, into /home/lvuser/deploy
+            targets << "roborio"
+            directory = '/home/lvuser/deploy'
         }
     }
 }
 
+// Set this to true to enable desktop support.
+def includeDesktopSupport = true
 
-
+// Maven central needed for JUnit
 repositories {
+    mavenCentral()
     jcenter()
     
     maven {
@@ -41,63 +54,25 @@ repositories {
    }
 }
 
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Toolsuite (Talon SRX)
-// and NavX.
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 4.
 dependencies {
-    compile wpilib()
-    compile ctre()
-    compile navx()
-    compile openrio.powerup.matchData()
-    
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
-   
-    compile group: 'com.google.inject', name: 'guice', version: '3.0'
-    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '3.0'
-    
+
+    compile group: 'com.google.inject', name: 'guice', version: '4.2.2'
+    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.2.2'
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
-    
     compile project(':SeriouslyCommonLib')
-}
-
-
- 
-remotes {
-    rio {
-        host = 'roboRIO-488-frc.local'
-        user = 'admin'
-        knownHosts = allowAnyHosts
-    }
-}
-
-task('copyResources') {
-    doLast {
-        ssh.run {
-            session(remotes.rio) {
-                // execute 'mkdir ~/449_resources', ignoreError: true
-                // execute 'mkdir /488Logs', ignoreError: true
-                put from: fileTree('../SeriouslyCommonLib/lib/log4jConfig/log4j.xml'), into: '/home/lvuser/'
-                //execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
-            }
-        }
-    }
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
-}
-
-tasks.withType(Test) {
-    testLogging.showStandardStreams = true
-    
-    afterTest { desc, result -> 
-        logger.quiet "Executed test ${desc.name} [${desc.className}] with result: ${result.resultType}"
-    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }

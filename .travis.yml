@@ -11,6 +11,6 @@ before_script:
   - export LD_LIBRARY_PATH=${PWD}
   - cd ../../../
 script: 
-  - cd CompetitionTemplate
+  - cd Competition
   - chmod +x gradlew
   - './gradlew build -i checkstyle --console=plain'

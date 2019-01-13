@@ -21,7 +21,7 @@ jobs:
         jdkArchitectureOption: x64
     - task: Gradle@2
       inputs:
-        workingDirectory: '/Competition'
+        workingDirectory: 'Competition'
         gradleWrapperFile: 'gradlew'
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true

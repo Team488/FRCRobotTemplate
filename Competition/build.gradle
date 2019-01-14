@@ -105,6 +105,10 @@ checkstyle {
     configFile = file('../SeriouslyCommonLib/xbotcheckstyle.xml')
 }
 
+checkstyleMain{
+    logging.setLevel(LogLevel.LIFECYCLE)
+}
+
 task checkstyle(type: Checkstyle) {
     source 'src/main/java'
     configProperties.basedir = file('../SeriouslyCommonLib')

@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
     id 'org.hidetake.ssh' version "2.9.0"
+    id 'checkstyle'
 }
 
 def ROBOT_MAIN_CLASS = "competition.Main"
@@ -96,5 +97,26 @@ task('copyResources') {
                 //execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
             }
         }
+    }
+}
+
+checkstyle {
+    toolVersion = '8.7'
+    configFile = file('../SeriouslyCommonLib/xbotcheckstyle.xml')
+}
+
+task checkstyle(type: Checkstyle) {
+    source 'src/main/java'
+    configProperties.basedir = file('../SeriouslyCommonLib')
+    
+    // Empty classpath
+    classpath = files()
+}
+
+tasks.withType(Test) {
+    testLogging.showStandardStreams = true
+    
+    afterTest { desc, result -> 
+        logger.quiet "Executed test ${desc.name} [${desc.className}] with result: ${result.resultType}"
     }
 }

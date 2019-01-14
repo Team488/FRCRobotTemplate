@@ -106,7 +106,11 @@ checkstyle {
 }
 
 checkstyleMain{
-    logging.setLevel(LogLevel.LIFECYCLE)
+    logging.setLevel(LogLevel.WARN)
+}
+
+checkstyleTest{
+    logging.setLevel(LogLevel.WARN)
 }
 
 task checkstyle(type: Checkstyle) {

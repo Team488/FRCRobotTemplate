@@ -48,12 +48,10 @@ repositories {
     maven {
         url "https://mvnrepository.com/artifact/com.google.inject/guice"
         url "http://first.wpi.edu/FRC/roborio/maven/release"
-        
-        //http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/
     }
     
     flatDir {
-       dirs '/SeriouslyCommonLib/build/libs'
+       dirs 'SeriouslyCommonLib/build/libs'
    }
 }
 

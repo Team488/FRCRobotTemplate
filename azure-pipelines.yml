@@ -27,7 +27,7 @@ jobs:
         jdkArchitectureOption: x64
     - task: Gradle@2
       inputs:
-        workingDirectory: 'Competition'
+        workingDirectory: '.'
         gradleWrapperFile: 'gradlew'
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true
@@ -38,5 +38,5 @@ jobs:
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: 'Competition/build/reports/jacoco/test/jacocoTestReport.xml'
-        reportDirectory: 'Competition/build/reports/jacoco/test/html'
+        summaryFileLocation: 'build/reports/jacoco/test/jacocoTestReport.xml'
+        reportDirectory: 'build/reports/jacoco/test/html'

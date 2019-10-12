@@ -25,4 +25,4 @@ pluginManagement {
 }
 
 rootProject.name = 'Competition'
-includeFlat 'SeriouslyCommonLib'
+include 'SeriouslyCommonLib'

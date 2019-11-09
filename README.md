@@ -7,3 +7,5 @@ To find out more about the library, visit the [Seriously Common Lib repo](https:
 ## Up-front warning
 
 This template, like our library as a whole, is a work-in-progress. See the library readme for more information.
+
+Edit

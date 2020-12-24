@@ -16,6 +16,10 @@ public class Robot extends BaseRobot {
 
     @Override
     protected void setupInjectionModule() {
-        this.injectionModule = new CompetitionModule(true);
+        if(BaseRobot.isReal()) {
+            this.injectionModule = new CompetitionModule(true);
+        } else {
+            this.injectionModule = new SimulationModule();
+        }
     }
 }

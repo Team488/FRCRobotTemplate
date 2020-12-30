@@ -1,14 +1,15 @@
 package competition;
 
 import competition.subsystems.pose.PoseSubsystem;
-import xbot.common.injection.UnitTestModule;
+import xbot.common.injection.SimulatorModule;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
-public class SimulationModule extends UnitTestModule {
+
+public class TemplateSimulationModule extends SimulatorModule {
 
     boolean isPractice;
 
-    public SimulationModule() {
+    public TemplateSimulationModule() {
         this.isPractice = true;
     }
     

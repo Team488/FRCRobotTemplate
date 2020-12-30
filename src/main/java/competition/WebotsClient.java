@@ -82,10 +82,13 @@ public class WebotsClient {
     public void testDrive() {
         JSONObject data = new JSONObject();
         List<JSONObject> motorValues = new ArrayList<JSONObject>();
-        motorValues.add(buildMotorObject("Motor1", 1.0f));
-        motorValues.add(buildMotorObject("Motor2", -1.0f));
-        motorValues.add(buildMotorObject("Motor3", 1.0f));
-        motorValues.add(buildMotorObject("Motor4", -1.0f));
+
+        long time = System.currentTimeMillis() / 1000;
+        float velocity = 5f * (float)Math.sin(time);
+        motorValues.add(buildMotorObject("Motor1", velocity));
+        motorValues.add(buildMotorObject("Motor2", -velocity));
+        motorValues.add(buildMotorObject("Motor3", velocity));
+        motorValues.add(buildMotorObject("Motor4", -velocity));
         data.put("motors", motorValues);
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://127.0.0.1:" + robotPort + "/motors"))
                 .header("Content-Type", "application/json").PUT(BodyPublishers.ofString(data.toString())).build();

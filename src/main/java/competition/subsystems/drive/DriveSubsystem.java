@@ -23,10 +23,10 @@ public class DriveSubsystem extends BaseSubsystem {
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
 
-        this.leftMaster = factory.createCANTalon(34);
-        this.leftFollower = factory.createCANTalon(35);
-        this.rightMaster = factory.createCANTalon(21);
-        this.rightFollower = factory.createCANTalon(20);
+        this.leftMaster = factory.createCANTalon(1);
+        this.leftFollower = factory.createCANTalon(3);
+        this.rightMaster = factory.createCANTalon(2);
+        this.rightFollower = factory.createCANTalon(4);
 
         XCANTalon.configureMotorTeam("LeftDrive", "LeftMaster", leftMaster, leftFollower, 
         true, true, false);

@@ -10,22 +10,28 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import edu.wpi.first.hal.sim.DriverStationSim;
 import xbot.common.command.BaseRobot;
+import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
+import xbot.common.injection.wpi_factories.DevicePolice;
 
 public class Robot extends BaseRobot {
 
     DriverStationSim dsSim;
     WebotsClient webots;
+    DevicePolice devicePolice;
 
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
+        this.devicePolice = this.injector.getInstance(DevicePolice.class);
     }
 
     @Override
@@ -53,6 +59,14 @@ public class Robot extends BaseRobot {
         // Feed watchdogs
         dsSim.notifyNewData();
 
-        webots.testDrive();
+        // find all CANTalons
+        List<MockCANTalon> talons = new ArrayList<MockCANTalon>();        
+        for (Object o : devicePolice.registeredDevices.values()) {
+            if(o instanceof MockCANTalon) {
+                talons.add((MockCANTalon)o);
+            }
+        }
+
+        webots.sendMotors(talons);
     }
 }

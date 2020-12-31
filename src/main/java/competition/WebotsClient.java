@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
+
 public class WebotsClient {
     String hostname = "localhost";
     InetAddress address;
@@ -77,6 +79,32 @@ public class WebotsClient {
         result.put("id", motor);
         result.put("val", value);
         return result;
+    }
+
+    public void sendMotors(List<MockCANTalon> motors) {
+        JSONObject data = new JSONObject();
+        List<JSONObject> motorValues = new ArrayList<JSONObject>();
+
+        for(MockCANTalon motor : motors) {
+            motorValues.add(buildMotorObject("Motor" + motor.deviceId, (float)motor.getThrottlePercent()));
+        }
+
+        data.put("motors", motorValues);
+
+        System.out.println("Sending: " + data.toString());
+
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://127.0.0.1:" + robotPort + "/motors"))
+                .header("Content-Type", "application/json").PUT(BodyPublishers.ofString(data.toString())).build();
+        HttpResponse<String> response;
+        try {
+            response = client.send(request, BodyHandlers.ofString());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void testDrive() {

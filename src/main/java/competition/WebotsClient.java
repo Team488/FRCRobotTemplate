@@ -91,8 +91,6 @@ public class WebotsClient {
 
         data.put("motors", motorValues);
 
-        System.out.println("Sending: " + data.toString());
-
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://127.0.0.1:" + robotPort + "/motors"))
                 .header("Content-Type", "application/json").PUT(BodyPublishers.ofString(data.toString())).build();
         HttpResponse<String> response;
@@ -107,34 +105,4 @@ public class WebotsClient {
         }
     }
 
-    public void testDrive() {
-        JSONObject data = new JSONObject();
-        List<JSONObject> motorValues = new ArrayList<JSONObject>();
-
-        long time = System.currentTimeMillis() / 1000;
-        float velocity = 5f * (float)Math.sin(time);
-        motorValues.add(buildMotorObject("Motor1", velocity));
-        motorValues.add(buildMotorObject("Motor2", -velocity));
-        motorValues.add(buildMotorObject("Motor3", velocity));
-        motorValues.add(buildMotorObject("Motor4", -velocity));
-        data.put("motors", motorValues);
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://127.0.0.1:" + robotPort + "/motors"))
-                .header("Content-Type", "application/json").PUT(BodyPublishers.ofString(data.toString())).build();
-        HttpResponse<String> response;
-        try {
-            response = client.send(request, BodyHandlers.ofString());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
-}
-
-class WebotsSererConfig {
-    
 }

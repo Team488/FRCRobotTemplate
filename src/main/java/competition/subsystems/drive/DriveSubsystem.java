@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import competition.electrical_contract.ElectricalContract;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XCANTalon.XCANTalonFactory;
+import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.PIDManager;
 import xbot.common.math.XYPair;
 import xbot.common.math.PIDManager.PIDManagerFactory;
@@ -29,7 +30,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private double scalingFactorFromTicksToInches = 1.0 / 256.0;
 
     @Inject
-    public DriveSubsystem(XCANTalonFactory talonFactory, XPropertyManager propManager, ElectricalContract contract, PIDManagerFactory pf) {
+    public DriveSubsystem(XCANTalonFactory talonFactory, RobotAssertionManager mgr, XPropertyManager propManager, ElectricalContract contract, PIDManagerFactory pf) {
         log.info("Creating DriveSubsystem");
 
         this.leftLeader = talonFactory.create(contract.getLeftLeader());

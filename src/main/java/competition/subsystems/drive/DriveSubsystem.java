@@ -3,9 +3,9 @@ package competition.subsystems.drive;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.log4j.Logger;
-
 import competition.electrical_contract.ElectricalContract;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XCANTalon.XCANTalonFactory;
 import xbot.common.math.PIDManager;
@@ -16,7 +16,7 @@ import xbot.common.subsystems.drive.BaseDriveSubsystem;
 
 @Singleton
 public class DriveSubsystem extends BaseDriveSubsystem {
-    private static Logger log = Logger.getLogger(DriveSubsystem.class);
+    private static Logger log = LogManager.getLogger(DriveSubsystem.class);
     
     ElectricalContract contract;
     

@@ -5,6 +5,7 @@ import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
@@ -20,7 +21,7 @@ public class Robot extends BaseRobot {
     }
 
     protected BaseRobotComponent createDaggerComponent() {
-        if (BaseRobot.isReal()) {
+        if (RobotBase.isReal()) {
             return DaggerRobotComponent.create();
         } else {
             return DaggerSimulationComponent.create();

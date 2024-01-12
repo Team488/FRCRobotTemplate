@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.electrical_contract.CANTalonInfo;
+import xbot.common.injection.electrical_contract.DeviceInfo;
 
 public class CompetitionContract extends ElectricalContract {
 
@@ -15,12 +16,12 @@ public class CompetitionContract extends ElectricalContract {
     public CompetitionContract() {}
 
     @Override
-    public CANTalonInfo getLeftLeader() {
-        return new CANTalonInfo(1, true, FeedbackDevice.CTRE_MagEncoder_Absolute, true, simulationScalingValue);
+    public DeviceInfo getLeftLeader() {
+        return new DeviceInfo("LeftLeader", 1, true, simulationScalingValue);
     }
 
     @Override
-    public CANTalonInfo getRightLeader() {
-        return new CANTalonInfo(2, true, FeedbackDevice.CTRE_MagEncoder_Absolute, true, simulationScalingValue);
+    public DeviceInfo getRightLeader() {
+        return new DeviceInfo("RightLeader", 2, false, simulationScalingValue);
     }
 }

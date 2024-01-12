@@ -12,7 +12,7 @@ public class DriveSubsystemTest extends BaseCompetitionTest {
         DriveSubsystem driveSubsystem = (DriveSubsystem)getInjectorComponent().driveSubsystem();
         driveSubsystem.tankDrive(1, 1);
 
-        assertEquals(1, driveSubsystem.leftLeader.getMotorOutputPercent(), 0.001);
-        assertEquals(1, driveSubsystem.rightLeader.getMotorOutputPercent(), 0.001);
+        assertEquals(1, driveSubsystem.leftLeader.getAppliedOutput(), 0.001);
+        assertEquals(1, driveSubsystem.rightLeader.getAppliedOutput(), 0.001);
     }
 }

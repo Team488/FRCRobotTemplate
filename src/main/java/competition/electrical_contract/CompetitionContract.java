@@ -21,20 +21,10 @@ public class CompetitionContract extends ElectricalContract {
     public boolean isDriveReady() {
         return true;
     }
-    
+
     @Override
     public boolean areCanCodersReady() {
         return true;
-    }
-
-    @Override
-    public DeviceInfo getLeftLeader() {
-        return new DeviceInfo("LeftLeader", 1, true, simulationScalingValue);
-    }
-
-    @Override
-    public DeviceInfo getRightLeader() {
-        return new DeviceInfo("RightLeader", 2, false, simulationScalingValue);
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {

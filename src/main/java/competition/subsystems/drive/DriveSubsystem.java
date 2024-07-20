@@ -27,16 +27,6 @@ import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 @Singleton
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
     private static Logger log = LogManager.getLogger(DriveSubsystem.class);
-    
-    ElectricalContract contract;
-
-    public final XCANSparkMax leftLeader;
-    public final XCANSparkMax rightLeader;
-
-    private final PIDManager positionPid;
-    private final PIDManager rotationPid;
-
-    private double scalingFactorFromTicksToInches = 1.0 / 256.0;
 
     @Inject
     public DriveSubsystem(XCANSparkMax.XCANSparkMaxFactory sparkMaxFactory, XPropertyManager propManager,
@@ -49,63 +39,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
-
-        this.leftLeader = sparkMaxFactory.create(contract.getLeftLeader(), this.getPrefix(), "LeftLeader");
-        this.rightLeader = sparkMaxFactory.create(contract.getRightLeader(), this.getPrefix(), "RightLeader");
-
-        positionPid = pidFactory.create(getPrefix() + "PositionPID");
-        rotationPid = pidFactory.create(getPrefix() + "RotationPID");
-    }
-
-    public void tankDrive(double leftPower, double rightPower) {
-        this.leftLeader.set(leftPower);
-        this.rightLeader.set(rightPower);
-    }
-
-    @Override
-    public PIDManager getPositionalPid() {
-        return positionPid;
-    }
-
-    @Override
-    public PIDManager getRotateToHeadingPid() {
-        return rotationPid;
-    }
-
-    @Override
-    public PIDManager getRotateDecayPid() {
-        return null;
-    }
-
-    @Override
-    public void move(XYPair translate, double rotate) {
-        double y = translate.y;
-
-        double left = y - rotate;
-        double right = y + rotate;
-
-        this.leftLeader.set(left);
-        this.rightLeader.set(right);
-    }
-
-    @Override
-    public double getLeftTotalDistance() {
-        return leftLeader.getPosition() * scalingFactorFromTicksToInches;
-    }
-
-    @Override
-    public double getRightTotalDistance() {
-        return rightLeader.getPosition() * scalingFactorFromTicksToInches;
-    }
-
-    @Override
-    public double getTransverseDistance() {
-        return 0;
     }
 
     @Override
     public void refreshDataFrame() {
-        leftLeader.refreshDataFrame();
-        rightLeader.refreshDataFrame();
+
     }
 }

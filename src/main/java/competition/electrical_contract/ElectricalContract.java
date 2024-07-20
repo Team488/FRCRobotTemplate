@@ -6,6 +6,5 @@ import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract {
-    public abstract DeviceInfo getLeftLeader();
-    public abstract DeviceInfo getRightLeader();
+
 }

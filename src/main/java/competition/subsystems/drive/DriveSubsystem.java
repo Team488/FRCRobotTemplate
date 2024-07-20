@@ -18,6 +18,7 @@ import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDManager;
 import xbot.common.math.XYPair;
 import xbot.common.math.PIDManager.PIDManagerFactory;
+import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
@@ -46,7 +47,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve);
         log.info("Creating DriveSubsystem");
 
-        pf.setPrefix(this);
+        pf.setPrefix(this.getPrefix());
+        pf.setDefaultLevel(Property.PropertyLevel.Important);
 
         this.leftLeader = sparkMaxFactory.create(contract.getLeftLeader(), this.getPrefix(), "LeftLeader");
         this.rightLeader = sparkMaxFactory.create(contract.getRightLeader(), this.getPrefix(), "RightLeader");

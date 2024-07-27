@@ -20,6 +20,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.drive = drive;
         this.pose = pose;
         this.oi = oi;
+        this.addRequirements(drive);
     }
 
     @Override
@@ -40,9 +41,10 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     private XYPair getTranslationIntent() {
-        XYPair intent = new XYPair(oi.gamepad.getLeftStickX(), oi.gamepad.getLeftStickY());
+        double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().x, 0.15);
+        double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().y, 0.15);
 
-        return intent;
+        return new XYPair(xIntent, yIntent).rotate(-90);
     }
 
     private double getRotationIntent() {
@@ -52,7 +54,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
-        double intent = rotateLeftIntent - rotateRightIntent;
-        return intent;
+        return rotateLeftIntent - rotateRightIntent;
     }
 }

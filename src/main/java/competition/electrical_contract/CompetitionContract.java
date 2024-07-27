@@ -88,6 +88,7 @@ public class CompetitionContract extends ElectricalContract {
         };
     }
 
+    // Is this dependent on the robot?
     @Override
     public XYPair getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {

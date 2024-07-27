@@ -40,9 +40,4 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
     }
-
-    @Override
-    public void refreshDataFrame() {
-
-    }
 }

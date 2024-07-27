@@ -44,11 +44,12 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().x, 0.15);
         double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().y, 0.15);
 
+        // We have to rotate -90 degrees to fix some alignment issues
         return new XYPair(xIntent, yIntent).rotate(-90);
     }
 
     private double getRotationIntent() {
-        // Deadband is to prevent buggy joysticks
+        // Deadband is to prevent buggy joysticks/triggers
         double rotateLeftIntent = MathUtils.deadband(oi.gamepad.getLeftTrigger(), 0.15);
         double rotateRightIntent = MathUtils.deadband(oi.gamepad.getRightTrigger(), 0.15);
 

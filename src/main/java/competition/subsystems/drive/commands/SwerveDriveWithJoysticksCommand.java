@@ -42,9 +42,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
             // Normalize the intent
             translationIntent.scale(1 / translationIntent.getMagnitude());
 
-            // Scale the intent so that it reflects on how far the joystick is
+            // Scale the intent so that it reflects on how far the joystick is (assuming the values are -1 to 1)
             // (So that it will not always be the same speed as long as magnitude is > 1)
-            translationIntent.scale(x, y);
+            translationIntent.scale(Math.abs(x), Math.abs(y));
         }
 
         // Field oriented drive will process the actual swerve movements for us

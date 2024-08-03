@@ -31,10 +31,26 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     @Override
     public void execute() {
         // Get translate and rotation intents
-        // Field oriented drive will process most of the hard stuff for us
+        XYPair translationIntent = getTranslationIntent();
+        double rotationIntent = getRotationIntent();
+
+        // Normalize and scale translationIntent
+        if (translationIntent.getMagnitude() > 1) {
+            double x = translationIntent.x;
+            double y = translationIntent.y;
+
+            // Normalize the intent
+            translationIntent.scale(1 / translationIntent.getMagnitude());
+
+            // Scale the intent so that it reflects on how far the joystick is
+            // (So that it will not always be the same speed as long as magnitude is > 1)
+            translationIntent.scale(x, y);
+        }
+
+        // Field oriented drive will process the actual swerve movements for us
         drive.fieldOrientedDrive(
-                getTranslationIntent(),
-                getRotationIntent(),
+                translationIntent,
+                rotationIntent,
                 pose.getCurrentHeading().getDegrees(),
                 new XYPair(0,0)
         );

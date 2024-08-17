@@ -121,7 +121,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
             suggested = evaluateLastKnownHeading(triggerRotateIntent);
         }
 
-        return unwrapSuggestedRotationValue(suggested);
+        return processSuggestedRotationValueIntoPower(suggested);
     }
 
     private SuggestedRotationValue evaluateSnappingInput(XYPair input) {
@@ -227,7 +227,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         return intent;
     }
 
-    private double unwrapSuggestedRotationValue(SuggestedRotationValue suggested) {
+    private double processSuggestedRotationValueIntoPower(SuggestedRotationValue suggested) {
         return switch (suggested.type) {
             case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
             case HeadingPower -> suggested.value;

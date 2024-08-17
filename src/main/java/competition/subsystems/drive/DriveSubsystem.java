@@ -4,6 +4,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.DataFrameRefreshable;
@@ -28,6 +30,11 @@ import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
     private static Logger log = LogManager.getLogger(DriveSubsystem.class);
 
+    private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
+    private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
+    private boolean lookAtPointActive = false;
+    private boolean staticHeadingActive = false;
+
     @Inject
     public DriveSubsystem(XCANSparkMax.XCANSparkMaxFactory sparkMaxFactory, XPropertyManager propManager,
                           ElectricalContract contract, PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -39,5 +46,21 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+    }
+
+    public Translation2d getLookAtPointTarget() {
+        return lookAtPointTarget;
+    }
+
+    public Rotation2d getStaticHeadingTarget() {
+        return staticHeadingTarget;
+    }
+
+    public boolean getLookAtPointActive() {
+        return lookAtPointActive;
+    }
+
+    public boolean getStaticHeadingActive() {
+        return staticHeadingActive;
     }
 }

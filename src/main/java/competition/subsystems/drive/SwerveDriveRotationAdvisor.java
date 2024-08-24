@@ -105,10 +105,12 @@ public class SwerveDriveRotationAdvisor {
         }
 
         return switch (recommendedMode) {
-            case HumanControl -> new SuggestedRotationValue(
-                    scaleHumanRotationIntent(triggerRotateIntent),
-                    SuggestedRotationValue.ValueType.HeadingPower
-            );
+            case HumanControl -> {
+                if (drive.isPrecisionRotationActive()) {
+                    triggerRotateIntent *= 0.25;
+                }
+                yield new SuggestedRotationValue(triggerRotateIntent, SuggestedRotationValue.ValueType.HeadingPower);
+            }
             case InitializeMachineControl -> {
                 drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
                 yield new SuggestedRotationValue();
@@ -119,13 +121,6 @@ public class SwerveDriveRotationAdvisor {
             );
             case Coast -> new SuggestedRotationValue();
         };
-    }
-
-    private double scaleHumanRotationIntent(double intent) {
-        if (drive.isPrecisionRotationActive()) {
-            intent *= 0.25;
-        }
-        return intent;
     }
 
     public void resetDecider() {

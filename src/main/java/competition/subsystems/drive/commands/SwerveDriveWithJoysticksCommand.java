@@ -54,15 +54,14 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     public void execute() {
         // Get raw human translate and rotation intents
         XYPair translationIntent = getRawHumanTranslationIntent();
-        double rotationIntent = getRawHumanRotationIntent();
+        double rawRotationIntent = getRawHumanRotationIntent();
 
         // Process the translation intent
         translationIntent = processTranslationIntent(translationIntent);
 
         // Checks snapping to side or other rotation features to get suggested intent
-        rotationIntent = getSuggestedRotationIntent(rotationIntent);
+        double rotationIntent = getSuggestedRotationIntent(rawRotationIntent);
 
-        // Further scale translation and rotation intents if not driving full power
         if (!drive.isUnlockFullDrivePowerActive()) {
             translationIntent = translationIntent.scale(overallDrivingPowerScale.get());
             rotationIntent *= overallTurningPowerScale.get();
@@ -87,8 +86,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double getRawHumanRotationIntent() {
         // Deadband is to prevent buggy joysticks/triggers
-        double rotateLeftIntent = MathUtils.deadband(oi.gamepad.getLeftTrigger(), 0.005);
-        double rotateRightIntent = MathUtils.deadband(oi.gamepad.getRightTrigger(), 0.005);
+        double rotateLeftIntent = MathUtils.deadband(oi.gamepad.getLeftTrigger(), 0.05);
+        double rotateRightIntent = MathUtils.deadband(oi.gamepad.getRightTrigger(), 0.05);
 
         // Merge the two trigger values together in case of conflicts
         // Rotate left = positive, right = negative
@@ -122,7 +121,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
             intent = intent.scale(Math.abs(x), Math.abs(y));
         }
 
-        // Further scale translation and rotation intents if not driving full power
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {

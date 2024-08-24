@@ -21,7 +21,6 @@ public class SwerveDriveRotationAdvisor {
     HumanVsMachineDecider hvmDecider;
     PoseSubsystem pose;
     DriveSubsystem drive;
-    OperatorInterface oi;
 
     DoubleProperty minimumMagnitudeToSnap;
 
@@ -32,7 +31,6 @@ public class SwerveDriveRotationAdvisor {
         this.hvmDecider = hvmFactory.create("SwerveDriveRotationAdvisor/");
         this.drive = drive;
         this.pose = pose;
-        this.oi = oi;
 
         this.minimumMagnitudeToSnap = pf.createPersistentProperty("MinimumMagnitudeToSnap", 0.75);
     }

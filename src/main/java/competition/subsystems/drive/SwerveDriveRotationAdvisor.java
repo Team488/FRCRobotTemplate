@@ -5,6 +5,7 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.math.ContiguousDouble;
@@ -24,6 +25,8 @@ public class SwerveDriveRotationAdvisor {
 
     DoubleProperty minimumMagnitudeToSnap;
 
+    AKitLogger aKitLogger;
+
     @Inject
     public SwerveDriveRotationAdvisor(PoseSubsystem pose, DriveSubsystem drive, PropertyFactory pf,
                                       HumanVsMachineDeciderFactory hvmFactory, OperatorInterface oi) {
@@ -32,18 +35,24 @@ public class SwerveDriveRotationAdvisor {
         this.drive = drive;
         this.pose = pose;
 
+        aKitLogger = new AKitLogger("SwerveDriveRotationAdvisor/");
+
         this.minimumMagnitudeToSnap = pf.createPersistentProperty("MinimumMagnitudeToSnap", 0.75);
     }
 
     public SuggestedRotationValue getSuggestedRotationValue(XYPair snappingInput, double triggerRotateIntent) {
         SuggestedRotationValue suggested;
         if (snappingInput.getMagnitude() >= minimumMagnitudeToSnap.get()) {
+            aKitLogger.record("SuggestedRotationMode", "Snap");
             suggested = evaluateSnappingInput(snappingInput);
         } else if (drive.getLookAtPointActive()) {
+            aKitLogger.record("SuggestedRotationMode", "LookAt");
             suggested = evaluateLookAtPoint();
         } else if (drive.getStaticHeadingActive()) {
+            aKitLogger.record("SuggestedRotationMode", "StaticHeading");
             suggested = evaluateStaticHeading();
         } else {
+            aKitLogger.record("SuggestedRotationMode", "HvmEvaluation");
             suggested = evaluateLastKnownHeading(triggerRotateIntent);
         }
 
@@ -97,7 +106,7 @@ public class SwerveDriveRotationAdvisor {
 
     private SuggestedRotationValue evaluateLastKnownHeading(double triggerRotateIntent) {
         HumanVsMachineDecider.HumanVsMachineMode recommendedMode = hvmDecider.getRecommendedMode(triggerRotateIntent);
-
+        aKitLogger.record("RecMode", recommendedMode);
         if (pose.getHeadingResetRecently()) {
             drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
         }
@@ -113,11 +122,15 @@ public class SwerveDriveRotationAdvisor {
                 drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
                 yield new SuggestedRotationValue();
             }
-            case MachineControl -> new SuggestedRotationValue(
-                    drive.getDesiredHeading(),
-                    SuggestedRotationValue.ValueType.DesiredHeading
-            );
-            case Coast -> new SuggestedRotationValue();
+            case MachineControl -> {
+                yield new SuggestedRotationValue(
+                        drive.getDesiredHeading(),
+                        SuggestedRotationValue.ValueType.DesiredHeading
+                );
+            }
+            case Coast -> {
+                yield new SuggestedRotationValue();
+            }
         };
     }
 

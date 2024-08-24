@@ -28,8 +28,9 @@ public class OperatorCommandMap {
         resetHeading.setHeadingToApply(90);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
-        Translation2d pointAtTestTranslation = new Translation2d(0.2032,5.547868);
-        Rotation2d staticHeadingTestRotation = Rotation2d.fromDegrees(120);
+        // Stolen from 2024
+        Translation2d pointAtTestTranslation = new Translation2d(2,2);
+        Rotation2d staticHeadingTestRotation = Rotation2d.fromDegrees(-45);
 
         var pointAtSpeaker = drive.createSetLookAtPointTargetCommand(
                 () -> PoseSubsystem.convertBlueToRedIfNeeded(pointAtTestTranslation));

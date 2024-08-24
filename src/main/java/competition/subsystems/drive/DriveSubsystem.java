@@ -6,25 +6,23 @@ import javax.inject.Singleton;
 import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.controls.actuators.XCANSparkMax;
-import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.controls.actuators.XCANTalon.XCANTalonFactory;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
-import xbot.common.math.PIDManager;
-import xbot.common.math.XYPair;
 import xbot.common.math.PIDManager.PIDManagerFactory;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.XPropertyManager;
-import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
+
+import java.util.function.Supplier;
 
 @Singleton
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
@@ -62,5 +60,42 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
     public boolean getStaticHeadingActive() {
         return staticHeadingActive;
+    }
+
+    public void setStaticHeadingTarget(Rotation2d staticHeadingTarget) {
+        this.staticHeadingTarget = staticHeadingTarget;
+    }
+
+    public void setLookAtPointTarget(Translation2d lookAtPointTarget) {
+        this.lookAtPointTarget = lookAtPointTarget;
+    }
+
+    public void setStaticHeadingTargetActive(boolean staticHeadingActive) {
+        this.staticHeadingActive = staticHeadingActive;
+    }
+
+    public void setLookAtPointTargetActive(boolean lookAtPointActive) {
+        this.lookAtPointActive = lookAtPointActive;
+    }
+
+    public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
+        return new InstantCommand(() -> {
+            setStaticHeadingTarget(staticHeadingTarget.get());
+            setStaticHeadingTargetActive(true);}
+        );
+    }
+
+    public InstantCommand createSetLookAtPointTargetCommand(Supplier<Translation2d> lookAtPointTarget) {
+        return new InstantCommand(() -> {
+            setLookAtPointTarget(lookAtPointTarget.get());
+            setLookAtPointTargetActive(true);}
+        );
+    }
+
+    public InstantCommand createClearAllHeadingTargetsCommand() {
+        return new InstantCommand(() -> {
+            setStaticHeadingTargetActive(false);
+            setLookAtPointTargetActive(false);
+        });
     }
 }

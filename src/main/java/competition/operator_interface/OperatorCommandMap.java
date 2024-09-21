@@ -25,11 +25,11 @@ public class OperatorCommandMap {
             OperatorInterface operatorInterface,
             SetRobotHeadingCommand resetHeading,
             DriveSubsystem drive) {
-        resetHeading.setHeadingToApply(90);
+        resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
         // Stolen from 2024
-        Translation2d pointAtTestTranslation = new Translation2d(2,2);
+        Translation2d pointAtTestTranslation = new Translation2d(1,1);
         Rotation2d staticHeadingTestRotation = Rotation2d.fromDegrees(-45);
 
         var pointAtSpeaker = drive.createSetLookAtPointTargetCommand(

@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.controls.actuators.XCANSparkMax;
 import xbot.common.injection.swerve.FrontLeftDrive;
@@ -97,5 +98,14 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
             setStaticHeadingTargetActive(false);
             setLookAtPointTargetActive(false);
         });
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
+        aKitLog.record("PointAtTargetX", lookAtPointTarget.getX());
+        aKitLog.record("PointAtTargetY", lookAtPointTarget.getY());
+        aKitLog.record("PointAtActive", lookAtPointActive);
     }
 }

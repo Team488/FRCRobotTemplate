@@ -8,20 +8,20 @@ public class SuggestedRotationValue {
      * HeadingPower (The power of which you should be rotating)
      */
     public double value;
-    public ValueType type;
+    public RotationGoalType type;
 
-    public enum ValueType {
+    public enum RotationGoalType {
         DesiredHeading,
         HeadingPower
     }
 
-    public SuggestedRotationValue(double value, ValueType type) {
+    public SuggestedRotationValue(double value, RotationGoalType type) {
         this.value = value;
         this.type = type;
     }
 
     public SuggestedRotationValue() {
         this.value = 0;
-        this.type = ValueType.HeadingPower;
+        this.type = RotationGoalType.HeadingPower;
     }
 }

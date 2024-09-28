@@ -42,12 +42,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return new SwerveDrivePoseEstimator(
                 drive.getSwerveDriveKinematics(),
                 getCurrentHeading(),
-                new SwerveModulePosition[] {
-                        drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
-                        drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(),
-                        drive.getRearLeftSwerveModuleSubsystem().getCurrentPosition(),
-                        drive.getRearRightSwerveModuleSubsystem().getCurrentPosition()
-                },
+                getSwerveModulePositions(),
                 new Pose2d());
     }
 

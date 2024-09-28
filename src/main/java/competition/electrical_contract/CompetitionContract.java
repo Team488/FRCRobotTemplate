@@ -88,9 +88,9 @@ public class CompetitionContract extends ElectricalContract {
         };
     }
 
-    // Is this dependent on the robot?
     @Override
-    public XYPair getSwerveModuleOffsets(SwerveInstance swerveInstance) {
+    public XYPair getSwerveModuleOffsetsInInches(SwerveInstance swerveInstance) {
+        // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" -> new XYPair(15, 15);
             case "FrontRightDrive" -> new XYPair(15, -15);

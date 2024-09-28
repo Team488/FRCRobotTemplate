@@ -71,18 +71,17 @@ public class SwerveDriveRotationAdvisor {
             desiredHeading += 180;
         }
 
-        // Shouldn't this be in more places? Hmm...
         if (pose.getHeadingResetRecently()) {
             drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
         } else {
             drive.setDesiredHeading(desiredHeading);
         }
         hvmDecider.reset();
-        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.ValueType.DesiredHeading);
+        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.RotationGoalType.DesiredHeading);
     }
 
+    /** Stalk a point in 2d space, does not take in consideration of height */
     private SuggestedRotationValue evaluateLookAtPoint() {
-        // Don't think this takes in consideration of height...
         Translation2d target = drive.getLookAtPointTarget();
 
         Pose2d currentPose = pose.getCurrentPose2d();
@@ -91,14 +90,15 @@ public class SwerveDriveRotationAdvisor {
         Translation2d currentXY = new Translation2d(currentPose.getX(), currentPose.getY());
 
         double desiredHeading = currentXY.minus(target).getAngle().getDegrees() + 180;
-        drive.setDesiredHeading(desiredHeading); // Does this need a recently heading reset check?
-        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.ValueType.DesiredHeading);
+        drive.setDesiredHeading(desiredHeading);
+        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.RotationGoalType.DesiredHeading);
     }
 
+    /** Look in a specific angle, statically */
     private SuggestedRotationValue evaluateStaticHeading() {
         double desiredHeading = drive.getStaticHeadingTarget().getDegrees();
         drive.setDesiredHeading(desiredHeading);
-        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.ValueType.DesiredHeading);
+        return new SuggestedRotationValue(desiredHeading, SuggestedRotationValue.RotationGoalType.DesiredHeading);
     }
 
     private SuggestedRotationValue evaluateLastKnownHeading(double triggerRotateIntent) {
@@ -115,7 +115,7 @@ public class SwerveDriveRotationAdvisor {
                 }
                 yield new SuggestedRotationValue(
                         triggerRotateIntent,
-                        SuggestedRotationValue.ValueType.HeadingPower
+                        SuggestedRotationValue.RotationGoalType.HeadingPower
                 );
             }
             case InitializeMachineControl -> {
@@ -125,7 +125,7 @@ public class SwerveDriveRotationAdvisor {
             case MachineControl -> {
                 yield new SuggestedRotationValue(
                         drive.getDesiredHeading(),
-                        SuggestedRotationValue.ValueType.DesiredHeading
+                        SuggestedRotationValue.RotationGoalType.DesiredHeading
                 );
             }
             case Coast -> {

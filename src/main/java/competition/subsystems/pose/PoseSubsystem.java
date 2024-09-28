@@ -65,8 +65,16 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 positionSource,
                 getCurrentHeading()
         );
-
         aKitLog.record("RobotPose", estimatedPosition);
+
+        totalDistanceX = estimatedPosition.getX();
+        totalDistanceY = estimatedPosition.getY();
+
+        double prevTotalDistanceX = totalDistanceX;
+        double prevTotalDistanceY = totalDistanceY;
+        this.velocityX = ((totalDistanceX - prevTotalDistanceX));
+        this.velocityY = ((totalDistanceY - prevTotalDistanceY));
+        this.totalVelocity = (Math.sqrt(Math.pow(velocityX, 2.0) + Math.pow(velocityY, 2.0))); // Unnecessary?
     }
 
     private SwerveModulePosition[] getSwerveModulePositions() {

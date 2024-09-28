@@ -99,13 +99,4 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
             setLookAtPointTargetActive(false);
         });
     }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-        aKitLog.setLogLevel(AKitLogger.LogLevel.INFO);
-        aKitLog.record("PointAtTargetX", lookAtPointTarget.getX());
-        aKitLog.record("PointAtTargetY", lookAtPointTarget.getY());
-        aKitLog.record("PointAtActive", lookAtPointActive);
-    }
 }

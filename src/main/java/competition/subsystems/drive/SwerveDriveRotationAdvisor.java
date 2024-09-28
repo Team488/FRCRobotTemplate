@@ -86,6 +86,8 @@ public class SwerveDriveRotationAdvisor {
         Translation2d target = drive.getLookAtPointTarget();
 
         Pose2d currentPose = pose.getCurrentPose2d();
+        aKitLogger.record("CurrentPoseX", currentPose.getX());
+        aKitLogger.record("CurrentPoseY", currentPose.getY());
         Translation2d currentXY = new Translation2d(currentPose.getX(), currentPose.getY());
 
         double desiredHeading = currentXY.minus(target).getAngle().getDegrees() + 180;

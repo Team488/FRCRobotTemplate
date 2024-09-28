@@ -27,24 +27,5 @@ public class OperatorCommandMap {
             DriveSubsystem drive) {
         resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
-
-        // Stolen from 2024
-        Translation2d pointAtTestTranslation = new Translation2d(1,1);
-        Rotation2d staticHeadingTestRotation = Rotation2d.fromDegrees(-45);
-
-        var pointAtSpeaker = drive.createSetLookAtPointTargetCommand(
-                () -> PoseSubsystem.convertBlueToRedIfNeeded(pointAtTestTranslation));
-
-        var pointAtSource = drive.createSetStaticHeadingTargetCommand(
-                () -> PoseSubsystem.convertBlueToRedIfNeeded(staticHeadingTestRotation));
-
-        var cancelSpecialPointAtPosition = drive.createClearAllHeadingTargetsCommand();
-
-        operatorInterface.gamepad.getXboxButton(XXboxController.XboxButton.B)
-                .onTrue(pointAtSpeaker)
-                .onFalse(cancelSpecialPointAtPosition);
-        operatorInterface.gamepad.getXboxButton(XXboxController.XboxButton.Y)
-                .onTrue(pointAtSource)
-                .onFalse(cancelSpecialPointAtPosition);
     }
 }

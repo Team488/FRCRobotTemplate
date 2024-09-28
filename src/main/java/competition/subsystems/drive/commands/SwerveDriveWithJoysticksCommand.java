@@ -5,7 +5,6 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.SuggestedRotationValue;
 import competition.subsystems.drive.SwerveDriveRotationAdvisor;
 import competition.subsystems.pose.PoseSubsystem;
-import xbot.common.advantage.AKitLogger;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
@@ -63,7 +62,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
         // Checks snapping to side or other rotation features to get suggested intent
         double rotationIntent = getSuggestedRotationIntent(rawRotationIntent);
-        aKitLog.record("rotationIntent", rotationIntent);
 
         if (!drive.isUnlockFullDrivePowerActive()) {
             translationIntent = translationIntent.scale(overallDrivingPowerScale.get());
@@ -138,7 +136,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     private double processSuggestedRotationValueIntoPower(SuggestedRotationValue suggested) {
         return switch (suggested.type) {
             case DesiredHeading -> {
-                aKitLog.record("DesiredHeading", suggested.value);
                 yield headingModule.calculateHeadingPower(suggested.value);
             }
             case HeadingPower -> suggested.value;

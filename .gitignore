@@ -164,3 +164,7 @@ imgui.ini
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
 networktables.*
 simgui*
+.run/Build & Deploy Robot.run.xml
+simgui-ds.json
+simgui-window.json
+simgui.json

@@ -4,6 +4,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
@@ -11,12 +15,15 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 @Singleton
 public class PoseSubsystem extends BasePoseSubsystem {
 
+    final SwerveDrivePoseEstimator onlyWheelsGyroSwerveOdometry;
     private final DriveSubsystem drive;
 
     @Inject
     public PoseSubsystem(XGyroFactory gyroFactory, PropertyFactory propManager, DriveSubsystem drive) {
         super(gyroFactory, propManager);
         this.drive = drive;
+
+        onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();
     }
 
 
@@ -30,4 +37,47 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return drive.getRightTotalDistance();
     }
 
+
+    private SwerveDrivePoseEstimator initializeSwerveOdometry() {
+        return new SwerveDrivePoseEstimator(
+                drive.getSwerveDriveKinematics(),
+                getCurrentHeading(),
+                getSwerveModulePositions(),
+                new Pose2d());
+    }
+
+    @Override
+    protected void updateOdometry() {
+        onlyWheelsGyroSwerveOdometry.update(
+                this.getCurrentHeading(),
+                getSwerveModulePositions()
+        );
+
+        aKitLog.record("WheelsOnlyEstimate", onlyWheelsGyroSwerveOdometry.getEstimatedPosition());
+
+        Translation2d positionSource = onlyWheelsGyroSwerveOdometry.getEstimatedPosition().getTranslation();
+        Pose2d estimatedPosition = new Pose2d(
+                positionSource,
+                getCurrentHeading()
+        );
+        aKitLog.record("RobotPose", estimatedPosition);
+
+        totalDistanceX = estimatedPosition.getX();
+        totalDistanceY = estimatedPosition.getY();
+
+        double prevTotalDistanceX = totalDistanceX;
+        double prevTotalDistanceY = totalDistanceY;
+        this.velocityX = ((totalDistanceX - prevTotalDistanceX));
+        this.velocityY = ((totalDistanceY - prevTotalDistanceY));
+        this.totalVelocity = (Math.sqrt(Math.pow(velocityX, 2.0) + Math.pow(velocityY, 2.0))); // Unnecessary?
+    }
+
+    private SwerveModulePosition[] getSwerveModulePositions() {
+        return new SwerveModulePosition[] {
+                drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
+                drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(),
+                drive.getRearLeftSwerveModuleSubsystem().getCurrentPosition(),
+                drive.getRearRightSwerveModuleSubsystem().getCurrentPosition()
+        };
+    }
 }

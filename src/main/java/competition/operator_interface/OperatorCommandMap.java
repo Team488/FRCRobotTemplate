@@ -18,9 +18,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupMyCommands(
             OperatorInterface operatorInterface,
-            SetRobotHeadingCommand resetHeading)
-    {
-        resetHeading.setHeadingToApply(90);
+            SetRobotHeadingCommand resetHeading) {
+        resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
     }
 }

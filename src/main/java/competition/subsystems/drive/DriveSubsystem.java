@@ -4,92 +4,99 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.electrical_contract.ElectricalContract;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.controls.actuators.XCANSparkMax;
-import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.controls.actuators.XCANTalon.XCANTalonFactory;
-import xbot.common.math.PIDManager;
-import xbot.common.math.XYPair;
+import xbot.common.injection.swerve.FrontLeftDrive;
+import xbot.common.injection.swerve.FrontRightDrive;
+import xbot.common.injection.swerve.RearLeftDrive;
+import xbot.common.injection.swerve.RearRightDrive;
+import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDManager.PIDManagerFactory;
+import xbot.common.properties.Property;
+import xbot.common.properties.PropertyFactory;
 import xbot.common.properties.XPropertyManager;
-import xbot.common.subsystems.drive.BaseDriveSubsystem;
+import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
+
+import java.util.function.Supplier;
 
 @Singleton
-public class DriveSubsystem extends BaseDriveSubsystem implements DataFrameRefreshable {
+public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
     private static Logger log = LogManager.getLogger(DriveSubsystem.class);
-    
-    ElectricalContract contract;
-    
-    public final XCANSparkMax leftLeader;
-    public final XCANSparkMax rightLeader;
 
-    private final PIDManager positionPid;
-    private final PIDManager rotationPid;
-
-    private double scalingFactorFromTicksToInches = 1.0 / 256.0;
+    private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
+    private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
+    private boolean lookAtPointActive = false;
+    private boolean staticHeadingActive = false;
 
     @Inject
-    public DriveSubsystem(XCANSparkMax.XCANSparkMaxFactory sparkMaxFactory, XPropertyManager propManager, ElectricalContract contract, PIDManagerFactory pf) {
+    public DriveSubsystem(XCANSparkMax.XCANSparkMaxFactory sparkMaxFactory, XPropertyManager propManager,
+                          ElectricalContract contract, PIDManagerFactory pidFactory, PropertyFactory pf,
+                          @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
+                          @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve) {
+
+        super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve);
         log.info("Creating DriveSubsystem");
 
-        this.leftLeader = sparkMaxFactory.create(contract.getLeftLeader(), this.getPrefix(), "LeftLeader");
-        this.rightLeader = sparkMaxFactory.create(contract.getRightLeader(), this.getPrefix(), "RightLeader");
-
-        positionPid = pf.create(getPrefix() + "PositionPID");
-        rotationPid = pf.create(getPrefix() + "RotationPID");
+        pf.setPrefix(this.getPrefix());
+        pf.setDefaultLevel(Property.PropertyLevel.Important);
     }
 
-    public void tankDrive(double leftPower, double rightPower) {
-        this.leftLeader.set(leftPower);
-        this.rightLeader.set(rightPower);
+    public Translation2d getLookAtPointTarget() {
+        return lookAtPointTarget;
     }
 
-    @Override
-    public PIDManager getPositionalPid() {
-        return positionPid;
+    public Rotation2d getStaticHeadingTarget() {
+        return staticHeadingTarget;
     }
 
-    @Override
-    public PIDManager getRotateToHeadingPid() {
-        return rotationPid;
+    public boolean getLookAtPointActive() {
+        return lookAtPointActive;
     }
 
-    @Override
-    public PIDManager getRotateDecayPid() {
-        return null;
+    public boolean getStaticHeadingActive() {
+        return staticHeadingActive;
     }
 
-    @Override
-    public void move(XYPair translate, double rotate) {
-        double y = translate.y;
-
-        double left = y - rotate;
-        double right = y + rotate;
-
-        this.leftLeader.set(left);
-        this.rightLeader.set(right);
+    public void setStaticHeadingTarget(Rotation2d staticHeadingTarget) {
+        this.staticHeadingTarget = staticHeadingTarget;
     }
 
-    @Override
-    public double getLeftTotalDistance() {
-        return leftLeader.getPosition() * scalingFactorFromTicksToInches;
+    public void setLookAtPointTarget(Translation2d lookAtPointTarget) {
+        this.lookAtPointTarget = lookAtPointTarget;
     }
 
-    @Override
-    public double getRightTotalDistance() {
-        return rightLeader.getPosition() * scalingFactorFromTicksToInches;
+    public void setStaticHeadingTargetActive(boolean staticHeadingActive) {
+        this.staticHeadingActive = staticHeadingActive;
     }
 
-    @Override
-    public double getTransverseDistance() {
-        return 0;
+    public void setLookAtPointTargetActive(boolean lookAtPointActive) {
+        this.lookAtPointActive = lookAtPointActive;
     }
 
-    @Override
-    public void refreshDataFrame() {
-        leftLeader.refreshDataFrame();
-        rightLeader.refreshDataFrame();
+    public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
+        return new InstantCommand(() -> {
+            setStaticHeadingTarget(staticHeadingTarget.get());
+            setStaticHeadingTargetActive(true);}
+        );
+    }
+
+    public InstantCommand createSetLookAtPointTargetCommand(Supplier<Translation2d> lookAtPointTarget) {
+        return new InstantCommand(() -> {
+            setLookAtPointTarget(lookAtPointTarget.get());
+            setLookAtPointTargetActive(true);}
+        );
+    }
+
+    public InstantCommand createClearAllHeadingTargetsCommand() {
+        return new InstantCommand(() -> {
+            setStaticHeadingTargetActive(false);
+            setLookAtPointTargetActive(false);
+        });
     }
 }

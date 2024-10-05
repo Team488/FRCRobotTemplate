@@ -1,7 +1,5 @@
 package competition.injection.modules;
 
-import javax.inject.Singleton;
-
 import competition.electrical_contract.CompetitionContract;
 import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.UnitTestCompetitionContract;
@@ -15,8 +13,10 @@ import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
+import javax.inject.Singleton;
+
 @Module
-public abstract class SimulatedRobotModule {
+public abstract class UnitTestRobotModule {
     @Binds
     @Singleton
     public abstract ElectricalContract getElectricalContract(UnitTestCompetitionContract impl);

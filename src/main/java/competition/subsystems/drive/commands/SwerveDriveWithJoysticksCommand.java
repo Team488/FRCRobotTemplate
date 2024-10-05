@@ -2,8 +2,10 @@ package competition.subsystems.drive.commands;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.SuggestedRotationValue;
-import competition.subsystems.drive.SwerveDriveRotationAdvisor;
+import xbot.common.logic.HumanVsMachineDecider;
+import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
+import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
+import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.MathUtils;
@@ -27,17 +29,19 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     DoubleProperty overallTurningPowerScale;
 
     SwerveDriveRotationAdvisor advisor;
+    HumanVsMachineDecider hvmDecider;
 
     @Inject
     public SwerveDriveWithJoysticksCommand(
             OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-            HeadingModuleFactory headingModuleFactory, SwerveDriveRotationAdvisor advisor) {
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory) {
         pf.setPrefix(this);
         this.drive = drive;
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
-        this.advisor = advisor;
+        this.hvmDecider = hvmFactory.create(pf.getPrefix());
+        this.advisor = new SwerveDriveRotationAdvisor(pose, drive, pf, hvmDecider);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
@@ -58,7 +62,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         double rawRotationIntent = getRawHumanRotationIntent();
 
         // Process the translation intent
-        translationIntent = processTranslationIntent(translationIntent);
+        translationIntent = getSuggestedTranslationIntent(translationIntent);
 
         // Checks snapping to side or other rotation features to get suggested intent
         double rotationIntent = getSuggestedRotationIntent(rawRotationIntent);
@@ -96,18 +100,16 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     public double getSuggestedRotationIntent(double triggerRotateIntent) {
-        // Firstly, I would like to apologize for the namings of these functions...
-
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
         XYPair joystickInput = new XYPair(-oi.gamepad.getRightVector().x, oi.gamepad.getRightVector().y).rotate(-90);
 
-        SuggestedRotationValue suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
+        SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
     }
 
-    private XYPair processTranslationIntent(XYPair intent) {
+    private XYPair getSuggestedTranslationIntent(XYPair intent) {
         // Process translation: normalize & scale translationIntent, prevent diagonal movement being faster
         // This is needed even if isUnlockFullDrivePowerActive == true
         if (intent.getMagnitude() != 0) {
@@ -133,12 +135,17 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         return intent;
     }
 
-    private double processSuggestedRotationValueIntoPower(SuggestedRotationValue suggested) {
+    private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
         return switch (suggested.type) {
             case DesiredHeading -> {
                 yield headingModule.calculateHeadingPower(suggested.value);
             }
-            case HeadingPower -> suggested.value;
+            case HumanControlHeadingPower -> {
+                if (drive.isPrecisionRotationActive()) {
+                    yield suggested.value *= 0.25;
+                }
+                yield suggested.value;
+            }
         };
     }
 }

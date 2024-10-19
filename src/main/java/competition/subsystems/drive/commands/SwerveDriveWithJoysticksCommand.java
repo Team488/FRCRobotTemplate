@@ -2,6 +2,7 @@ package competition.subsystems.drive.commands;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
@@ -85,8 +86,14 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().x, 0.15);
         double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().y, 0.15);
 
+        XYPair translationIntent = new XYPair(xIntent, yIntent);
+
+        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
+            translationIntent.rotate(180);
+        }
+
         // We have to rotate -90 degrees to fix some alignment issues
-        return new XYPair(xIntent, yIntent).rotate(-90);
+        return translationIntent.rotate(-90);
     }
 
     private double getRawHumanRotationIntent() {

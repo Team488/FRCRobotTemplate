@@ -6,6 +6,7 @@ import competition.injection.components.DaggerPracticeRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
+import competition.simulation.Simulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
@@ -16,12 +17,18 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
 
+    Simulator simulator;
+
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
         getInjectorComponent().subsystemDefaultCommandMap();
         getInjectorComponent().operatorCommandMap();
         getInjectorComponent().swerveDefaultCommandMap();
+
+        if (BaseRobot.isSimulation()) {
+            simulator = getInjectorComponent().simulator();
+        }
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -76,5 +83,14 @@ public class Robot extends BaseRobot {
             -4.58*PoseSubsystem.INCHES_IN_A_METER, 
             BasePoseSubsystem.FACING_TOWARDS_DRIVERS
             );
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        super.simulationPeriodic();
+
+        if (simulator != null) {
+            simulator.update();
+        }
     }
 }

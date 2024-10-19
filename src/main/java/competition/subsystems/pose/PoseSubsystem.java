@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
+import xbot.common.math.WrappedRotation2d;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
@@ -16,6 +17,7 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class PoseSubsystem extends BasePoseSubsystem {
 
     final SwerveDrivePoseEstimator onlyWheelsGyroSwerveOdometry;
+
     private final DriveSubsystem drive;
 
     @Inject
@@ -79,5 +81,24 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 drive.getRearLeftSwerveModuleSubsystem().getCurrentPosition(),
                 drive.getRearRightSwerveModuleSubsystem().getCurrentPosition()
         };
+    }
+
+    public void setCurrentPosition(double newXPositionMeters, double newYPositionMeters, WrappedRotation2d heading) {
+        super.setCurrentPosition(newXPositionMeters, newYPositionMeters);
+        super.setCurrentHeading(heading.getDegrees());
+        onlyWheelsGyroSwerveOdometry.resetPosition(
+                heading,
+                getSwerveModulePositions(),
+                new Pose2d(
+                        newXPositionMeters,
+                        newYPositionMeters,
+                        this.getCurrentHeading()));
+    }
+    public void setCurrentPoseInMeters(Pose2d newPoseInMeters) {
+        setCurrentPosition(
+                newPoseInMeters.getTranslation().getX(),
+                newPoseInMeters.getTranslation().getY(),
+                WrappedRotation2d.fromRotation2d(newPoseInMeters.getRotation())
+        );
     }
 }

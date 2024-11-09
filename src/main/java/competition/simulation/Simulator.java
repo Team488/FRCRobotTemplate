@@ -20,6 +20,8 @@ public class Simulator {
 
     PoseSubsystem pose;
     DriveSubsystem drive;
+    final double robotTopSpeedInMetersPerSecond = 3.0;
+    final double robotLoopPeriod = 0.02;
 
     @Inject
     public Simulator(PoseSubsystem pose, DriveSubsystem drive) {
@@ -28,9 +30,6 @@ public class Simulator {
     }
 
     public void update() {
-        double robotTopSpeedInMetersPerSecond = 3.0;
-        double robotLoopPeriod = 0.02;
-
         simulateDrive(robotTopSpeedInMetersPerSecond, robotLoopPeriod);
     }
 

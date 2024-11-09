@@ -43,7 +43,13 @@ public class OperatorCommandMap {
         points2.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0,0), new Rotation2d(), 10));
         s2.logic.setKeyPoints(points2);
 
+        var s3 = swerveSimpleTrajectoryCommandProvider.get();
+        List<XbotSwervePoint> points3 = new ArrayList<>();
+        points3.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(1,4), new Rotation2d(), 10));
+        s3.logic.setKeyPoints(points3);
+
         operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(s1);
         operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(s2);
+        operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(s3);
     }
 }

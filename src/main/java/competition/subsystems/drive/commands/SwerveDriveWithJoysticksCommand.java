@@ -82,8 +82,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     }
 
     private XYPair getRawHumanTranslationIntent() {
-        double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().x, 0.15);
-        double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().y, 0.15);
+        double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getX(), 0.15);
+        double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getY(), 0.15);
 
         // We have to rotate -90 degrees to fix some alignment issues
         return new XYPair(xIntent, yIntent).rotate(-90);
@@ -103,7 +103,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        XYPair joystickInput = new XYPair(-oi.gamepad.getRightVector().x, oi.gamepad.getRightVector().y).rotate(-90);
+        XYPair joystickInput = new XYPair(-oi.gamepad.getRightVector().getX(), oi.gamepad.getRightVector().getY()).rotate(-90);
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);

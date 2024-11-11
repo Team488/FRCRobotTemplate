@@ -20,6 +20,11 @@ public class Simulator {
 
     PoseSubsystem pose;
     DriveSubsystem drive;
+    final double robotTopSpeedInMetersPerSecond = 3.0;
+    final double robotLoopPeriod = 0.02;
+    final double robotTopAngularSpeedInDegreesPerSecond = 360;
+    final double poseAdjustmentFactorForDriveSimulation = robotTopSpeedInMetersPerSecond * robotLoopPeriod;
+    final double headingAdjustmentFactorForDriveSimulation = robotTopAngularSpeedInDegreesPerSecond * robotLoopPeriod;
 
     @Inject
     public Simulator(PoseSubsystem pose, DriveSubsystem drive) {
@@ -28,17 +33,10 @@ public class Simulator {
     }
 
     public void update() {
-        double robotTopSpeedInMetersPerSecond = 3.0;
-        double robotLoopPeriod = 0.02;
-
-        simulateDrive(robotTopSpeedInMetersPerSecond, robotLoopPeriod);
+        simulateDrive();
     }
 
-    private void simulateDrive(double robotTopSpeedInMetersPerSecond, double robotLoopPeriod) {
-        double poseAdjustmentFactorForSimulation = robotTopSpeedInMetersPerSecond * robotLoopPeriod;
-        double robotTopAngularSpeedInDegreesPerSecond = 360;
-        double headingAdjustmentFactorForSimulation = robotTopAngularSpeedInDegreesPerSecond * robotLoopPeriod;
-
+    private void simulateDrive() {
         var currentPose = pose.getCurrentPose2d();
 
         // Extremely simple physics simulation. We want to give the robot some very basic translational and rotational
@@ -53,9 +51,9 @@ public class Simulator {
 
         var updatedPose = new Pose2d(
                 new Translation2d(
-                        currentPose.getTranslation().getX() + currentAverage.getX() * poseAdjustmentFactorForSimulation,
-                        currentPose.getTranslation().getY() + currentAverage.getY() * poseAdjustmentFactorForSimulation),
-                currentPose.getRotation().plus(Rotation2d.fromDegrees(currentRotationAverage * headingAdjustmentFactorForSimulation)));
+                        currentPose.getTranslation().getX() + currentAverage.getX() * poseAdjustmentFactorForDriveSimulation,
+                        currentPose.getTranslation().getY() + currentAverage.getY() * poseAdjustmentFactorForDriveSimulation),
+                currentPose.getRotation().plus(Rotation2d.fromDegrees(currentRotationAverage * headingAdjustmentFactorForDriveSimulation)));
         pose.setCurrentPoseInMeters(updatedPose);
     }
 }

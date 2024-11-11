@@ -94,6 +94,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
                         newYPositionMeters,
                         this.getCurrentHeading()));
     }
+
     public void setCurrentPoseInMeters(Pose2d newPoseInMeters) {
         setCurrentPosition(
                 newPoseInMeters.getTranslation().getX(),

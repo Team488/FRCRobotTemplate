@@ -5,7 +5,6 @@ import competition.simulation.Simulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
-import xbot.common.subsystems.drive.SwerveSpeedCalculator;
 import xbot.common.subsystems.drive.swerve.SwerveDefaultCommandMap;
 
 public abstract class BaseRobotComponent extends BaseComponent {
@@ -18,6 +17,4 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract SwerveComponentHolder swerveComponentHolder();
 
     public abstract Simulator simulator();
-
-    public abstract SwerveSpeedCalculator swerveSpeedCalculator();
 }

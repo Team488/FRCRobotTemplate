@@ -33,6 +33,7 @@ public class OperatorCommandMap {
         resetHeading.setHeadingToApply(0);
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
+        // TODO: for testing, remake this so that XbotSwervePoints are set up properly again
         var s1 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points = new ArrayList<>();
         points.add(XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(2,2), new Rotation2d(), 10));

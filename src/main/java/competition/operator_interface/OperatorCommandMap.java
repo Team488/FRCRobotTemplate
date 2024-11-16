@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.controls.sensors.XXboxController;
+import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryVelocityMode;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
@@ -35,33 +36,29 @@ public class OperatorCommandMap {
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
         // TODO: for testing, remake this so that XbotSwervePoints are set up properly again
+        SwervePointKinematics kinematicValuesForTesting = new SwervePointKinematics(0.2, 0, 2, 5);
+
         var s1 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points = new ArrayList<>();
-        XbotSwervePoint point1 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                new Pose2d(new Translation2d(2, 2), new Rotation2d()), 10
-        );
-        point1.setKinematicValues(0.2, 0, 2, 5);
-        points.add(point1);
+        XbotSwervePoint p1 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(2, 2), new Rotation2d(), 10);
+        p1.setKinematics(kinematicValuesForTesting);
+        points.add(p1);
         s1.logic.setKeyPoints(points);
         s1.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
 
         var s2 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points2 = new ArrayList<>();
-        XbotSwervePoint point2 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                new Pose2d(new Translation2d(0, 0), new Rotation2d()), 10
-        );
-        point2.setKinematicValues(0.2, 0, 2, 5);
-        points2.add(point2);
+        XbotSwervePoint p2 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0, 0), new Rotation2d(), 10);
+        p2.setKinematics(kinematicValuesForTesting);
+        points2.add(p2);
         s2.logic.setKeyPoints(points2);
         s2.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
 
         var s3 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points3 = new ArrayList<>();
-        XbotSwervePoint point3 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(
-                new Pose2d(new Translation2d(1, 4), new Rotation2d()), 10
-        );
-        point3.setKinematicValues(0.2, 0, 2, 5);
-        points3.add(point3);
+        XbotSwervePoint p3 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(1, 4), new Rotation2d(), 10);
+        p3.setKinematics(kinematicValuesForTesting);
+        points3.add(p3);
         s3.logic.setKeyPoints(points3);
         s3.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
 

@@ -4,13 +4,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.drive.SwervePointKinematics;
 import xbot.common.subsystems.drive.SwerveSimpleTrajectoryCommand;
-import xbot.common.subsystems.drive.SwerveSimpleTrajectoryVelocityMode;
+import xbot.common.subsystems.drive.SwerveSimpleTrajectoryMode;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import xbot.common.trajectory.XbotSwervePoint;
 
@@ -44,7 +43,7 @@ public class OperatorCommandMap {
         p1.setKinematics(kinematicValuesForTesting);
         points.add(p1);
         s1.logic.setKeyPoints(points);
-        s1.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
+        s1.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForIndividualPoints);
 
         var s2 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points2 = new ArrayList<>();
@@ -52,7 +51,7 @@ public class OperatorCommandMap {
         p2.setKinematics(kinematicValuesForTesting);
         points2.add(p2);
         s2.logic.setKeyPoints(points2);
-        s2.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
+        s2.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForIndividualPoints);
 
         var s3 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points3 = new ArrayList<>();
@@ -60,7 +59,7 @@ public class OperatorCommandMap {
         p3.setKinematics(kinematicValuesForTesting);
         points3.add(p3);
         s3.logic.setKeyPoints(points3);
-        s3.logic.setVelocityMode(SwerveSimpleTrajectoryVelocityMode.Kinematics);
+        s3.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForIndividualPoints);
 
         operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(s1);
         operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(s2);

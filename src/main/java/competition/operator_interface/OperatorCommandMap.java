@@ -35,7 +35,7 @@ public class OperatorCommandMap {
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
         // TODO: for testing, remake this so that XbotSwervePoints are set up properly again
-        SwervePointKinematics kinematicValuesForTesting = new SwervePointKinematics(0.2, 0, 2, 5);
+        SwervePointKinematics kinematicValuesForTesting = new SwervePointKinematics(0.4, 0, 2, 10);
 
         var s1 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points = new ArrayList<>();
@@ -55,7 +55,7 @@ public class OperatorCommandMap {
         s3.logic.setKeyPoints(points3);
         s3.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForPointsList);
 
-        operatorInterface.gamepad.getifAvailable(1).onTrue(s1);
+        operatorInterface.gamepad.getifAvailable(2).onTrue(s1);
         operatorInterface.gamepad.getifAvailable(3).onTrue(s3);
     }
 }

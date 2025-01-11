@@ -20,7 +20,7 @@ public class Simulator {
 
     PoseSubsystem pose;
     DriveSubsystem drive;
-    final double robotTopSpeedInMetersPerSecond = 3.0;
+    final double robotTopSpeedInMetersPerSecond = 5.0;
     final double robotLoopPeriod = 0.02;
     final double robotTopAngularSpeedInDegreesPerSecond = 360;
     final double poseAdjustmentFactorForDriveSimulation = robotTopSpeedInMetersPerSecond * robotLoopPeriod;

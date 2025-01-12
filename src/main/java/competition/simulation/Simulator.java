@@ -5,19 +5,20 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import xbot.common.math.MovingAverageForDouble;
-import xbot.common.math.MovingAverageForTranslation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
 
 public class Simulator {
-
-    MovingAverageForTranslation2d translationAverageCalculator =
-            new MovingAverageForTranslation2d(15);
-
-    MovingAverageForDouble rotationAverageCalculator =
-            new MovingAverageForDouble(15);
-
     PoseSubsystem pose;
     DriveSubsystem drive;
     final double robotTopSpeedInMetersPerSecond = 3.0;
@@ -26,34 +27,63 @@ public class Simulator {
     final double poseAdjustmentFactorForDriveSimulation = robotTopSpeedInMetersPerSecond * robotLoopPeriod;
     final double headingAdjustmentFactorForDriveSimulation = robotTopAngularSpeedInDegreesPerSecond * robotLoopPeriod;
 
+    // maple-sim stuff
+    // TODO: update config with real values
+    final DriveTrainSimulationConfig config = DriveTrainSimulationConfig.Default();
+    private final Field2d field2d;
+    final SimulatedArena arena;
+    final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
+
     @Inject
     public Simulator(PoseSubsystem pose, DriveSubsystem drive) {
         this.pose = pose;
         this.drive = drive;
+
+        arena = SimulatedArena.getInstance();
+
+        config.withCustomModuleTranslations(new Translation2d[]{
+            drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation(),
+            drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation(),
+            drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation(),
+            drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
+        });
+        // Creating the SelfControlledSwerveDriveSimulation instance
+        this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
+                new SwerveDriveSimulation(config, new Pose2d(0, 0, new Rotation2d())));
+
+        arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
+
+        field2d = new Field2d();
+        SmartDashboard.putData("simulation field", field2d);
     }
 
     public void update() {
-        simulateDrive();
-    }
+        
 
-    private void simulateDrive() {
-        var currentPose = pose.getCurrentPose2d();
+       
+        // drive simulated motors from requested robot commands
+        swerveDriveSimulation.runSwerveStates(new SwerveModuleState[]{
+            drive.getFrontLeftSwerveModuleSubsystem().getTargetState(),
+            drive.getFrontRightSwerveModuleSubsystem().getTargetState(),
+            drive.getRearLeftSwerveModuleSubsystem().getTargetState(),
+            drive.getRearRightSwerveModuleSubsystem().getTargetState()
+        });
 
-        // Extremely simple physics simulation. We want to give the robot some very basic translational and rotational
-        // inertia. We can take the moving average of the last second or so of robot commands and apply that to the
-        // robot's pose. This is a very simple way to simulate the robot's movement without having to do any real physics.
+        arena.simulationPeriodic();
+        swerveDriveSimulation.periodic();
 
-        translationAverageCalculator.add(drive.lastRawCommandedDirection);
-        var currentAverage = translationAverageCalculator.getAverage();
+        // read values back out from sim
+        field2d.setRobotPose(swerveDriveSimulation.getActualPoseInSimulationWorld());
+        field2d.getObject("odometry").setPose(swerveDriveSimulation.getOdometryEstimatedPose());
 
-        rotationAverageCalculator.add(drive.lastRawCommandedRotation);
-        var currentRotationAverage = rotationAverageCalculator.getAverage();
+         // update gyro reading from sim
+         pose.setCurrentHeading(this.swerveDriveSimulation.getOdometryEstimatedPose().getRotation().getDegrees());
 
-        var updatedPose = new Pose2d(
-                new Translation2d(
-                        currentPose.getTranslation().getX() + currentAverage.getX() * poseAdjustmentFactorForDriveSimulation,
-                        currentPose.getTranslation().getY() + currentAverage.getY() * poseAdjustmentFactorForDriveSimulation),
-                currentPose.getRotation().plus(Rotation2d.fromDegrees(currentRotationAverage * headingAdjustmentFactorForDriveSimulation)));
-        pose.setCurrentPoseInMeters(updatedPose);
+         // update position from sim
+         pose.setCurrentPosition(this.swerveDriveSimulation.getOdometryEstimatedPose().getTranslation().getX(),
+                 this.swerveDriveSimulation.getOdometryEstimatedPose().getTranslation().getY());
+ 
+ 
+        
     }
 }

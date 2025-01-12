@@ -35,27 +35,64 @@ public class OperatorCommandMap {
         operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
 
         // Below are for testing purposes only!!!
-        SwervePointKinematics kinematicValuesForTesting = new SwervePointKinematics(1, 0, 0, 1000);
+        SwervePointKinematics kinematicValuesForTesting = new SwervePointKinematics(0.2, 0, 0, 1.5);
 
-        var s1 = swerveSimpleTrajectoryCommandProvider.get();
-        List<XbotSwervePoint> points = new ArrayList<>();
-        XbotSwervePoint p1 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(2, 2), new Rotation2d(), 10);
+        // Command 1: to (1,0) then back to (0,0)
+        var command1 = swerveSimpleTrajectoryCommandProvider.get();
+        List<XbotSwervePoint> points1 = new ArrayList<>();
+
+        XbotSwervePoint p1 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(1, 0), new Rotation2d(), 10);
         p1.setKinematics(kinematicValuesForTesting);
-        points.add(p1);
-        s1.logic.setKeyPoints(points);
-        s1.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForIndividualPoints);
+        XbotSwervePoint p2 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0, 0), new Rotation2d(), 10);
+        p2.setKinematics(kinematicValuesForTesting);
 
-        var s3 = swerveSimpleTrajectoryCommandProvider.get();
+        points1.add(p1);
+        points1.add(p2);
+        command1.logic.setKeyPoints(points1);
+        command1.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForIndividualPoints);
+
+        // Command 2: same as Command1 but uses global values mode (slightly faster is the difference)
+        var command2 = swerveSimpleTrajectoryCommandProvider.get();
+        List<XbotSwervePoint> points2 = new ArrayList<>();
+
+        XbotSwervePoint p3 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(1, 0), new Rotation2d(), 10);
+        XbotSwervePoint p4 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0, 0), new Rotation2d(), 10);
+
+        points2.add(p3);
+        points2.add(p4);
+        command2.logic.setGlobalKinematicValues(kinematicValuesForTesting);
+        command2.logic.setKeyPoints(points2);
+        command2.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForPointsList);
+
+        // Command 3: Slightly further drive (pray)
+        var command3 = swerveSimpleTrajectoryCommandProvider.get();
         List<XbotSwervePoint> points3 = new ArrayList<>();
-        XbotSwervePoint p3 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(15, 4), new Rotation2d(Math.toDegrees(45)), 10);
-        XbotSwervePoint p4 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(1, 5), new Rotation2d(), 10);
-        s3.logic.setGlobalKinematicValues(kinematicValuesForTesting);
-        points3.add(p3);
-        points3.add(p4);
-        s3.logic.setKeyPoints(points3);
-        s3.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForPointsList);
 
-        operatorInterface.gamepad.getifAvailable(2).onTrue(s1);
-        operatorInterface.gamepad.getifAvailable(3).onTrue(s3);
+        XbotSwervePoint p5 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(2.5, 0), new Rotation2d(), 10);
+        XbotSwervePoint p6 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0, 0), new Rotation2d(), 10);
+
+        points3.add(p5);
+        points3.add(p6);
+        command3.logic.setGlobalKinematicValues(kinematicValuesForTesting);
+        command3.logic.setKeyPoints(points3);
+        command3.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForPointsList);
+
+        // Command 4: Really far for observation purposes
+        var command4 = swerveSimpleTrajectoryCommandProvider.get();
+        List<XbotSwervePoint> points4 = new ArrayList<>();
+
+        XbotSwervePoint p7 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(3, 0), new Rotation2d(), 10);
+        XbotSwervePoint p8 = XbotSwervePoint.createPotentiallyFilppedXbotSwervePoint(new Translation2d(0, 0), new Rotation2d(), 10);
+
+        points4.add(p7);
+        points4.add(p8);
+        command4.logic.setGlobalKinematicValues(kinematicValuesForTesting);
+        command4.logic.setKeyPoints(points4);
+        command4.logic.setVelocityMode(SwerveSimpleTrajectoryMode.KinematicsForPointsList);
+
+        operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.B).onTrue(command1); // 2 Invididual kinematics values
+        operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.X).onTrue(command2); // 3 One thingy
+        operatorInterface.gamepad.getifAvailable(XXboxController.XboxButton.Y).onTrue(command3);
     }
 }
+

@@ -1,5 +1,6 @@
 package competition.electrical_contract;
 
+import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANTalonInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
@@ -12,9 +13,9 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract boolean areCanCodersReady();
 
-    public abstract DeviceInfo getDriveMotor(SwerveInstance swerveInstance);
+    public abstract CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance);
 
-    public abstract DeviceInfo getSteeringMotor(SwerveInstance swerveInstance);
+    public abstract CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance);
 
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
 

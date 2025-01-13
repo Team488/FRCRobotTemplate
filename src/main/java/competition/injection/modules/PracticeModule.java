@@ -2,6 +2,8 @@ package competition.injection.modules;
 
 import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.PracticeContract;
+import competition.simulation.BaseSimulator;
+import competition.simulation.NoopSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
@@ -35,4 +37,8 @@ public abstract class PracticeModule {
     @Binds
     @Singleton
     public abstract BaseDriveSubsystem getDriveSubsystem(BaseSwerveDriveSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract BaseSimulator getSimulator(NoopSimulator impl);
 }

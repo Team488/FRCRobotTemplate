@@ -10,7 +10,7 @@ import xbot.common.math.MovingAverageForTranslation2d;
 
 import javax.inject.Inject;
 
-public class Simulator {
+public class Simulator implements BaseSimulator {
 
     MovingAverageForTranslation2d translationAverageCalculator =
             new MovingAverageForTranslation2d(15);

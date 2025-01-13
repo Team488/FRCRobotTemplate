@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 
 /**
  * For setting the default commands on subsystems

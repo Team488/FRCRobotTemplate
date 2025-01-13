@@ -20,6 +20,9 @@ public class PoseSubsystem extends BasePoseSubsystem {
 
     private final DriveSubsystem drive;
 
+    // only used when simulating the robot
+    protected SwerveModulePosition[] simulatedModulePositions = null;
+
     @Inject
     public PoseSubsystem(XGyroFactory gyroFactory, PropertyFactory propManager, DriveSubsystem drive) {
         super(gyroFactory, propManager);
@@ -55,6 +58,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 getSwerveModulePositions()
         );
 
+        aKitLog.record("SwerveModulePositions", getSwerveModulePositions());
         aKitLog.record("WheelsOnlyEstimate", onlyWheelsGyroSwerveOdometry.getEstimatedPosition());
 
         Translation2d positionSource = onlyWheelsGyroSwerveOdometry.getEstimatedPosition().getTranslation();
@@ -75,6 +79,11 @@ public class PoseSubsystem extends BasePoseSubsystem {
     }
 
     private SwerveModulePosition[] getSwerveModulePositions() {
+        // if we have simulated data, return that directly instead of asking the
+        // modules
+        if(simulatedModulePositions != null) {
+            return simulatedModulePositions;
+        }
         return new SwerveModulePosition[] {
                 drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
                 drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(),
@@ -101,5 +110,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 newPoseInMeters.getTranslation().getY(),
                 WrappedRotation2d.fromRotation2d(newPoseInMeters.getRotation())
         );
+    }
+
+    // used by the physics simulator to mock what the swerve modules are doing currently for pose estimation
+    public void ingestSimulationData(SwerveModulePosition[] positions) {
+        this.simulatedModulePositions = positions;
     }
 }

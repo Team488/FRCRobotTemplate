@@ -20,7 +20,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
 
     private final DriveSubsystem drive;
 
-    protected SwerveModulePosition[] mockPositions = null;
+    // only used when simulating the robot
+    protected SwerveModulePosition[] simulatedModulePositions = null;
 
     @Inject
     public PoseSubsystem(XGyroFactory gyroFactory, PropertyFactory propManager, DriveSubsystem drive) {
@@ -78,8 +79,10 @@ public class PoseSubsystem extends BasePoseSubsystem {
     }
 
     private SwerveModulePosition[] getSwerveModulePositions() {
-        if(mockPositions != null) {
-            return mockPositions;
+        // if we have simulated data, return that directly instead of asking the
+        // modules
+        if(simulatedModulePositions != null) {
+            return simulatedModulePositions;
         }
         return new SwerveModulePosition[] {
                 drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
@@ -111,6 +114,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
 
     // used by the physics simulator to mock what the swerve modules are doing currently for pose estimation
     public void ingestSimulationData(SwerveModulePosition[] positions) {
-        this.mockPositions = positions;
+        this.simulatedModulePositions = positions;
     }
 }

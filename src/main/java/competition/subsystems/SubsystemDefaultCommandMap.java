@@ -9,7 +9,7 @@ import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 /**
  * For setting the default commands on subsystems
  */
-@Singleton 
+@Singleton
 public class SubsystemDefaultCommandMap {
 
     @Inject

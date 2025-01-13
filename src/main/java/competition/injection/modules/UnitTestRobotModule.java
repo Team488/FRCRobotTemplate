@@ -3,6 +3,8 @@ package competition.injection.modules;
 import competition.electrical_contract.CompetitionContract;
 import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.UnitTestCompetitionContract;
+import competition.simulation.BaseSimulator;
+import competition.simulation.NoopSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
@@ -36,4 +38,8 @@ public abstract class UnitTestRobotModule {
     @Binds
     @Singleton
     public abstract BaseDriveSubsystem getDriveSubsystem(BaseSwerveDriveSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract BaseSimulator getSimulator(NoopSimulator impl);
 }

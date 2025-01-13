@@ -24,7 +24,7 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
 @Singleton
-public class Simulator implements BaseSimulator{
+public class MapleSimulator implements BaseSimulator {
     final PoseSubsystem pose;
     final DriveSubsystem drive;
     final double robotTopSpeedInMetersPerSecond = 3.0;
@@ -41,26 +41,28 @@ public class Simulator implements BaseSimulator{
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
     @Inject
-    public Simulator(PoseSubsystem pose, DriveSubsystem drive) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive) {
         this.pose = pose;
         this.drive = drive;
 
         aKitLog = new AKitLogger("Simulator/");
 
         arena = SimulatedArena.getInstance();
-        // more custom things to provide here like motor ratios and what have you
+        // TODO: custom things to provide here like motor ratios and what have you
         config = DriveTrainSimulationConfig.Default().withCustomModuleTranslations(new Translation2d[] {
                 drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation(),
                 drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation(),
                 drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation(),
                 drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
         });
-        // middle ish of the field
+
+        // middle ish of the field on blue
         var startingPose = new Pose2d(6, 4, new Rotation2d());
 
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
                 new SwerveDriveSimulation(config, startingPose));
+        // Tell the robot it's starting in the same spot
         pose.setCurrentPoseInMeters(startingPose);
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
@@ -83,40 +85,10 @@ public class Simulator implements BaseSimulator{
         aKitLog.record("RobotGroundTruthPose", swerveDriveSimulation.getActualPoseInSimulationWorld());
         aKitLog.record("MapleOdometryPose", swerveDriveSimulation.getOdometryEstimatedPose());
 
-        // we have to divide the sim numbers out because we later will multiply by this factor before giving the values to the estimator
-        //pose.mockPositions = swerveDriveSimulation.getLatestModulePositions();
-        // var metersPerRotation = drive.getFrontLeftSwerveModuleSubsystem().getDriveSubsystem().metersPerMotorRotation.get();
-        // ((MockCANMotorController)drive.getFrontLeftSwerveModuleSubsystem().getDriveSubsystem().motorController).setPosition(
-        //     Rotations.of(swerveDriveSimulation.getLatestModulePositions()[0].distanceMeters / metersPerRotation)
-        // );
-        // ((MockCANMotorController)drive.getFrontRightSwerveModuleSubsystem().getDriveSubsystem().motorController).setPosition(
-        //     Rotations.of(swerveDriveSimulation.getLatestModulePositions()[1].distanceMeters/ metersPerRotation)
-        // );
-        // ((MockCANMotorController)drive.getRearLeftSwerveModuleSubsystem().getDriveSubsystem().motorController).setPosition(
-        //     Rotations.of(swerveDriveSimulation.getLatestModulePositions()[2].distanceMeters / metersPerRotation)
-        // );
-        // ((MockCANMotorController)drive.getRearRightSwerveModuleSubsystem().getDriveSubsystem().motorController).setPosition(
-        //     Rotations.of(swerveDriveSimulation.getLatestModulePositions()[3].distanceMeters / metersPerRotation)
-        // );
-
-        // ((MockCANCoder)drive.getFrontLeftSwerveModuleSubsystem().getSteeringSubsystem().encoder).setAbsolutePosition(
-        //     swerveDriveSimulation.getLatestModulePositions()[0].angle.getDegrees()
-        // );
-        // ((MockCANCoder)drive.getFrontRightSwerveModuleSubsystem().getSteeringSubsystem().encoder).setAbsolutePosition(
-        //     swerveDriveSimulation.getLatestModulePositions()[1].angle.getDegrees()
-        // );
-        // ((MockCANCoder)drive.getRearLeftSwerveModuleSubsystem().getSteeringSubsystem().encoder).setAbsolutePosition(
-        //     swerveDriveSimulation.getLatestModulePositions()[2].angle.getDegrees()
-        // );
-        // ((MockCANCoder)drive.getRearRightSwerveModuleSubsystem().getSteeringSubsystem().encoder).setAbsolutePosition(
-        //     swerveDriveSimulation.getLatestModulePositions()[3].angle.getDegrees()
-        // );
-
+        pose.ingestSimulationData(swerveDriveSimulation.getLatestModulePositions());
         // update gyro reading from sim
         ((MockGyro) pose.imu).setYaw(this.swerveDriveSimulation.getOdometryEstimatedPose().getRotation().getDegrees());
         // if we want to give the gyro ground truth to make debugging other problems easier swap to this:
         // ((MockGyro) pose.imu).setYaw(this.swerveDriveSimulation.getActualPoseInSimulationWorld().getRotation().getDegrees());
-
-
     }
 }

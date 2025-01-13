@@ -6,13 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import static edu.wpi.first.units.Units.Rotations;
 
 import xbot.common.advantage.AKitLogger;
-import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
-import xbot.common.controls.sensors.mock_adapters.MockCANCoder;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 
 import javax.inject.Inject;
@@ -27,11 +22,6 @@ import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 public class MapleSimulator implements BaseSimulator {
     final PoseSubsystem pose;
     final DriveSubsystem drive;
-    final double robotTopSpeedInMetersPerSecond = 3.0;
-    final double robotLoopPeriod = 0.02;
-    final double robotTopAngularSpeedInDegreesPerSecond = 360;
-    final double poseAdjustmentFactorForDriveSimulation = robotTopSpeedInMetersPerSecond * robotLoopPeriod;
-    final double headingAdjustmentFactorForDriveSimulation = robotTopAngularSpeedInDegreesPerSecond * robotLoopPeriod;
 
     protected final AKitLogger aKitLog;
 

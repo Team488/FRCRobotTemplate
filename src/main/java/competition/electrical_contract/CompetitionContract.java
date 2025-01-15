@@ -5,8 +5,12 @@ import javax.inject.Inject;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import competition.subsystems.pose.PoseSubsystem;
+import xbot.common.injection.electrical_contract.CANBusId;
+import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
+import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANTalonInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.math.XYPair;
 
@@ -40,33 +44,73 @@ public class CompetitionContract extends ElectricalContract {
     }
 
     @Override
-    public DeviceInfo getDriveMotor(SwerveInstance swerveInstance) {
+    public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getDriveControllerName(swerveInstance), 31, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            31,
+                            new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
-                    new DeviceInfo(getDriveControllerName(swerveInstance), 29, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            29,
+                            new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
-                    new DeviceInfo(getDriveControllerName(swerveInstance), 38, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            38,
+                            new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
-                    new DeviceInfo(getDriveControllerName(swerveInstance), 21, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            21,
+                            new CANMotorControllerOutputConfig());
             default -> null;
         };
     }
 
     @Override
-    public DeviceInfo getSteeringMotor(SwerveInstance swerveInstance) {
+    public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
         double simulationScalingValue = 1.0;
 
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringControllerName(swerveInstance), 30, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            30,
+                            new CANMotorControllerOutputConfig());
             case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringControllerName(swerveInstance), 28, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            28,
+                            new CANMotorControllerOutputConfig());
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringControllerName(swerveInstance), 39, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            39,
+                            new CANMotorControllerOutputConfig());
             case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringControllerName(swerveInstance), 20, false, simulationScalingValue);
+                    new CANMotorControllerInfo(
+                            getDriveControllerName(swerveInstance),
+                            MotorControllerType.SparkMax,
+                            CANBusId.RIO,
+                            20,
+                            new CANMotorControllerOutputConfig());
             default -> null;
         };
     }

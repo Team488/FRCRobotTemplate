@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
-import xbot.common.controls.actuators.XCANSparkMax;
+import xbot.common.controls.actuators.XCANMotorController;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -35,8 +35,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean staticHeadingActive = false;
 
     @Inject
-    public DriveSubsystem(XCANSparkMax.XCANSparkMaxFactory sparkMaxFactory, XPropertyManager propManager,
-                          ElectricalContract contract, PIDManagerFactory pidFactory, PropertyFactory pf,
+    public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
                           @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
                           @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve) {
 

@@ -4,9 +4,7 @@ import javax.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import org.apache.logging.log4j.LogManager;
 import xbot.common.command.BaseCommand;
-import xbot.common.controls.actuators.XCANSparkMax;
 import xbot.common.math.MathUtils;
 
 public class TankDriveWithJoysticksCommand extends BaseCommand {

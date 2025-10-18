@@ -13,10 +13,13 @@ import xbot.common.math.WrappedRotation2d;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
+import java.util.Optional;
+
 @Singleton
 public class PoseSubsystem extends BasePoseSubsystem {
 
     final SwerveDrivePoseEstimator onlyWheelsGyroSwerveOdometry;
+    protected Optional<SwerveModulePosition[]> simulatedModulePositions = Optional.empty();
 
     private final DriveSubsystem drive;
 
@@ -75,6 +78,11 @@ public class PoseSubsystem extends BasePoseSubsystem {
     }
 
     private SwerveModulePosition[] getSwerveModulePositions() {
+        // if we have simulated data, return that directly instead of asking the
+        // modules
+        if (simulatedModulePositions.isPresent()) {
+            return simulatedModulePositions.get();
+        }
         return new SwerveModulePosition[] {
                 drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
                 drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(),
@@ -101,5 +109,11 @@ public class PoseSubsystem extends BasePoseSubsystem {
                 newPoseInMeters.getTranslation().getY(),
                 WrappedRotation2d.fromRotation2d(newPoseInMeters.getRotation())
         );
+    }
+
+    // used by the physics simulator to mock what the swerve modules are doing
+    // currently for pose estimation
+    public void ingestSimulatedSwerveModulePositions(SwerveModulePosition[] positions) {
+        this.simulatedModulePositions = Optional.of(positions);
     }
 }

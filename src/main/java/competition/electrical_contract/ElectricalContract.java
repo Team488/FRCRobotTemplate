@@ -1,5 +1,6 @@
 package competition.electrical_contract;
 
+import competition.subsystems.shooter.ShooterSubsystem;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANTalonInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -20,4 +21,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
 
     public abstract XYPair getSwerveModuleOffsetsInInches(SwerveInstance swerveInstance);
+
+    //public abstract DeviceInfo getShoot();
 }

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.subsystems.shooter.ShooterSubsystem;
-import competition.subsystems.shooter.commands.DecrasingMotorCommand;
+import competition.subsystems.shooter.commands.DecreasingMotorCommand;
 import competition.subsystems.shooter.commands.IncreasingMotorCommand;
 import competition.subsystems.shooter.commands.StartMotorCommand;
 import competition.subsystems.shooter.commands.StopMotorCommand;
@@ -22,16 +22,17 @@ public class OperatorCommandMap {
 
     }
 
+    @Inject
     public void setUpGamePad(OperatorInterface oi,
                              ShooterSubsystem shooterSubsystem,
                              StartMotorCommand startMotorCommand,
                              StopMotorCommand stopMotorCommand,
                              IncreasingMotorCommand increasingMotorCommand,
-                             DecrasingMotorCommand decreasingMotorCommand) {
+                             DecreasingMotorCommand decreasingMotorCommand) {
         oi.gamepad.getXboxButton(XXboxController.XboxButton.Start).onTrue(startMotorCommand);
         oi.gamepad.getXboxButton(XXboxController.XboxButton.Back).onTrue(stopMotorCommand);
-        oi.gamepad.getXboxButton(XXboxController.XboxButton.LeftTrigger).whileTrue(increasingMotorCommand);
-        oi.gamepad.getXboxButton(XXboxController.XboxButton.RightTrigger).whileTrue(decreasingMotorCommand);
+        oi.gamepad.getXboxButton(XXboxController.XboxButton.LeftTrigger).whileTrue(decreasingMotorCommand);
+        oi.gamepad.getXboxButton(XXboxController.XboxButton.RightTrigger).whileTrue(increasingMotorCommand);
 
 
     }

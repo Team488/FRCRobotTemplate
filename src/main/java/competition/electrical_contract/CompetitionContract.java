@@ -23,12 +23,12 @@ public class CompetitionContract extends ElectricalContract {
 
     @Override
     public boolean isDriveReady() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean areCanCodersReady() {
-        return true;
+        return false;
     }
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {

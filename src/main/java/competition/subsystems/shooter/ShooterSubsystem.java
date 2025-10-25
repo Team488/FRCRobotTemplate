@@ -17,7 +17,9 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ShooterSubsystem extends BaseSubsystem {
     final DoubleProperty upperRpm;
     final DoubleProperty lowerRpm;
@@ -28,6 +30,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     final DoubleProperty rpmIncrease;
     final DoubleProperty rpmDecrease;
 
+
+
     final XCANMotorController shooter1;
     final XCANMotorController shooter2;
 
@@ -36,39 +40,48 @@ public class ShooterSubsystem extends BaseSubsystem {
 
 
     @Inject
-    public ShooterSubsystem(XCANCoder.XCANCoderFactory sparkFactory, PropertyFactory pf,
-                            ElectricalContract el, PoseSubsystem poseSubsystem, PIDManager.PIDManagerFactory pidMFactory,
-                            PIDController pidController, XCANMotorController xcanMotorController,
+    public ShooterSubsystem(PropertyFactory pf, ElectricalContract el,
                             XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory) {
         this.el = el;
         pf.setPrefix(this);
         upperRpm = pf.createPersistentProperty("UpperRPM", 0);
         lowerRpm = pf.createPersistentProperty("LowerRPM", 0);
-        startingRpm1 = pf.createPersistentProperty("Starting rpm 1",2000);
-        startingRpm2 = pf.createPersistentProperty("Starting rpm 2",2000);
+        startingRpm1 = pf.createPersistentProperty("Starting rpm 1",200);
+        startingRpm2 = pf.createPersistentProperty("Starting rpm 2",200);
         minRpm = pf.createPersistentProperty("Minimum rpm", 0);
         maxRpm = pf.createPersistentProperty("Max rpm limit", 4000);
         rpmIncrease = pf.createPersistentProperty("rpmIncreaseRate", 1.1); //Increase rpm by 10%
         rpmDecrease = pf.createPersistentProperty("rpmDecreaseRate", .9); //Increase rpm by 10%
 
 
-        shooter1 = xcanMotorControllerFactory.create(new CANMotorControllerInfo("AlgaeCollectionMotor",
+
+        shooter1 = xcanMotorControllerFactory.create(new CANMotorControllerInfo("Shooter1",
                 MotorControllerType.SparkMax,
                 CANBusId.RIO,
                 32,
-                new CANMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)), "1", "1");
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)), getPrefix(), "PID");
         //shooter2 = xcanMotorControllerFactory.create(xcanMotorController, "2", "2'");
-        shooter2 = xcanMotorControllerFactory.create(new CANMotorControllerInfo("AlgaeCollectionMotor",
+        shooter2 = xcanMotorControllerFactory.create(new CANMotorControllerInfo("Shooter2",
                 MotorControllerType.SparkMax,
                 CANBusId.RIO,
-                33,
-                new CANMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)), "1", "1");
+                36,
+                new CANMotorControllerOutputConfig()
+                        .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)), getPrefix(), "PID");
 
-
+        shooter1.setPidProperties(
+                0.01,
+                0,
+                0);
+        shooter2.setPidProperties(
+                0.01,
+                0,
+                0);
     }
 
+   // public boolean isShooterMotorReady(){
 
-
+    //}
 
     public void stopMotors(){
         shooter1.setPower(0);
@@ -77,9 +90,12 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
 
+
     public void startMotor(){
-        shooter1.setVelocityTarget(Units.RPM.of(startingRpm1.get()));
-        shooter2.setVelocityTarget(Units.RPM.of(startingRpm2.get()));
+        shooter1.setPower(1);
+        shooter2.setPower(1);
+        //shooter1.setVelocityTarget(Units.RPM.of(startingRpm1.get()));
+        //shooter2.setVelocityTarget(Units.RPM.of(startingRpm2.get()));
     }
 
     public void increaseMotorRpm(){
@@ -93,6 +109,8 @@ public class ShooterSubsystem extends BaseSubsystem {
         shooter1.setVelocityTarget(Units.RPM.of(startingRpm1.get()).times(rpmDecrease.get()));
         shooter2.setVelocityTarget(Units.RPM.of(startingRpm2.get()).times(rpmDecrease.get()));
     }
+
+
 
 
 

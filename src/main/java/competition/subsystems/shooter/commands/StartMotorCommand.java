@@ -1,11 +1,16 @@
 package competition.subsystems.shooter.commands;
 
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.shooter.ShooterSubsystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseCommand;
 
 import javax.inject.Inject;
 
 public class StartMotorCommand extends BaseCommand {
+    private static Logger log = LogManager.getLogger(StartMotorCommand.class);
+
     ShooterSubsystem shooter;
 
 
@@ -19,6 +24,7 @@ public class StartMotorCommand extends BaseCommand {
     @Override
     public void initialize() {
         shooter.startMotor();
+        log.info("Initialized");
 
     }
 

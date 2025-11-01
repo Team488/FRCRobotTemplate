@@ -8,7 +8,6 @@ import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
-import xbot.common.injection.electrical_contract.CANTalonInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
@@ -142,5 +141,15 @@ public class CompetitionContract extends ElectricalContract {
             case "RearRightDrive" -> new XYPair(-15, -15);
             default -> new XYPair(0, 0);
         };
+    }
+
+    @Override
+    public double getSteeringGearRatio() {
+        return 12.1; // Documented value for WCP x2i.
+    }
+
+    @Override
+    public double getDriveGearRatio() {
+        return 6.48; // Documented value for WCP x2i with X3 10t gears.
     }
 }

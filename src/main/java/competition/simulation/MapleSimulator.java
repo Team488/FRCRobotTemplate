@@ -95,12 +95,7 @@ public class MapleSimulator implements BaseSimulator {
 
     protected void updateDriveSimulation() {
         // drive simulated robot from requested robot commands
-        swerveDriveSimulation.runSwerveStates(new SwerveModuleState[] {
-                drive.getFrontLeftSwerveModuleSubsystem().getTargetState(),
-                drive.getFrontRightSwerveModuleSubsystem().getTargetState(),
-                drive.getRearLeftSwerveModuleSubsystem().getTargetState(),
-                drive.getRearRightSwerveModuleSubsystem().getTargetState()
-        });
+        swerveDriveSimulation.runSwerveStates(drive.getTargetSwerveStates().toArray());
 
         // run the simulation
         arena.simulationPeriodic();

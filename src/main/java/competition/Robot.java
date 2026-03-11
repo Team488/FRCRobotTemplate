@@ -2,10 +2,10 @@
 package competition;
 
 import competition.injection.components.BaseRobotComponent;
-import competition.injection.components.DaggerPracticeRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
@@ -20,6 +20,7 @@ public class Robot extends BaseRobot {
     public static final double LOOP_INTERVAL = 0.02;
 
     BaseSimulator simulator;
+    OperatorInterface oi;
 
     Robot() {
         super(LOOP_INTERVAL);
@@ -35,6 +36,7 @@ public class Robot extends BaseRobot {
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
         }
+        oi = getInjectorComponent().operatorInterface();
 
         dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
         dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
@@ -50,9 +52,6 @@ public class Robot extends BaseRobot {
             String chosenContract = Preferences.getString("ContractToUse", "Competition");
 
             switch (chosenContract) {
-                case "Practice":
-                    System.out.println("Using practice contract");
-                    return DaggerPracticeRobotComponent.create();
                 case "Robox":
                     System.out.println("Using Robox contract");
                     return DaggerRoboxComponent.create();
@@ -97,6 +96,15 @@ public class Robot extends BaseRobot {
 
         if (simulator != null) {
             simulator.update();
+        }
+    }
+
+    @Override
+    protected void sharedPeriodic() {
+        super.sharedPeriodic();
+
+        if (this.oi != null) {
+            this.oi.periodic();
         }
     }
 }

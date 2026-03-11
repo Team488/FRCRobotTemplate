@@ -16,15 +16,6 @@ public class OperatorCommandMap {
 
     @Inject
     public OperatorCommandMap() {}
-    
-    // Example for setting up a command to fire when a button is pressed:
-    @Inject
-    public void setupMyCommands(
-            OperatorInterface operatorInterface,
-            SetRobotHeadingCommand resetHeading) {
-        resetHeading.setHeadingToApply(0);
-        operatorInterface.gamepad.getifAvailable(1).onTrue(resetHeading);
-    }
 
     @Inject
     public void setupDriveCommands(OperatorInterface operatorInterface,

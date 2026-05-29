@@ -3,24 +3,28 @@ package competition.subsystems.drive;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
-import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.command.BaseRobot;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
+import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
+import xbot.common.math.XYPair;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 import java.util.function.Supplier;
@@ -32,6 +36,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
     private Rotation2d staticHeadingTarget = new Rotation2d(); // The heading you want to constantly be at
     private boolean lookAtPointActive = false;
+    private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
 
     @Inject
@@ -44,6 +49,36 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+    }
+
+    @Override
+    protected PIDDefaults getPositionalPIDDefaults() {
+        return new PIDDefaults(
+                1.08, // P
+                0, // I
+                4.0, // D
+                0.0, // F
+                0.6, // Max output
+                -0.6, // Min output
+                0.05, // Error threshold
+                0.005, // Derivative threshold
+                0.2); // Time threshold
+    }
+
+    @Override
+    protected PIDDefaults getHeadingPIDDefaults() {
+        var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
+        return new PIDDefaults(
+                0.008, // P
+                0.0005, // I
+                0.01, // D
+                0.0, // F
+                0.75, // Max output
+                -0.75, // Min output
+                errorThreshold, // Error threshold
+                0.2, // Derivative threshold
+                0.2, // Time threshold
+                10); // IZone
     }
 
     public Translation2d getLookAtPointTarget() {
@@ -78,6 +113,14 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         this.lookAtPointActive = lookAtPointActive;
     }
 
+    public void setLookAtPointInverted(boolean lookAtPointInverted) {
+        this.lookAtPointInverted = lookAtPointInverted;
+    }
+
+    public boolean getLookAtPointInverted() {
+        return lookAtPointInverted;
+    }
+
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
         return new InstantCommand(() -> {
             setStaticHeadingTarget(staticHeadingTarget.get());
@@ -97,5 +140,31 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
             setStaticHeadingTargetActive(false);
             setLookAtPointTargetActive(false);
         });
+    }
+
+    /**
+     * Gets the current robot-relative chassis speeds by converting the current swerve module states
+     * through inverse kinematics. This is needed by PathPlanner's AutoBuilder.
+     * @return The current robot-relative ChassisSpeeds.
+     */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        var states = getCurrentSwerveStates();
+        return getSwerveDriveKinematics().toChassisSpeeds(states.toArray());
+    }
+
+    /**
+     * Drives the robot using the given robot-relative ChassisSpeeds. Converts the ChassisSpeeds
+     * to individual swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
+     * @param chassisSpeeds The desired robot-relative chassis speeds.
+     */
+    public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+        SwerveModuleState[] moduleStates = getSwerveDriveKinematics().toSwerveModuleStates(chassisSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, getMaxTargetSpeedMetersPerSecond());
+
+        aKitLog.record("DesiredSwerveState", moduleStates);
+        this.getFrontLeftSwerveModuleSubsystem().setTargetState(moduleStates[0]);
+        this.getFrontRightSwerveModuleSubsystem().setTargetState(moduleStates[1]);
+        this.getRearLeftSwerveModuleSubsystem().setTargetState(moduleStates[2]);
+        this.getRearRightSwerveModuleSubsystem().setTargetState(moduleStates[3]);
     }
 }

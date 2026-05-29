@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
@@ -149,6 +150,16 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public double getSteeringGearRatio() {
         return 12.1; // Documented value for WCP x2i.
+    }
+
+    /**
+     * Returns the largest radius of the robot.
+     *
+     * @return The longest point to the edge of the robot back to the center.
+     */
+    @Override
+    public Distance getRadiusOfRobot() {
+        return null;
     }
 
     @Override

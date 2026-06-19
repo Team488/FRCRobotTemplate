@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
     private final Set<Hardware> readinessSet;
 

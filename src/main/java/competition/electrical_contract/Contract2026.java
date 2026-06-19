@@ -11,15 +11,11 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.Units;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
-import xbot.common.injection.electrical_contract.CANLightControllerInfo;
-import xbot.common.injection.electrical_contract.CANLightControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
-import xbot.common.injection.electrical_contract.LEDStripType;
-import xbot.common.injection.electrical_contract.LightControllerType;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.PowerSource;
@@ -35,7 +31,6 @@ import java.util.Set;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Seconds;
 
 public class Contract2026 extends HardwareContract {
 

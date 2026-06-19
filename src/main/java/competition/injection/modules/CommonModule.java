@@ -1,6 +1,9 @@
 package competition.injection.modules;
 
+import competition.electrical_contract.Contract2023;
+import competition.electrical_contract.Contract2026;
 import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.HardwareContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
@@ -96,4 +99,9 @@ public abstract class CommonModule {
     @Binds
     @Singleton
     public abstract ISwerveAdvisorPoseSupport getSwerveAdvisorPoseSupport(PoseSubsystem impl);
+
+    @Provides
+    public static HardwareContract getHardwareContract() {
+        return new Contract2026();
+    }
 }

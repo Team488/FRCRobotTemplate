@@ -27,7 +27,7 @@ import java.util.Set;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2025 extends GeneralContract {
+public class Contract2025 extends HardwareContract {
 
     @Inject
     public Contract2025() {

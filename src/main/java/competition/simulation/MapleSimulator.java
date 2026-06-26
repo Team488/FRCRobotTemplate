@@ -11,7 +11,6 @@ import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 
 import competition.Robot;
 import competition.subsystems.drive.DriveSubsystem;
@@ -38,7 +37,6 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
-    final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
     @Inject
@@ -47,16 +45,6 @@ public class MapleSimulator implements BaseSimulator {
         this.drive = drive;
 
         aKitLog = new AKitLogger("Simulator/");
-
-        /**
-         * MapleSim arena and drive setup
-         */
-        arena = new org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt(false);
-        SimulatedArena.overrideInstance(arena);
-        
-        // uncomment this to force all fuel onto the sim, otherwise it defaults to 1/3rd of the fuel for perf reasons
-        //((Arena2026Rebuilt)arena).setEfficiencyMode(false);
-        arena.resetFieldForAuto();
 
         var ourConfig = new DriveTrainSimulationConfig(
                 Units.Kilograms.of((double)45.0F),
@@ -89,8 +77,6 @@ public class MapleSimulator implements BaseSimulator {
         // Tell the robot it's starting in the same spot
         pose.setCurrentPoseInMeters(startingPose);
 
-        arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
-
         // TODO: this should depend on when we actually deploy and run our collector
         // but for now just auto deploy it right away
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
@@ -105,7 +91,6 @@ public class MapleSimulator implements BaseSimulator {
         swerveDriveSimulation.runSwerveStates(drive.getTargetSwerveStates().toArray());
 
         // run the simulation
-        arena.simulationPeriodic();
         swerveDriveSimulation.periodic();
 
         // this is where the robot really is in the sim
@@ -122,7 +107,6 @@ public class MapleSimulator implements BaseSimulator {
 
     @Override
     public void resetPosition(Pose2d pose) {
-        arena.resetFieldForAuto();
         this.swerveDriveSimulation.getDriveTrainSimulation().setSimulationWorldPose(pose);
         this.pose.setCurrentPoseInMeters(pose);
     }
@@ -130,9 +114,5 @@ public class MapleSimulator implements BaseSimulator {
     @Override
     public Pose2d getGroundTruthPose() {
         return this.swerveDriveSimulation.getActualPoseInSimulationWorld();
-    }
-
-    public void resetForAuto() {
-        arena.resetFieldForAuto();
     }
 }

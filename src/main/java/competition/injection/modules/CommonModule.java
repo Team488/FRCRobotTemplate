@@ -63,25 +63,6 @@ public abstract class CommonModule {
 
     @Provides
     @Singleton
-    public static AprilTagFieldLayout fieldLayout() {
-        // Initialize the contract to use if this is a fresh robot. Assume competition since that's the safest.
-        if (!Preferences.containsKey("AprilTagFieldLayout")) {
-            Preferences.setString("AprilTagFieldLayout", "2026_welded");
-        }
-
-        String chosenField = Preferences.getString("FieldLayout", "2026_welded");
-        switch (chosenField) {
-            case "2026_andymark":
-                log.info("Using 2026 Andymark April Tag Field Layout.");
-                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
-            default:
-                log.info("Using 2026 Welded April Tag Field Layout default for competition.");
-                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
-        }
-    }
-
-    @Provides
-    @Singleton
     public static GameField.Symmetry fieldSymmetry() {
         return GameField.Symmetry.Rotational;
     }

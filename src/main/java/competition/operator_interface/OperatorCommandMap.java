@@ -32,8 +32,7 @@ public class OperatorCommandMap {
     public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider) { }
 
     @Inject
-    public void setupSimulatorCommands(ResetSimulatedPoseCommand resetPose) {
-        resetPose.includeOnSmartDashboard();
+    public void setupSimulatorCommands() {
     }
 
     @Inject

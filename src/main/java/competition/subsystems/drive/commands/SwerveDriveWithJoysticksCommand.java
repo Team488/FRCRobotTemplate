@@ -1,14 +1,17 @@
 package competition.subsystems.drive.commands;
 
+import javax.inject.Inject;
+
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import xbot.common.command.BaseCommand;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
-import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
-import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
-import competition.subsystems.pose.PoseSubsystem;
-import xbot.common.command.BaseCommand;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
@@ -16,8 +19,8 @@ import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule.HeadingModuleFactory;
-
-import javax.inject.Inject;
+import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
+import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
 
 public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
@@ -26,8 +29,13 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     PoseSubsystem pose;
     HeadingModule headingModule;
 
-    DoubleProperty overallDrivingPowerScale;
-    DoubleProperty overallTurningPowerScale;
+    XGyro xGyro;
+
+    final DoubleProperty overallDrivingPowerScale;
+    final DoubleProperty overallTurningPowerScale;
+    final DoubleProperty precisionTranslationScale;
+    final DoubleProperty extremePrecisionTranslationScale;
+    final DoubleProperty precisionRotationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
@@ -35,22 +43,32 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     @Inject
     public SwerveDriveWithJoysticksCommand(
             OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
-            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory) {
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
+            SwerveDriveRotationAdvisor.Factory advisorFactory
+    ) {
         pf.setPrefix(this);
         this.drive = drive;
+        this.xGyro = pose.imu;
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
         this.hvmDecider = hvmFactory.create(pf.getPrefix());
-        this.advisor = new SwerveDriveRotationAdvisor(pose, drive, pf, hvmDecider);
+        this.advisor = advisorFactory.create(hvmDecider);
+        this.advisor.setSnappingZoneCount(4);
         pf.setDefaultLevel(Property.PropertyLevel.Important);
         this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
+        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.1);
+        this.extremePrecisionTranslationScale = pf.createPersistentProperty(
+                "ExtremePrecisionTranslationScale", 0.15);
+        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.2);
+
         this.addRequirements(drive);
     }
 
     @Override
     public void initialize() {
+        super.initialize();
         log.info("Initializing");
         advisor.resetDecider();
         drive.setDesiredHeading(pose.getCurrentHeading().getDegrees());
@@ -80,11 +98,13 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
                 pose.getCurrentHeading().getDegrees(),
                 new XYPair(0,0)
         );
+
+        aKitLog.record("HumanTranslationIntentX", translationIntent.x);
+        aKitLog.record("HumanTranslationIntentY", translationIntent.y);
+        aKitLog.record("HumanRotationIntent", rawRotationIntent);
     }
 
     private XYPair getRawHumanTranslationIntent() {
-        double xIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getX(), 0.15);
-        double yIntent = MathUtils.deadband(oi.gamepad.getLeftVector().getY(), 0.15);
         double xIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getX(), 0.15);
         double yIntent = MathUtils.deadband(oi.driverGamepad.getLeftVector().getY(), 0.15);
 
@@ -100,8 +120,6 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double getRawHumanRotationIntent() {
         // Deadband is to prevent buggy joysticks/triggers
-        double rotateLeftIntent = MathUtils.deadband(oi.gamepad.getLeftTrigger(), 0.05);
-        double rotateRightIntent = MathUtils.deadband(oi.gamepad.getRightTrigger(), 0.05);
         double rotateLeftIntent = MathUtils.deadband(oi.driverGamepad.getLeftTrigger(), 0.05);
         double rotateRightIntent = MathUtils.deadband(oi.driverGamepad.getRightTrigger(), 0.05);
 
@@ -114,10 +132,18 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Checks the right joystick input to see if we want to snap to a certain side
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
-        XYPair joystickInput = new XYPair(-oi.gamepad.getRightVector().getX(), oi.gamepad.getRightVector().getY()).rotate(-90);
-        XYPair joystickInput = new XYPair(-oi.driverGamepad.getRightVector().getX(), oi.driverGamepad.getRightVector().getY()).rotate(-90);
+        Translation2d joystickInput;
+        if (xGyro != null && xGyro.isBroken()){
+            joystickInput = new Translation2d();
+        } else {
+            joystickInput = oi.driverGamepad.getRightVector();
+        }
+        Translation2d processedInput = new Translation2d(
+                -joystickInput.getX(),
+                joystickInput.getY()
+        ).rotateBy(Rotation2d.fromDegrees(-90));
 
-        SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(joystickInput, triggerRotateIntent);
+        SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
     }
 
@@ -139,9 +165,9 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         if (!drive.isUnlockFullDrivePowerActive()) {
             // Scale translationIntent if precision modes active, values from XBot2024 repository
             if (drive.isExtremePrecisionTranslationActive()) {
-                intent = intent.scale(0.15);
+                intent = intent.scale(extremePrecisionTranslationScale.get());
             } else if (drive.isPrecisionTranslationActive()) {
-                intent = intent.scale(0.50);
+                intent = intent.scale(precisionTranslationScale.get());
             }
         }
         return intent;
@@ -149,14 +175,13 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
         return switch (suggested.type) {
-            case DesiredHeading -> {
-                yield headingModule.calculateHeadingPower(suggested.value);
-            }
+            case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
             case HumanControlHeadingPower -> {
                 if (drive.isPrecisionRotationActive()) {
-                    yield suggested.value *= 0.25;
+                    yield suggested.value *= precisionRotationScale.get();
+                } else {
+                    yield suggested.value;
                 }
-                yield suggested.value;
             }
         };
     }

@@ -16,23 +16,27 @@ import xbot.common.properties.PropertyFactory;
  */
 @Singleton
 public class OperatorInterface {
-    public XXboxController gamepad;
     public XXboxController driverGamepad;
+    public XXboxController operatorGamepad;
+    public XXboxController setupDebugGamepad;
 
     final DoubleProperty driverDeadband;
     final DoubleProperty operatorDeadband;
 
     @Inject
-    public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager) {
-        gamepad = controllerFactory.create(0);
-        gamepad.setLeftInversion(false, true);
-        gamepad.setRightInversion(true, true);
-
     public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager,
-            PropertyFactory pf) {
+                             PropertyFactory pf) {
         driverGamepad = controllerFactory.create(0);
         driverGamepad.setLeftInversion(false, true);
         driverGamepad.setRightInversion(true, true);
+
+        operatorGamepad = controllerFactory.create(1);
+        operatorGamepad.setLeftInversion(false,true);
+        operatorGamepad.setRightInversion(true,true);
+
+        setupDebugGamepad = controllerFactory.create(2);
+        setupDebugGamepad.setLeftInversion(false,true);
+        setupDebugGamepad.setRightInversion(true,true);
 
         pf.setPrefix("OperatorInterface");
         pf.setDefaultLevel(Property.PropertyLevel.Debug);
@@ -46,5 +50,10 @@ public class OperatorInterface {
 
     public double getOperatorGamepadTypicalDeadband() {
         return operatorDeadband.get();
+    }
+
+    public void periodic() {
+        driverGamepad.getRumbleManager().periodic();
+        operatorGamepad.getRumbleManager().periodic();
     }
 }

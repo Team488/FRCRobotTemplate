@@ -1,20 +1,5 @@
 package competition.simulation;
 
-import competition.Robot;
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
-import org.ironmaple.simulation.drivesims.COTS;
-import xbot.common.advantage.AKitLogger;
-import xbot.common.controls.sensors.mock_adapters.MockGyro;
-import xbot.common.logic.TimeStableValidator;
-
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -22,9 +7,24 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
+
+import competition.Robot;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+import xbot.common.advantage.AKitLogger;
+import xbot.common.controls.sensors.mock_adapters.MockGyro;
+import xbot.common.logic.TimeStableValidator;
 
 @Singleton
 public class MapleSimulator implements BaseSimulator {
@@ -38,7 +38,7 @@ public class MapleSimulator implements BaseSimulator {
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
-    final SimulatedArena arena;
+    final Arena2026Rebuilt arena;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
     @Inject
@@ -51,7 +51,11 @@ public class MapleSimulator implements BaseSimulator {
         /**
          * MapleSim arena and drive setup
          */
-        arena = SimulatedArena.getInstance();
+        arena = new org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt(false);
+        SimulatedArena.overrideInstance(arena);
+        
+        // uncomment this to force all fuel onto the sim, otherwise it defaults to 1/3rd of the fuel for perf reasons
+        //((Arena2026Rebuilt)arena).setEfficiencyMode(false);
         arena.resetFieldForAuto();
 
         var ourConfig = new DriveTrainSimulationConfig(
@@ -60,12 +64,13 @@ public class MapleSimulator implements BaseSimulator {
                 Units.Meters.of(0.76),
                 Units.Meters.of(0.52),
                 Units.Meters.of(0.52),
+                COTS.ofPigeon2(),
                 COTS.ofMark4(
                         DCMotor.getKrakenX60(1),
                         DCMotor.getKrakenX60(1),
                         COTS.WHEELS.SLS_PRINTED_WHEELS.cof,
-                        3),
-                COTS.ofPigeon2());
+                        3)
+        );
 
         // TODO: custom things to provide here like motor ratios and what have you
         config = ourConfig.withCustomModuleTranslations(new Translation2d[] {
@@ -86,6 +91,8 @@ public class MapleSimulator implements BaseSimulator {
 
         arena.addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
+        // TODO: this should depend on when we actually deploy and run our collector
+        // but for now just auto deploy it right away
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
@@ -104,7 +111,7 @@ public class MapleSimulator implements BaseSimulator {
         // this is where the robot really is in the sim
         aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
 
-        // tell the pose subystem about where the robot has moved based on odometry
+        // tell the pose subsystem about where the robot has moved based on odometry
         pose.ingestSimulatedSwerveModulePositions(swerveDriveSimulation.getLatestModulePositions());
 
         aKitLog.record("RobotVelocity", swerveDriveSimulation.getActualSpeedsFieldRelative());
@@ -123,5 +130,9 @@ public class MapleSimulator implements BaseSimulator {
     @Override
     public Pose2d getGroundTruthPose() {
         return this.swerveDriveSimulation.getActualPoseInSimulationWorld();
+    }
+
+    public void resetForAuto() {
+        arena.resetFieldForAuto();
     }
 }

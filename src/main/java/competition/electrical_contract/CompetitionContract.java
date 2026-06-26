@@ -2,17 +2,15 @@ package competition.electrical_contract;
 
 import javax.inject.Inject;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.swerve.SwerveInstance;
-import xbot.common.math.XYPair;
 
 import static edu.wpi.first.units.Units.Inches;
 
@@ -154,5 +152,11 @@ public class CompetitionContract extends ElectricalContract {
     @Override
     public double getDriveGearRatio() {
         return 6.48; // Documented value for WCP x2i with X3 10t gears.
+    }
+
+    @Override
+    public Distance getRadiusOfRobot() {
+        // placeholder value
+        return Inches.of(21.5);
     }
 }

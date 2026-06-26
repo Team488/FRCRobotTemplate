@@ -3,7 +3,6 @@ package competition.injection.components;
 import javax.inject.Singleton;
 
 import competition.injection.modules.CommonModule;
-import competition.injection.modules.SimulatedRobotModule;
 import competition.injection.modules.UnitTestRobotModule;
 import dagger.Component;
 import xbot.common.injection.modules.MockControlsModule;

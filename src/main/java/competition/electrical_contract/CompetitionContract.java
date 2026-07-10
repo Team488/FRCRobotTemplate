@@ -1,25 +1,33 @@
 package competition.electrical_contract;
 
+import static edu.wpi.first.units.Units.Inches;
+
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
+import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.swerve.SwerveInstance;
 
-import static edu.wpi.first.units.Units.Inches;
-
-public class CompetitionContract extends ElectricalContract {
+public class CompetitionContract extends GeneralContract {
 
     protected final double simulationScalingValue = 256.0 * PoseSubsystem.INCHES_IN_A_METER;
 
     @Inject
-    public CompetitionContract() {}
+    public CompetitionContract() {
+        super(Set.of());
+    }
 
     @Override
     public boolean isDriveReady() {
@@ -30,6 +38,18 @@ public class CompetitionContract extends ElectricalContract {
     public boolean areCanCodersReady() {
         return true;
     }
+
+
+    @Override
+    public IMUInfo getIMUInfo() {
+        return new IMUInfo(XGyro.InterfaceType.spi, PowerSource.RIO);
+    }
+
+    @Override
+    public CameraInfo[] getCameraInfo() {
+        return new CameraInfo[]{};
+    }
+    
 
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";

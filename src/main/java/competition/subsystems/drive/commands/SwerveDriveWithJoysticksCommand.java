@@ -1,17 +1,17 @@
 package competition.subsystems.drive.commands;
 
+import javax.inject.Inject;
+
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import competition.subsystems.pose.PoseSubsystem;
+import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
-import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
-import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
-import competition.subsystems.pose.PoseSubsystem;
-import xbot.common.command.BaseCommand;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
@@ -19,8 +19,8 @@ import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule.HeadingModuleFactory;
-
-import javax.inject.Inject;
+import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
+import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
 
 public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 

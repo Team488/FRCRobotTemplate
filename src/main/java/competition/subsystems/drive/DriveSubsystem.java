@@ -1,5 +1,7 @@
 package competition.subsystems.drive;
 
+import java.util.function.Supplier;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -11,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xbot.common.advantage.AKitLogger;
 import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.command.BaseRobot;
 import xbot.common.injection.swerve.FrontLeftDrive;
@@ -21,13 +22,10 @@ import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
-import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.Property;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
-
-import java.util.function.Supplier;
 
 @Singleton
 public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
@@ -38,6 +36,13 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     private boolean lookAtPointActive = false;
     private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
+    private final DoubleProperty autoInterstitialDistanceErrorThresholdInMeters;
+    private final DoubleProperty autoInterstitialRotationErrorThresholdInDegrees;
+    private final DoubleProperty autoEndDistanceErrorThresholdInMeters;
+    private final DoubleProperty autoEndRotationErrorThresholdInDegrees;
+    private final DoubleProperty maxAutoTargetSpeedMps;
+    private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
+    private final DoubleProperty interstitialSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
@@ -49,6 +54,13 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
 
         pf.setPrefix(this.getPrefix());
         pf.setDefaultLevel(Property.PropertyLevel.Important);
+        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.0);
+        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
+        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 0.4);
+        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
+        this.autoInterstitialRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
+        this.autoEndDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoEndDistanceErrorThresholdInMeters", 0.25);
+        this.autoEndRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoEndRotationErrorThresholdInDegrees", 5.0);
     }
 
     @Override
@@ -121,17 +133,47 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         return lookAtPointInverted;
     }
 
+    public double getMaxAutoTargetSpeedMetersPerSecond() {
+        return this.maxAutoTargetSpeedMps.get();
+    }
+
+    public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
+        return this.maxAutoFuelIntakeTargetSpeedMps.get();
+    }
+
+    public double getInterstitialSpeedMetersPerSecond() {
+        return this.interstitialSpeedMps.get();
+    }
+
+    public double getAutoInterstitialDistanceErrorThresholdInMeters() {
+        return this.autoInterstitialDistanceErrorThresholdInMeters.get();
+    }
+
+    public double getAutoInterstitialRotationErrorThresholdInDegrees() {
+        return this.autoInterstitialRotationErrorThresholdInDegrees.get();
+    }
+
+    public double getAutoEndDistanceErrorThresholdInMeters() {
+        return this.autoEndDistanceErrorThresholdInMeters.get();
+    }
+
+    public double getAutoEndRotationErrorThresholdInDegrees() {
+        return this.autoEndRotationErrorThresholdInDegrees.get();
+    }
+
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
         return new InstantCommand(() -> {
             setStaticHeadingTarget(staticHeadingTarget.get());
-            setStaticHeadingTargetActive(true);}
+            setStaticHeadingTargetActive(true);
+        }
         );
     }
 
     public InstantCommand createSetLookAtPointTargetCommand(Supplier<Translation2d> lookAtPointTarget) {
         return new InstantCommand(() -> {
             setLookAtPointTarget(lookAtPointTarget.get());
-            setLookAtPointTargetActive(true);}
+            setLookAtPointTargetActive(true);
+        }
         );
     }
 
@@ -142,9 +184,12 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
         });
     }
 
+    /** The follow methods are stole directly from Junjie's SCL PR which is probably 99.5% AI Generated */
+
     /**
      * Gets the current robot-relative chassis speeds by converting the current swerve module states
      * through inverse kinematics. This is needed by PathPlanner's AutoBuilder.
+     *
      * @return The current robot-relative ChassisSpeeds.
      */
     public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -155,6 +200,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     /**
      * Drives the robot using the given robot-relative ChassisSpeeds. Converts the ChassisSpeeds
      * to individual swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
+     *
      * @param chassisSpeeds The desired robot-relative chassis speeds.
      */
     public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {

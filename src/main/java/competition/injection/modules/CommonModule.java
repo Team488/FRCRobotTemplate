@@ -1,9 +1,12 @@
 package competition.injection.modules;
 
-import competition.electrical_contract.Contract2023;
 import competition.electrical_contract.Contract2026;
-import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.HardwareContract;
+import javax.inject.Singleton;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
@@ -12,7 +15,6 @@ import dagger.Provides;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.Preferences;
-import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -21,15 +23,7 @@ import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.drive.swerve.ISwerveAdvisorDriveSupport;
 import xbot.common.subsystems.drive.swerve.ISwerveAdvisorPoseSupport;
-import xbot.common.subsystems.drive.swerve.SwerveDriveSubsystem;
-import xbot.common.subsystems.pose.ObstacleMap;
 import xbot.common.subsystems.pose.GameField;
-import xbot.common.subsystems.vision.AprilTagVisionSubsystem;
-
-import javax.inject.Singleton;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Module(subcomponents = { SwerveComponent.class })
 public abstract class CommonModule {

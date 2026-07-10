@@ -1,16 +1,15 @@
 package competition.operator_interface;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
-import competition.subsystems.drive.commands.DebugSwerveModuleCommand;
-import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
-import xbot.common.subsystems.drive.swerve.commands.ChangeActiveSwerveModuleCommand;
+import com.pathplanner.lib.auto.AutoBuilder;
 
-/**
- * Maps operator interface buttons to commands
- */
+import xbot.common.controls.sensors.XXboxController;
+import xbot.common.subsystems.autonomous.SetAutonomousCommand;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
+
 @Singleton
 public class OperatorCommandMap {
 
@@ -18,16 +17,17 @@ public class OperatorCommandMap {
     public OperatorCommandMap() {}
 
     @Inject
-    public void setupDriveCommands(OperatorInterface operatorInterface,
-                                   SetRobotHeadingCommand resetHeading,
-                                   DebugSwerveModuleCommand debugModule,
-                                   ChangeActiveSwerveModuleCommand changeActiveModule,
-                                   SwerveDriveWithJoysticksCommand typicalSwerveDrive) {
-        resetHeading.setHeadingToApply(0);
-        operatorInterface.driverGamepad.getifAvailable(1).onTrue(resetHeading);
+    public void setupOperatorCommands(OperatorInterface operatorInterface) {}
 
-        operatorInterface.driverGamepad.getPovIfAvailable(0).onTrue(debugModule);
-        operatorInterface.driverGamepad.getPovIfAvailable(90).onTrue(changeActiveModule);
-        operatorInterface.driverGamepad.getPovIfAvailable(180).onTrue(typicalSwerveDrive);
-    }
+    @Inject
+    public void setupDriveCommands(OperatorInterface operatorInterface) {}
+
+    @Inject
+    public void setupOperatorGamepad(OperatorInterface operatorInterface) {}
+
+    @Inject
+    public void setupDebugGamepad(OperatorInterface operatorInterface) {}
+
+    @Inject
+    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider) {}
 }

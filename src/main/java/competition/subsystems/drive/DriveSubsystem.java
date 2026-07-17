@@ -13,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.command.BaseRobot;
+import xbot.common.command.DataFrameRegistry;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -28,7 +28,7 @@ import xbot.common.properties.PropertyFactory;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 @Singleton
-public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFrameRefreshable {
+public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     private static Logger log = LogManager.getLogger(DriveSubsystem.class);
 
     private Translation2d lookAtPointTarget = new Translation2d(); // The target point to look at
@@ -47,9 +47,10 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem implements DataFram
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
                           @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
-                          @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve) {
+                          @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve,
+                          DataFrameRegistry dataFrameRegistry) {
 
-        super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve);
+        super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
         log.info("Creating DriveSubsystem");
 
         pf.setPrefix(this.getPrefix());

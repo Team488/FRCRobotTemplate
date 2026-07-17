@@ -7,7 +7,6 @@ import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -36,10 +35,6 @@ public class Robot extends BaseRobot {
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
         }
-        oi = getInjectorComponent().operatorInterface();
-
-        dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {

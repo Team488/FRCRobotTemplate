@@ -203,7 +203,7 @@ task checkstyle(type: Checkstyle) {
 test {
     reports {
         junitXml.required = true
-    }
+    }               
 }
 
 // Configuration for AdvantageKit
@@ -220,15 +220,15 @@ task(electricalReport, type: JavaExec) {
 
 tasks.withType(Test) {
     testLogging.showStandardStreams = true
-
-    afterTest { desc, result ->
+    
+    afterTest { desc, result -> 
         logger.quiet "Executed test ${desc.name} [${desc.className}] with result: ${result.resultType}"
     }
 
     afterSuite { desc, result ->
-        if (!desc.parent) { // will match the outermost suite
-            logger.quiet "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-        }
+      if (!desc.parent) { // will match the outermost suite
+        logger.quiet "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+      }
     }
 }
 

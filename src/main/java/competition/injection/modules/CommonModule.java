@@ -93,9 +93,4 @@ public abstract class CommonModule {
     @Binds
     @Singleton
     public abstract ISwerveAdvisorPoseSupport getSwerveAdvisorPoseSupport(PoseSubsystem impl);
-
-    @Provides
-    public static HardwareContract getHardwareContract() {
-        return new Contract2026();
-    }
 }

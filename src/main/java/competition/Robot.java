@@ -2,10 +2,14 @@
 package competition;
 
 import competition.injection.components.BaseRobotComponent;
-import competition.injection.components.DaggerPracticeRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
+import competition.injection.components.DaggerRobotComponent2023;
+import competition.injection.components.DaggerRobotComponent2025;
+import competition.injection.components.DaggerRobotComponent2026;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
+import competition.injection.components.RobotComponent2023;
+import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
@@ -19,6 +23,7 @@ public class Robot extends BaseRobot {
     public static final double LOOP_INTERVAL = 0.02;
 
     BaseSimulator simulator;
+    OperatorInterface oi;
 
     Robot() {
         super(LOOP_INTERVAL);
@@ -46,16 +51,27 @@ public class Robot extends BaseRobot {
             String chosenContract = Preferences.getString("ContractToUse", "Competition");
 
             switch (chosenContract) {
-                case "Practice":
-                    System.out.println("Using practice contract");
-                    return DaggerPracticeRobotComponent.create();
-                case "Robox":
+                case "Robox" -> {
                     System.out.println("Using Robox contract");
                     return DaggerRoboxComponent.create();
-                default:
-                    System.out.println("Using Competition contract");
+                }
+                case "2023" -> {
+                    System.out.println("Using 2023 contract");
+                    return DaggerRobotComponent2023.create();
+                }
+                case "2025" -> {
+                    System.out.println("Using 2025 contract");
+                    return DaggerRobotComponent2025.create();
+                }
+                case "2026" -> {
+                    System.out.println("Using 2026 contract");
+                    return DaggerRobotComponent2026.create();
+                }
+                default -> {
                     // In all other cases, return the competition component.
+                    System.out.println("Using Competition contract");
                     return DaggerRobotComponent.create();
+                }
             }
         } else {
             return DaggerSimulationComponent.create();
@@ -93,6 +109,15 @@ public class Robot extends BaseRobot {
 
         if (simulator != null) {
             simulator.update();
+        }
+    }
+
+    @Override
+    protected void sharedPeriodic() {
+        super.sharedPeriodic();
+
+        if (this.oi != null) {
+            this.oi.periodic();
         }
     }
 }

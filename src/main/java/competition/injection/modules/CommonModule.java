@@ -1,11 +1,12 @@
 package competition.injection.modules;
 
+import competition.electrical_contract.Contract2026;
+import competition.electrical_contract.HardwareContract;
 import javax.inject.Singleton;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
@@ -14,7 +15,6 @@ import dagger.Provides;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.Preferences;
-import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -59,6 +59,25 @@ public abstract class CommonModule {
         return builder
                 .swerveInstance(new SwerveInstance("RearRightDrive"))
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    public static AprilTagFieldLayout fieldLayout() {
+        // Initialize the contract to use if this is a fresh robot. Assume competition since that's the safest.
+        if (!Preferences.containsKey("AprilTagFieldLayout")) {
+            Preferences.setString("AprilTagFieldLayout", "2026_welded");
+        }
+
+        String chosenField = Preferences.getString("FieldLayout", "2026_welded");
+        switch (chosenField) {
+            case "2026_andymark":
+                log.info("Using 2026 Andymark April Tag Field Layout.");
+                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+            default:
+                log.info("Using 2026 Welded April Tag Field Layout default for competition.");
+                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+        }
     }
 
     @Provides

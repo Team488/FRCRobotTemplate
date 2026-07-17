@@ -1,7 +1,7 @@
 package competition.injection.modules;
 
+import competition.electrical_contract.Contract2025;
 import competition.electrical_contract.ElectricalContract;
-import competition.electrical_contract.PracticeContract;
 import competition.simulation.BaseSimulator;
 import competition.simulation.NoopSimulator;
 import competition.subsystems.drive.DriveSubsystem;
@@ -16,10 +16,10 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 import javax.inject.Singleton;
 
 @Module
-public abstract class PracticeModule {
+public abstract class Module2025 {
     @Binds
     @Singleton
-    public abstract ElectricalContract getElectricalContract(PracticeContract impl);
+    public abstract ElectricalContract getElectricalContract(Contract2025 impl);
 
     @Binds
     @Singleton

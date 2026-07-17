@@ -45,45 +45,47 @@ public class Contract2023 extends HardwareContract {
 
     @Override
     public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+        var driveMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig()
+                .withSmartCurrentLimit(Amps.of(60));
+
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            31,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(60)));
-            case "FrontRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            29,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(60)));
-            case "RearLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            38,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(60)));
-            case "RearRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANBusId.RIO,
-                            21,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(60)));
+            case "FrontLeftDrive" -> new CANMotorControllerInfo(
+                    getDriveControllerName(swerveInstance),
+                    MotorControllerType.SparkMax,
+                    CANBusId.RIO,
+                    31,
+                    driveMotorControllerOutputConfig
+            );
+            case "FrontRightDrive" -> new CANMotorControllerInfo(
+                    getDriveControllerName(swerveInstance),
+                    MotorControllerType.SparkMax,
+                    CANBusId.RIO,
+                    29,
+                    driveMotorControllerOutputConfig
+            );
+            case "RearLeftDrive" -> new CANMotorControllerInfo(
+                    getDriveControllerName(swerveInstance),
+                    MotorControllerType.SparkMax,
+                    CANBusId.RIO,
+                    38,
+                    driveMotorControllerOutputConfig
+            );
+            case "RearRightDrive" -> new CANMotorControllerInfo(
+                    getDriveControllerName(swerveInstance),
+                    MotorControllerType.SparkMax,
+                    CANBusId.RIO,
+                    21,
+                    driveMotorControllerOutputConfig
+            );
             default -> null;
         };
     }
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
+        var steerMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig()
+                .withSmartCurrentLimit(Amps.of(40));
+
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(
@@ -91,32 +93,32 @@ public class Contract2023 extends HardwareContract {
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             30,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(40)));
+                            steerMotorControllerOutputConfig
+                    );
             case "FrontRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             28,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(40)));
+                            steerMotorControllerOutputConfig
+                    );
             case "RearLeftDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             39,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(40)));
+                            steerMotorControllerOutputConfig
+                    );
             case "RearRightDrive" ->
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
                             CANBusId.RIO,
                             20,
-                            new SparkMaxMotorControllerOutputConfig()
-                                    .withSmartCurrentLimit(Amps.of(40)));
+                            steerMotorControllerOutputConfig
+                    );
             default -> null;
         };
     }

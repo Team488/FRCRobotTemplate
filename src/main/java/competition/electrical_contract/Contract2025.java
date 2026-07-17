@@ -47,7 +47,7 @@ public class Contract2025 extends HardwareContract {
     TalonFxMotorControllerOutputConfig regularDriveMotorConfig =
             new TalonFxMotorControllerOutputConfig()
                     .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
-                    .withStatorCurrentLimit(Amps.of(80))
+                    .withStatorCurrentLimit(Amps.of(60))
                     .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
 
     TalonFxMotorControllerOutputConfig invertedDriveMotorConfig =
@@ -74,25 +74,29 @@ public class Contract2025 extends HardwareContract {
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     39,
-                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
+                    regularDriveMotorConfig
+            );
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     31,
-                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
+                    regularDriveMotorConfig
+            );
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     20,
-                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
+                    regularDriveMotorConfig
+            );
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     29,
-                    regularDriveMotorConfig.withStatorCurrentLimit(Amps.of(60)));
+                    regularDriveMotorConfig
+            );
             default -> null;
         };
     }
@@ -103,7 +107,7 @@ public class Contract2025 extends HardwareContract {
         TalonFxMotorControllerOutputConfig invertedSteeringMotorConfig =
                 new TalonFxMotorControllerOutputConfig()
                         .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
-                        .withStatorCurrentLimit(Amps.of(45))
+                        .withStatorCurrentLimit(Amps.of(40))
                         .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
 
         return switch (swerveInstance.label()) {
@@ -112,25 +116,29 @@ public class Contract2025 extends HardwareContract {
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     38,
-                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
+                    invertedSteeringMotorConfig
+            );
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     30,
-                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
+                    invertedSteeringMotorConfig
+            );
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     21,
-                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
+                    invertedSteeringMotorConfig
+            );
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getSteeringControllerName(swerveInstance),
                     MotorControllerType.TalonFx,
                     CANBusId.Canivore,
                     28,
-                    invertedSteeringMotorConfig.withStatorCurrentLimit(Amps.of(40)));
+                    invertedSteeringMotorConfig
+            );
             default -> null;
         };
     }

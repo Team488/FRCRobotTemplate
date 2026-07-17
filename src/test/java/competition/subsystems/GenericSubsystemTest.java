@@ -5,6 +5,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.mockito.Mockito;
+import xbot.common.advantage.DataFrameRefreshable;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
 
@@ -37,13 +38,14 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
         assertNotEquals(0, subsystems.size());
 
         for (Object subsystem : subsystems) {
-            // Run each subsystem refreshDataFrame method
-            Method refreshDataFrameMethod = subsystem.getClass().getMethod("refreshDataFrame");
-            refreshDataFrameMethod.setAccessible(true);
-            try {
-                refreshDataFrameMethod.invoke(subsystem);
-            } catch (Exception e) {
-                fail("Subsystem " + subsystem.getClass().getName() + " failed to call refreshDataFrame:\n" + e);
+            // Not every subsystem implements DataFrameRefreshable - only those that self-register
+            // with DataFrameRegistry (devices, and subsystems like BaseSwerveDriveSubsystem).
+            if (subsystem instanceof DataFrameRefreshable refreshable) {
+                try {
+                    refreshable.refreshDataFrame();
+                } catch (Exception e) {
+                    fail("Subsystem " + subsystem.getClass().getName() + " failed to call refreshDataFrame:\n" + e);
+                }
             }
         }
 
@@ -92,14 +94,14 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
             subsystemMotorControllerMap.put(subsystem, motorControllers);
         }
 
-        // Run each subsystem refreshDataFrame method
+        // Run each subsystem refreshDataFrame method, where implemented
         for (Object subsystem : subsystems) {
-            Method refreshDataFrameMethod = subsystem.getClass().getMethod("refreshDataFrame");
-            refreshDataFrameMethod.setAccessible(true);
-            try {
-                refreshDataFrameMethod.invoke(subsystem);
-            } catch (Exception e) {
-                fail("Subsystem " + subsystem.getClass().getName() + " failed to call refreshDataFrame:\n" + e);
+            if (subsystem instanceof DataFrameRefreshable refreshable) {
+                try {
+                    refreshable.refreshDataFrame();
+                } catch (Exception e) {
+                    fail("Subsystem " + subsystem.getClass().getName() + " failed to call refreshDataFrame:\n" + e);
+                }
             }
         }
 

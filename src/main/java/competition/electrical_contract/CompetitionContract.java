@@ -2,6 +2,7 @@ package competition.electrical_contract;
 
 import javax.inject.Inject;
 
+import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANBusId;

@@ -7,9 +7,12 @@ import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
+import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import xbot.common.command.BaseRobot;
+import xbot.common.math.FieldPose;
+import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
 
@@ -80,5 +83,17 @@ public class Robot extends BaseRobot {
         if (simulator != null) {
             simulator.update();
         }
+    }
+
+    @SuppressWarnings("unused")
+    private FieldPose getFieldOrigin() {
+        // Modify this to whatever the simulator coordinates are for the "FRC origin" of the field.
+        // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
+        // of the field.
+        return new FieldPose(
+            -2.33*PoseSubsystem.INCHES_IN_A_METER, 
+            -4.58*PoseSubsystem.INCHES_IN_A_METER, 
+            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+            );
     }
 }

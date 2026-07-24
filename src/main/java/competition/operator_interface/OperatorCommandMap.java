@@ -4,11 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import xbot.common.controls.sensors.XXboxController;
 import xbot.common.subsystems.autonomous.SetAutonomousCommand;
-import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 @Singleton
 public class OperatorCommandMap {

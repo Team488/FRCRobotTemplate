@@ -2,7 +2,6 @@ package competition.electrical_contract;
 
 import javax.inject.Inject;
 
-import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANBusId;
@@ -80,8 +79,6 @@ public class CompetitionContract extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-        double simulationScalingValue = 1.0;
-
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
                     new CANMotorControllerInfo(

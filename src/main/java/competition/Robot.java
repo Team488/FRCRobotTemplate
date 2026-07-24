@@ -76,6 +76,16 @@ public class Robot extends BaseRobot {
         //webots.setFieldPoseOffset(getFieldOrigin());
     }
 
+    @Override
+    public void simulationPeriodic() {
+        super.simulationPeriodic();
+
+        if (simulator != null) {
+            simulator.update();
+        }
+    }
+
+    @SuppressWarnings("unused")
     private FieldPose getFieldOrigin() {
         // Modify this to whatever the simulator coordinates are for the "FRC origin" of the field.
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
@@ -85,14 +95,5 @@ public class Robot extends BaseRobot {
             -4.58*PoseSubsystem.INCHES_IN_A_METER, 
             BasePoseSubsystem.FACING_TOWARDS_DRIVERS
             );
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        super.simulationPeriodic();
-
-        if (simulator != null) {
-            simulator.update();
-        }
     }
 }

@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.subsystems.arms.BaseArmSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -29,6 +30,7 @@ import xbot.common.logic.TimeStableValidator;
 public class MapleSimulator implements BaseSimulator {
     final PoseSubsystem pose;
     final DriveSubsystem drive;
+    final BaseArmSubsystem arm;
 
     protected final AKitLogger aKitLog;
 
@@ -40,9 +42,10 @@ public class MapleSimulator implements BaseSimulator {
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
     @Inject
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive) {
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, BaseArmSubsystem arm) {
         this.pose = pose;
         this.drive = drive;
+        this.arm = arm;
 
         aKitLog = new AKitLogger("Simulator/");
 
@@ -76,6 +79,9 @@ public class MapleSimulator implements BaseSimulator {
                 new SwerveDriveSimulation(config, startingPose));
         // Tell the robot it's starting in the same spot
         pose.setCurrentPoseInMeters(startingPose);
+
+        arm.setArmState(BaseArmSubsystem.ArmState.STOWED);
+
 
         // TODO: this should depend on when we actually deploy and run our collector
         // but for now just auto deploy it right away

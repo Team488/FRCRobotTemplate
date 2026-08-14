@@ -22,6 +22,8 @@
     <module name="SuppressionCommentFilter"/>
     <module name="OuterTypeFilename"/>
 
+    <module name="UnusedImports"/>
+    <module name="RedundantImport"/>
     <module name="AvoidStarImport"/>
     <module name="OneTopLevelClass"/>
     <module name="NoLineWrap"/>
@@ -76,6 +78,7 @@
     </module>
     <module name="NoFinalizer"/>
     <module name="OverloadMethodsDeclarationOrder"/>
+    <module name="UnusedLocalVariable"/>
     <module name="VariableDeclarationUsageDistance">
       <property name="allowedDistance" value="12"/>
     </module>

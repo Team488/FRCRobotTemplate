@@ -1,12 +1,12 @@
 package competition.subsystems.arms.commands;
 
+import competition.subsystems.arms.BaseArmSubsystem;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.command.BaseMaintainerCommand;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.properties.PropertyFactory;
-import xbot.common.subsystems.arms.BaseArmSubsystem;
 
 import javax.inject.Inject;
 
@@ -24,8 +24,6 @@ public class BaseArmMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
         this.baseArm = baseArm;
         this.controller = controller;
-
-
     }
 
     @Override

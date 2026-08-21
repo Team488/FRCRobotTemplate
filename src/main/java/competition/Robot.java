@@ -7,7 +7,6 @@ import competition.injection.components.DaggerRobotComponent;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.simulation.BaseSimulator;
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -35,9 +34,6 @@ public class Robot extends BaseRobot {
         if (BaseRobot.isSimulation()) {
             simulator = getInjectorComponent().simulator();
         }
-
-        dataFrameRefreshables.add((DriveSubsystem)getInjectorComponent().driveSubsystem());
-        dataFrameRefreshables.add(getInjectorComponent().poseSubsystem());
     }
 
     protected BaseRobotComponent createDaggerComponent() {
@@ -80,6 +76,16 @@ public class Robot extends BaseRobot {
         //webots.setFieldPoseOffset(getFieldOrigin());
     }
 
+    @Override
+    public void simulationPeriodic() {
+        super.simulationPeriodic();
+
+        if (simulator != null) {
+            simulator.update();
+        }
+    }
+
+    @SuppressWarnings("unused")
     private FieldPose getFieldOrigin() {
         // Modify this to whatever the simulator coordinates are for the "FRC origin" of the field.
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner
@@ -89,14 +95,5 @@ public class Robot extends BaseRobot {
             -4.58*PoseSubsystem.INCHES_IN_A_METER, 
             BasePoseSubsystem.FACING_TOWARDS_DRIVERS
             );
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        super.simulationPeriodic();
-
-        if (simulator != null) {
-            simulator.update();
-        }
     }
 }

@@ -49,6 +49,7 @@ public class MapleSimulator implements BaseSimulator {
 
         aKitLog = new AKitLogger("Simulator/");
 
+        @SuppressWarnings("unchecked")
         var ourConfig = new DriveTrainSimulationConfig(
                 Units.Kilograms.of((double)45.0F),
                 Units.Meters.of(0.76),

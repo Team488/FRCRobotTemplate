@@ -5,16 +5,11 @@ import javax.inject.Singleton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.wpilibj.Preferences;
-import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
@@ -27,6 +22,7 @@ import xbot.common.subsystems.pose.GameField;
 
 @Module(subcomponents = { SwerveComponent.class })
 public abstract class CommonModule {
+    @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(CommonModule.class);
 
     @Provides

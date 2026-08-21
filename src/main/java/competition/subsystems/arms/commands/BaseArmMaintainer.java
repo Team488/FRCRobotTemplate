@@ -39,7 +39,7 @@ public class BaseArmMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     @Override
     protected void calibratedMachineControlAction() {
-        baseArm.setAngle(baseArm.targetAngle.in(Units.Degrees));
+        baseArm.setTargetValue(baseArm.targetAngle);
     }
 
     @Override
@@ -53,14 +53,15 @@ public class BaseArmMaintainer extends BaseMaintainerCommand <Angle, Double> {
 
     @Override
     protected Double getHumanInput() {
-        double rawInput = controller.getRawAxis(1);
-        double currentDegrees = baseArm.getCurrentValue().in(Units.Degrees);
 
-        if (Math.abs(rawInput) > 0) {
-            currentDegrees++;
-            baseArm.setTargetValue(Units.Degrees.of(currentDegrees + 1));
-        } else {
-            baseArm.setTargetValue(Units.Degrees.of(currentDegrees - 1));        }
+        double rawInput = controller.getRawAxis(1);
+
+        if (Math.abs(rawInput) > 0.05) {
+            double currentDegrees = baseArm.getCurrentValue().in(Units.Degrees);
+            baseArm.setTargetValue(
+                    Units.Degrees.of(currentDegrees + rawInput)
+            );
+        }
         return rawInput;
 
     }

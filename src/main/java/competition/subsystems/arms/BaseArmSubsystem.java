@@ -16,7 +16,7 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     private DoubleProperty calibrationValue;
 
     private Angle currentArmAngle;
-    public Angle targetAngle;
+    public Angle targetAngle = Units.Degrees.of(45);
 
     boolean isCalibrated = false;
     final Alert isNotCalibratedAlert = new Alert("CoralArm: not calibrated", Alert.AlertType.kWarning);
@@ -59,7 +59,7 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     @Override
     public boolean isCalibrated() {
 
-        if (armMotor.getPower() < .005) {
+        if (Math.abs(armMotor.getPower()) < .005) {
             armMotor.setPower(0.0);
             return true;
         }
@@ -93,13 +93,13 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         this.currentState = newState;
         switch (currentState) {
             case FLAT:
-                targetAngle= Units.Degrees.of(0);
+                setTargetValue(Units.Degrees.of(0));
                 break;
             case EXTENDED:
-                targetAngle= Units.Degrees.of(180);
+                setTargetValue(Units.Degrees.of(180));
                 break;
             default: // STOWED
-                targetAngle = Units.Degrees.of(45);
+                setTargetValue(Units.Degrees.of(45));
         }
     }
 
@@ -108,9 +108,7 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         return currentArmAngle;
     }
 
-    public void setAngle(double degrees){
-        currentArmAngle = Units.Degrees.of(degrees);
-    }
+
 
 
 }

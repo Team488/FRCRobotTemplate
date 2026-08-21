@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import competition.simulation.arm.BaseArmSimulator;
 import competition.subsystems.arms.BaseArmSubsystem;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.COTS;
@@ -94,6 +95,7 @@ public class MapleSimulator implements BaseSimulator {
     }
 
     protected void updateDriveSimulation() {
+        arm.periodic();
         // drive simulated robot from requested robot commands
         swerveDriveSimulation.runSwerveStates(drive.getTargetSwerveStates().toArray());
 

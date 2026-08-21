@@ -21,10 +21,10 @@ public class BaseArmSimulator {
     final PIDManager pidManager;
 
     @Inject
-    public BaseArmSimulator(BaseArmSubsystem arm, PIDManager pidManager, PropertyFactory pf) {
+    public BaseArmSimulator(BaseArmSubsystem arm, PIDManager.PIDManagerFactory pidManager, PropertyFactory pf) {
         this.arm = arm;
         this.armMotor = (MockCANMotorController) arm.armMotor;
-        this.pidManager = pidManager;
+        this.pidManager = pidManager.create("Arm");
     }
 
 

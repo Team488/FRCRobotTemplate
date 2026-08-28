@@ -1,7 +1,5 @@
 package competition.injection.modules;
 
-import competition.electrical_contract.Contract2026;
-import competition.electrical_contract.HardwareContract;
 import javax.inject.Singleton;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +25,7 @@ import xbot.common.subsystems.pose.GameField;
 
 @Module(subcomponents = { SwerveComponent.class })
 public abstract class CommonModule {
+    @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(CommonModule.class);
 
     @Provides

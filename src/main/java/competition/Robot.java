@@ -8,7 +8,6 @@ import competition.injection.components.DaggerRobotComponent2025;
 import competition.injection.components.DaggerRobotComponent2026;
 import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
-import competition.injection.components.RobotComponent2023;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.pose.PoseSubsystem;
@@ -92,6 +91,7 @@ public class Robot extends BaseRobot {
         //webots.setFieldPoseOffset(getFieldOrigin());
     }
 
+    @SuppressWarnings("unused")
     private FieldPose getFieldOrigin() {
         // Modify this to whatever the simulator coordinates are for the "FRC origin" of the field.
         // From a birds-eye view where your alliance station is at the bottom, this is the bottom-left corner

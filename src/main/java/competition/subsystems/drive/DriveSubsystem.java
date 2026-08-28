@@ -5,15 +5,14 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
 import xbot.common.command.DataFrameRegistry;
 import xbot.common.injection.swerve.FrontLeftDrive;
@@ -166,14 +165,16 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {
         return new InstantCommand(() -> {
             setStaticHeadingTarget(staticHeadingTarget.get());
-            setStaticHeadingTargetActive(true);}
+            setStaticHeadingTargetActive(true);
+        }
         );
     }
 
     public InstantCommand createSetLookAtPointTargetCommand(Supplier<Translation2d> lookAtPointTarget) {
         return new InstantCommand(() -> {
             setLookAtPointTarget(lookAtPointTarget.get());
-            setLookAtPointTargetActive(true);}
+            setLookAtPointTargetActive(true);
+        }
         );
     }
 
@@ -189,6 +190,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     /**
      * Gets the current robot-relative chassis speeds by converting the current swerve module states
      * through inverse kinematics. This is needed by PathPlanner's AutoBuilder.
+     *
      * @return The current robot-relative ChassisSpeeds.
      */
     public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -199,6 +201,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     /**
      * Drives the robot using the given robot-relative ChassisSpeeds. Converts the ChassisSpeeds
      * to individual swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
+     *
      * @param chassisSpeeds The desired robot-relative chassis speeds.
      */
     public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {

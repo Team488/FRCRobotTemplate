@@ -1,11 +1,11 @@
 package competition.subsystems.drive.commands;
 
-import javax.inject.Inject;
-
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
 import edu.wpi.first.math.MathUtil;
 import xbot.common.command.BaseCommand;
+
+import javax.inject.Inject;
 
 public class DebugSwerveModuleCommand extends BaseCommand {
 

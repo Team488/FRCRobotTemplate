@@ -4,10 +4,10 @@ import javax.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;

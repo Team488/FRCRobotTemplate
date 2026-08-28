@@ -20,24 +20,4 @@ public abstract class UnitTestRobotModule {
     @Binds
     @Singleton
     public abstract ElectricalContract getElectricalContract(UnitTestCompetitionContract impl);
-
-    @Binds
-    @Singleton
-    public abstract XSwerveDriveElectricalContract getSwerveContract(ElectricalContract impl);
-
-    @Binds
-    @Singleton
-    public abstract BasePoseSubsystem getPoseSubsystem(PoseSubsystem impl);
-
-    @Binds
-    @Singleton
-    public abstract BaseSwerveDriveSubsystem getSwerveDriveSubsystem(DriveSubsystem impl);
-
-    @Binds
-    @Singleton
-    public abstract BaseDriveSubsystem getDriveSubsystem(BaseSwerveDriveSubsystem impl);
-
-    @Binds
-    @Singleton
-    public abstract BaseSimulator getSimulator(NoopSimulator impl);
 }

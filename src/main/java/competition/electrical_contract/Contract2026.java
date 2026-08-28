@@ -149,8 +149,6 @@ public class Contract2026 extends HardwareContract {
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
-        double simulationScalingValue = 1.0;
-
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
                     new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANBusId.Canivore, 53, false);

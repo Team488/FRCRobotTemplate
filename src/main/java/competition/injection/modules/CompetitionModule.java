@@ -3,7 +3,6 @@ package competition.injection.modules;
 import javax.inject.Singleton;
 
 import competition.electrical_contract.Contract2026;
-import competition.electrical_contract.HardwareContract;
 import competition.electrical_contract.ElectricalContract;
 import competition.simulation.BaseSimulator;
 import competition.simulation.NoopSimulator;

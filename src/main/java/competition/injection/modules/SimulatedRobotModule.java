@@ -6,8 +6,6 @@ import competition.electrical_contract.ElectricalContract;
 import competition.electrical_contract.UnitTestCompetitionContract;
 import competition.simulation.BaseSimulator;
 import competition.simulation.MapleSimulator;
-import competition.simulation.arm.BaseArmSimulator;
-import competition.subsystems.arms.BaseArmSubsystem;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;

@@ -1,11 +1,12 @@
 package competition.subsystems.arms;
 
+import competition.electrical_contract.ElectricalContract;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
-import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
@@ -27,11 +28,22 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     private ArmState currentState = ArmState.STOWED;
 
     @Inject
-    public BaseArmSubsystem(XCANMotorController armMotor, PropertyFactory propertyFactory) {
-        super();
-        this.armMotor = armMotor;
-    }
+    public BaseArmSubsystem(XCANMotorController.XCANMotorControllerFactory xcanMotorControllerFactory,
+            ElectricalContract electricalContract,
+            PropertyFactory propertyFactory) {
 
+        super();
+
+        propertyFactory.setPrefix(this);
+
+        this.armMotor = xcanMotorControllerFactory.create(
+                electricalContract.getArmMotorInfo(),
+                getPrefix(),
+                "ArmMotor",
+                new XCANMotorControllerPIDProperties(
+                )
+        );
+    }
     @Override
     public Angle getTargetValue() {
         return targetAngle;

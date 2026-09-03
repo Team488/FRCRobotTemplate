@@ -1,14 +1,10 @@
 package competition.simulation.arm;
 
-import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.arms.BaseArmSubsystem;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.advantage.AKitLogger;
-import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
-import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.math.PIDManager;
-import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
 
 import javax.inject.Inject;

@@ -36,6 +36,7 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
     public abstract IMUInfo getIMUInfo();
 
+
     /**
      * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
      * Override this method in specific contract implementations to specify these connections.
@@ -56,6 +57,10 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Distance getRadiusOfRobot();
 
+    public CANMotorControllerInfo getArmMotorInfo() {
+        return new CANMotorControllerInfo("ArmSubsystem/DefaultMotor", 1);
+    }
+
     protected String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
@@ -67,4 +72,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
     }
+
+
 }

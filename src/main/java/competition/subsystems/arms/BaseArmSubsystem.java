@@ -9,6 +9,8 @@ import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
 
+import javax.inject.Inject;
+
 public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController armMotor;
 
@@ -24,13 +26,10 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
 
     private ArmState currentState = ArmState.STOWED;
 
-    public BaseArmSubsystem(MockCANMotorController.@org.jetbrains.annotations.UnknownNullability MockCANMotorControllerFactory armMotor, PropertyFactory propertyFactory) {
+    @Inject
+    public BaseArmSubsystem(XCANMotorController armMotor, PropertyFactory propertyFactory) {
+        super();
         this.armMotor = armMotor;
-
-        armMotor.setPower(0);
-
-        this.calibrationValue = propertyFactory.createPersistentProperty("Calibration value",.05);
-
     }
 
     @Override

@@ -12,6 +12,10 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
+import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
+import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
@@ -42,5 +46,21 @@ public abstract class SimulatedRobotModule {
     @Binds
     @Singleton
     public abstract BaseSimulator getSimulator(MapleSimulator impl);
+
+    @Module
+    public class ArmModule {
+        @Provides
+        public XCANMotorController provideArmMotor(
+                ElectricalContract contract,
+                MockCANMotorController.MockCANMotorControllerFactory factory) {
+            var defaultPid = new XCANMotorControllerPIDProperties();
+            return factory.create(
+                    contract.getArmMotorInfo(),
+                    "ArmSubsystem",
+                    "Arm",
+                    defaultPid
+            );
+        }
+    }
 
 }

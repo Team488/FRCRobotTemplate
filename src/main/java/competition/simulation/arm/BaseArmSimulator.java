@@ -1,9 +1,12 @@
 package competition.simulation.arm;
 
+import competition.electrical_contract.ElectricalContract;
 import competition.subsystems.arms.BaseArmSubsystem;
 import edu.wpi.first.units.measure.Angle;
 import xbot.common.advantage.AKitLogger;
+import xbot.common.controls.actuators.XCANMotorControllerPIDProperties;
 import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
+import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.PropertyFactory;
 import xbot.common.simulation.MotorInternalPIDHelper;
@@ -21,8 +24,11 @@ public class BaseArmSimulator {
     final PIDManager pidManager;
 
     @Inject
-    public BaseArmSimulator(PIDManager.PIDManagerFactory pidManager, PropertyFactory pf, MockCANMotorController.MockCANMotorControllerFactory armMotor) {
-        this.arm = new BaseArmSubsystem(armMotor, pf);
+    public BaseArmSimulator(
+            BaseArmSubsystem arm,
+            PIDManager.PIDManagerFactory pidManager) {
+        this.arm = arm;
+        // Cast or access the motor directly from the subsystem
         this.armMotor = (MockCANMotorController) arm.armMotor;
         this.pidManager = pidManager.create("Arm");
     }

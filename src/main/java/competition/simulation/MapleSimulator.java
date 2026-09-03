@@ -33,6 +33,8 @@ public class MapleSimulator implements BaseSimulator {
     final DriveSubsystem drive;
     final BaseArmSubsystem arm;
 
+    final BaseArmSimulator armSimulator;
+
     protected final AKitLogger aKitLog;
 
     final Distance humanLoadingDistanceThreshold = Meters.of(0.2);
@@ -42,10 +44,13 @@ public class MapleSimulator implements BaseSimulator {
     final DriveTrainSimulationConfig config;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
-    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, BaseArmSubsystem arm) {
+    @Inject
+    public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, BaseArmSubsystem arm, BaseArmSimulator armSimulator) {
         this.pose = pose;
         this.drive = drive;
         this.arm = arm;
+
+        this.armSimulator = armSimulator;
 
         aKitLog = new AKitLogger("Simulator/");
 
@@ -91,6 +96,7 @@ public class MapleSimulator implements BaseSimulator {
 
     public void update() {
         this.updateDriveSimulation();
+        this.armSimulator.update();
     }
 
     protected void updateDriveSimulation() {

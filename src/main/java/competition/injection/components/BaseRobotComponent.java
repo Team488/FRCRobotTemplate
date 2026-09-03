@@ -2,6 +2,7 @@ package competition.injection.components;
 
 import competition.operator_interface.OperatorCommandMap;
 import competition.simulation.BaseSimulator;
+import competition.simulation.arm.BaseArmSimulator;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import xbot.common.injection.components.BaseComponent;
 import xbot.common.injection.swerve.SwerveComponentHolder;
@@ -17,4 +18,6 @@ public abstract class BaseRobotComponent extends BaseComponent {
     public abstract SwerveComponentHolder swerveComponentHolder();
 
     public abstract BaseSimulator simulator();
+
+    public abstract BaseArmSimulator baseArmSimulator();
 }

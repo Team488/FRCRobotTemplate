@@ -5,10 +5,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Alert;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.controls.actuators.XCANMotorController;
+import xbot.common.controls.actuators.mock_adapters.MockCANMotorController;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.PropertyFactory;
-
-import javax.inject.Inject;
 
 public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public final XCANMotorController armMotor;
@@ -19,17 +18,13 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
     public Angle targetAngle = Units.Degrees.of(45);
 
     boolean isCalibrated = false;
-    final Alert isNotCalibratedAlert = new Alert("CoralArm: not calibrated", Alert.AlertType.kWarning);
+    final Alert isNotCalibratedAlert = new Alert("Arm: not calibrated", Alert.AlertType.kWarning);
 
     private final int currentLimit = 20;
 
     private ArmState currentState = ArmState.STOWED;
 
-
-
-
-    @Inject
-    public BaseArmSubsystem(XCANMotorController armMotor, PropertyFactory propertyFactory) {
+    public BaseArmSubsystem(MockCANMotorController.@org.jetbrains.annotations.UnknownNullability MockCANMotorControllerFactory armMotor, PropertyFactory propertyFactory) {
         this.armMotor = armMotor;
 
         armMotor.setPower(0);
@@ -37,7 +32,6 @@ public class BaseArmSubsystem extends BaseSetpointSubsystem <Angle, Double> {
         this.calibrationValue = propertyFactory.createPersistentProperty("Calibration value",.05);
 
     }
-
 
     @Override
     public Angle getTargetValue() {

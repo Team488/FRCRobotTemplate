@@ -42,7 +42,6 @@ public class MapleSimulator implements BaseSimulator {
     final DriveTrainSimulationConfig config;
     final SelfControlledSwerveDriveSimulation swerveDriveSimulation;
 
-    @Inject
     public MapleSimulator(PoseSubsystem pose, DriveSubsystem drive, BaseArmSubsystem arm) {
         this.pose = pose;
         this.drive = drive;

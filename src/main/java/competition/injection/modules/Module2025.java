@@ -4,6 +4,7 @@ import competition.electrical_contract.Contract2025;
 import competition.electrical_contract.ElectricalContract;
 import dagger.Binds;
 import dagger.Module;
+
 import javax.inject.Singleton;
 
 @Module

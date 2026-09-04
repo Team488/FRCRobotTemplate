@@ -2,6 +2,9 @@ package competition.injection.modules;
 
 import javax.inject.Singleton;
 
+import competition.electrical_contract.ElectricalContract;
+import competition.simulation.BaseSimulator;
+import competition.simulation.NoopSimulator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,14 +16,18 @@ import dagger.Provides;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.wpilibj.Preferences;
+import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
 import xbot.common.injection.swerve.RearLeftDrive;
 import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.injection.swerve.SwerveInstance;
+import xbot.common.subsystems.drive.BaseDriveSubsystem;
+import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 import xbot.common.subsystems.drive.swerve.ISwerveAdvisorDriveSupport;
 import xbot.common.subsystems.drive.swerve.ISwerveAdvisorPoseSupport;
+import xbot.common.subsystems.pose.BasePoseSubsystem;
 import xbot.common.subsystems.pose.GameField;
 
 @Module(subcomponents = { SwerveComponent.class })
@@ -92,4 +99,24 @@ public abstract class CommonModule {
     @Binds
     @Singleton
     public abstract ISwerveAdvisorPoseSupport getSwerveAdvisorPoseSupport(PoseSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract XSwerveDriveElectricalContract getSwerveContract(ElectricalContract impl);
+
+    @Binds
+    @Singleton
+    public abstract BasePoseSubsystem getPoseSubsystem(PoseSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract BaseSwerveDriveSubsystem getSwerveDriveSubsystem(DriveSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract BaseDriveSubsystem getDriveSubsystem(BaseSwerveDriveSubsystem impl);
+
+    @Binds
+    @Singleton
+    public abstract BaseSimulator getSimulator(NoopSimulator impl);
 }

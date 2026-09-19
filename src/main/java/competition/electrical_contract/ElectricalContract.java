@@ -15,6 +15,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/*
+ * The electrical contract hierarchy:
+ *
+ * ElectricalContract
+ * ├── Contract2023
+ * ├── Contract2025
+ * └── Contract2026
+ *     ├── RoboxContract
+ *     └── UnitTestCompetitionContract
+ *
+ * ElectricalContract defines the shared API and readiness checks for
+ * year-specific mechanisms such as arms, elevators, shooters, and intakes.
+ *
+ * Contract20XX classes provide each year's concrete/evergreen robot configuration,
+ * including drivetrain motors, steering encoders, cameras, geometry.
+ *
+ * Specialized contracts (RoboxContract, etc.) extend the closest matching year and
+ * override the hardware or behavior that differs.
+ */
 public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
     private final Set<Hardware> readinessSet;
 

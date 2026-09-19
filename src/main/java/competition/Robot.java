@@ -1,12 +1,14 @@
 
 package competition;
 
+import competition.electrical_contract.Contract2023;
+import competition.electrical_contract.Contract2025;
+import competition.electrical_contract.Contract2026;
+import competition.electrical_contract.ElectricalContract;
+import competition.electrical_contract.RoboxContract;
+import competition.electrical_contract.UnitTestCompetitionContract;
 import competition.injection.components.BaseRobotComponent;
 import competition.injection.components.DaggerRobotComponent;
-import competition.injection.components.DaggerRobotComponent2023;
-import competition.injection.components.DaggerRobotComponent2025;
-import competition.injection.components.DaggerRobotComponent2026;
-import competition.injection.components.DaggerRoboxComponent;
 import competition.injection.components.DaggerSimulationComponent;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
@@ -31,50 +33,39 @@ public class Robot extends BaseRobot {
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
-        getInjectorComponent().subsystemDefaultCommandMap();
-        getInjectorComponent().operatorCommandMap();
-        getInjectorComponent().swerveDefaultCommandMap();
+        var component = getInjectorComponent();
+        component.subsystemDefaultCommandMap();
+        component.operatorCommandMap();
+        component.swerveDefaultCommandMap();
+        oi = component.operatorInterface();
 
         if (BaseRobot.isSimulation()) {
-            simulator = getInjectorComponent().simulator();
+            simulator = component.simulator();
         }
     }
 
+    @Override
     protected BaseRobotComponent createDaggerComponent() {
-        if (BaseRobot.isReal()) {
-            // Initialize the contract to use if this is a fresh robot. Assume competition since that's the safest.
-            if (!Preferences.containsKey("ContractToUse")) {
-                Preferences.setString("ContractToUse", "Competition");
-            }
-
-            String chosenContract = Preferences.getString("ContractToUse", "Competition");
-
-            switch (chosenContract) {
-                case "Robox" -> {
-                    System.out.println("Using Robox contract");
-                    return DaggerRoboxComponent.create();
-                }
-                case "2023" -> {
-                    System.out.println("Using 2023 contract");
-                    return DaggerRobotComponent2023.create();
-                }
-                case "2025" -> {
-                    System.out.println("Using 2025 contract");
-                    return DaggerRobotComponent2025.create();
-                }
-                case "2026" -> {
-                    System.out.println("Using 2026 contract");
-                    return DaggerRobotComponent2026.create();
-                }
-                default -> {
-                    // In all other cases, return the competition component.
-                    System.out.println("Using Competition contract");
-                    return DaggerRobotComponent.create();
-                }
-            }
-        } else {
-            return DaggerSimulationComponent.create();
+        if (BaseRobot.isSimulation()) {
+            return DaggerSimulationComponent.factory().create(new UnitTestCompetitionContract());
         }
+        return DaggerRobotComponent.factory().create(selectElectricalContract());
+    }
+
+    private ElectricalContract selectElectricalContract() {
+        String chosenContract = Preferences.getString("ContractToUse", "Competition");
+        ElectricalContract contract = switch (chosenContract) {
+            case "Robox" -> new RoboxContract();
+            case "2023" -> new Contract2023();
+            case "2025" -> new Contract2025();
+            default -> {
+                // By default, use the newest contract
+                yield new Contract2026();
+            }
+        };
+
+        System.out.println("Using " + contract.getClass().getName());
+        return contract;
     }
 
     public BaseRobotComponent getInjectorComponent() {

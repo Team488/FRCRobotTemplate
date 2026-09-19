@@ -75,6 +75,9 @@ public class MapleSimulator implements BaseSimulator {
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
                 new SwerveDriveSimulation(config, startingPose));
+        SimulatedArena.getInstance().addDriveTrainSimulation(
+                swerveDriveSimulation.getDriveTrainSimulation());
+
         // Tell the robot it's starting in the same spot
         pose.setCurrentPoseInMeters(startingPose);
 
@@ -91,7 +94,8 @@ public class MapleSimulator implements BaseSimulator {
         // drive simulated robot from requested robot commands
         swerveDriveSimulation.runSwerveStates(drive.getTargetSwerveStates().toArray());
 
-        // run the simulation
+        // Advance the physics world, then update MapleSim's odometry from the new sensor values.
+        SimulatedArena.getInstance().simulationPeriodic();
         swerveDriveSimulation.periodic();
 
         // this is where the robot really is in the sim

@@ -32,7 +32,7 @@ import java.util.Set;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 
-public class Contract2026 extends HardwareContract {
+public class Contract2026 extends ElectricalContract {
 
     @Inject
     public Contract2026() {

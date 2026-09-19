@@ -3,8 +3,6 @@ package competition.injection.modules;
 import javax.inject.Singleton;
 
 import competition.electrical_contract.ElectricalContract;
-import competition.simulation.BaseSimulator;
-import competition.simulation.NoopSimulator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -116,7 +114,4 @@ public abstract class CommonModule {
     @Singleton
     public abstract BaseDriveSubsystem getDriveSubsystem(BaseSwerveDriveSubsystem impl);
 
-    @Binds
-    @Singleton
-    public abstract BaseSimulator getSimulator(NoopSimulator impl);
 }

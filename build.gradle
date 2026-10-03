@@ -23,7 +23,7 @@ sourceSets.main.java {
 
 // When in doubt, use the latest version from
 // https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
-def SeriouslyCommonLibVersion = '20260713.2'
+def SeriouslyCommonLibVersion = '20261003.6'
 
 def ROBOT_MAIN_CLASS = "competition.Main"
 

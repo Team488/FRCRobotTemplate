@@ -17,7 +17,6 @@ import org.wpilib.preferences.Preferences;
 import org.wpilib.simulation.DriverStationSim;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
 
@@ -28,6 +27,8 @@ public class Robot extends BaseRobot {
 
     Robot() {
         super(LOOP_INTERVAL);
+        // WPILib 2027 initializes robots in their constructor; SCL still exposes the old hook.
+        robotInit();
     }
 
     @Override
@@ -90,7 +91,7 @@ public class Robot extends BaseRobot {
         return new FieldPose(
             -2.33*PoseSubsystem.INCHES_IN_A_METER, 
             -4.58*PoseSubsystem.INCHES_IN_A_METER, 
-            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+            -180 // Facing towards the drivers.
             );
     }
 

@@ -25,7 +25,7 @@ public class OperatorInterface {
 
     @Inject
     public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager,
-                             TunableFactory pf) {
+                             TunableFactory tf) {
         driverGamepad = controllerFactory.create(0);
         driverGamepad.setLeftInversion(false, true);
         driverGamepad.setRightInversion(true, true);
@@ -38,10 +38,10 @@ public class OperatorInterface {
         setupDebugGamepad.setLeftInversion(false,true);
         setupDebugGamepad.setRightInversion(true,true);
 
-        pf.setPrefix("OperatorInterface");
-        pf.setDefaultLevel(TunableLevel.Debug);
-        driverDeadband = pf.createDouble("Driver Deadband", 0.12);
-        operatorDeadband = pf.createDouble("Operator Deadband", 0.15);
+        tf.setPrefix("OperatorInterface");
+        tf.setDefaultLevel(TunableLevel.Debug);
+        driverDeadband = tf.createDouble("Driver Deadband", 0.12);
+        operatorDeadband = tf.createDouble("Operator Deadband", 0.15);
     }
 
     public double getDriverGamepadTypicalDeadband() {

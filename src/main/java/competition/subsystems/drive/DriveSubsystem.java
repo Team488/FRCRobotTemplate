@@ -45,23 +45,23 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     private final TunableDouble interstitialSpeedMps;
 
     @Inject
-    public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory pf,
+    public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory tf,
                           @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
                           @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve,
                           DataFrameRegistry dataFrameRegistry) {
 
-        super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
+        super(pidFactory, tf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
         log.info("Creating DriveSubsystem");
 
-        pf.setPrefix(this.getPrefix());
-        pf.setDefaultLevel(TunableLevel.Important);
-        this.maxAutoTargetSpeedMps = pf.createDouble("MaxAutoTargetSpeedMetersPerSecond", 2.0);
-        this.maxAutoFuelIntakeTargetSpeedMps = pf.createDouble("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
-        this.interstitialSpeedMps = pf.createDouble("InterstitialSpeedMetersPerSecond", 0.4);
-        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createDouble("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
-        this.autoInterstitialRotationErrorThresholdInDegrees = pf.createDouble("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
-        this.autoEndDistanceErrorThresholdInMeters = pf.createDouble("autoEndDistanceErrorThresholdInMeters", 0.25);
-        this.autoEndRotationErrorThresholdInDegrees = pf.createDouble("autoEndRotationErrorThresholdInDegrees", 5.0);
+        tf.setPrefix(this.getPrefix());
+        tf.setDefaultLevel(TunableLevel.Important);
+        this.maxAutoTargetSpeedMps = tf.createDouble("MaxAutoTargetSpeedMetersPerSecond", 2.0);
+        this.maxAutoFuelIntakeTargetSpeedMps = tf.createDouble("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
+        this.interstitialSpeedMps = tf.createDouble("InterstitialSpeedMetersPerSecond", 0.4);
+        this.autoInterstitialDistanceErrorThresholdInMeters = tf.createDouble("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
+        this.autoInterstitialRotationErrorThresholdInDegrees = tf.createDouble("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
+        this.autoEndDistanceErrorThresholdInMeters = tf.createDouble("autoEndDistanceErrorThresholdInMeters", 0.25);
+        this.autoEndRotationErrorThresholdInDegrees = tf.createDouble("autoEndRotationErrorThresholdInDegrees", 5.0);
     }
 
     @Override

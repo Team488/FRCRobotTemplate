@@ -43,26 +43,26 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     @Inject
     public SwerveDriveWithJoysticksCommand(
-            OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, TunableFactory pf,
+            OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, TunableFactory tf,
             HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
             SwerveDriveRotationAdvisor.Factory advisorFactory
     ) {
-        pf.setPrefix(this);
+        tf.setPrefix(this);
         this.drive = drive;
         this.xGyro = pose.imu;
         this.pose = pose;
         this.oi = oi;
         this.headingModule = headingModuleFactory.create(drive.getRotateToHeadingPid());
-        this.hvmDecider = hvmFactory.create(pf.getPrefix());
+        this.hvmDecider = hvmFactory.create(tf.getPrefix());
         this.advisor = advisorFactory.create(hvmDecider);
         this.advisor.setSnappingZoneCount(4);
-        pf.setDefaultLevel(TunableLevel.Important);
-        this.overallDrivingPowerScale = pf.createDouble("DrivingPowerScale", 1.0);
-        this.overallTurningPowerScale = pf.createDouble("TurningPowerScale", 1.0);
-        this.precisionTranslationScale = pf.createDouble("PrecisionTranslationScale", 0.1);
-        this.extremePrecisionTranslationScale = pf.createDouble(
+        tf.setDefaultLevel(TunableLevel.Important);
+        this.overallDrivingPowerScale = tf.createDouble("DrivingPowerScale", 1.0);
+        this.overallTurningPowerScale = tf.createDouble("TurningPowerScale", 1.0);
+        this.precisionTranslationScale = tf.createDouble("PrecisionTranslationScale", 0.1);
+        this.extremePrecisionTranslationScale = tf.createDouble(
                 "ExtremePrecisionTranslationScale", 0.15);
-        precisionRotationScale = pf.createDouble("PrecisionRotationScale", 0.2);
+        precisionRotationScale = tf.createDouble("PrecisionRotationScale", 0.2);
 
         this.addRequirements(drive);
     }

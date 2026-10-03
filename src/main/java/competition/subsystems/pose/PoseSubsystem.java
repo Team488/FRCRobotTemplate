@@ -24,8 +24,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DriveSubsystem drive;
 
     @Inject
-    public PoseSubsystem(XGyroFactory gyroFactory, TunableFactory propManager, DriveSubsystem drive) {
-        super(gyroFactory, propManager);
+    public PoseSubsystem(XGyroFactory gyroFactory, TunableFactory tf, DriveSubsystem drive) {
+        super(gyroFactory, tf);
         this.drive = drive;
 
         onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();

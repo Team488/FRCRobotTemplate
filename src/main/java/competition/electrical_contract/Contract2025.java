@@ -1,13 +1,13 @@
 package competition.electrical_contract;
 
 import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
-import xbot.common.controls.sensors.XGyro;
+import org.wpilib.math.geometry.Rotation3d;
+import org.wpilib.math.geometry.Transform3d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Translation3d;
+import org.wpilib.units.Units;
+import org.wpilib.units.measure.Distance;
+import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CANMotorControllerOutputConfig;
@@ -15,7 +15,6 @@ import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
-import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
@@ -24,8 +23,8 @@ import javax.inject.Inject;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
+import static org.wpilib.units.Units.Amps;
+import static org.wpilib.units.Units.Inches;
 
 public class Contract2025 extends ElectricalContract {
 
@@ -36,7 +35,9 @@ public class Contract2025 extends ElectricalContract {
 
     @Override
     public IMUInfo getIMUInfo() {
-        return new IMUInfo(XGyro.InterfaceType.spi, PowerSource.RIO);
+        // TODO: VERIFY ON THE ROBOT BEFORE DEPLOYING: FLAT is a provisional SystemCore IMU mounting orientation.
+        // Replace this with the actual controller mounting orientation; incorrect orientation corrupts heading/pose.
+        return new IMUInfo(MountOrientation.FLAT);
     }
 
     @Override

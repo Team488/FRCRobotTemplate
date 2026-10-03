@@ -2,7 +2,7 @@ package competition.simulation;
 
 import javax.inject.Inject;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose2d;
 
 public class NoopSimulator implements BaseSimulator {
     @Inject

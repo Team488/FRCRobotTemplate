@@ -4,9 +4,10 @@ import javax.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.driverstation.MatchState;
+import org.wpilib.driverstation.Alliance;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XGyro;
@@ -14,9 +15,9 @@ import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
-import xbot.common.properties.DoubleProperty;
-import xbot.common.properties.Property;
-import xbot.common.properties.PropertyFactory;
+import org.wpilib.tunable.TunableDouble;
+import xbot.common.properties.TunableLevel;
+import xbot.common.properties.TunableFactory;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule.HeadingModuleFactory;
 import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
@@ -31,18 +32,18 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     XGyro xGyro;
 
-    final DoubleProperty overallDrivingPowerScale;
-    final DoubleProperty overallTurningPowerScale;
-    final DoubleProperty precisionTranslationScale;
-    final DoubleProperty extremePrecisionTranslationScale;
-    final DoubleProperty precisionRotationScale;
+    final TunableDouble overallDrivingPowerScale;
+    final TunableDouble overallTurningPowerScale;
+    final TunableDouble precisionTranslationScale;
+    final TunableDouble extremePrecisionTranslationScale;
+    final TunableDouble precisionRotationScale;
 
     SwerveDriveRotationAdvisor advisor;
     HumanVsMachineDecider hvmDecider;
 
     @Inject
     public SwerveDriveWithJoysticksCommand(
-            OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, PropertyFactory pf,
+            OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, TunableFactory pf,
             HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
             SwerveDriveRotationAdvisor.Factory advisorFactory
     ) {
@@ -55,13 +56,13 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.hvmDecider = hvmFactory.create(pf.getPrefix());
         this.advisor = advisorFactory.create(hvmDecider);
         this.advisor.setSnappingZoneCount(4);
-        pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.overallDrivingPowerScale = pf.createPersistentProperty("DrivingPowerScale", 1.0);
-        this.overallTurningPowerScale = pf.createPersistentProperty("TurningPowerScale", 1.0);
-        this.precisionTranslationScale = pf.createPersistentProperty("PrecisionTranslationScale", 0.1);
-        this.extremePrecisionTranslationScale = pf.createPersistentProperty(
+        pf.setDefaultLevel(TunableLevel.Important);
+        this.overallDrivingPowerScale = pf.createDouble("DrivingPowerScale", 1.0);
+        this.overallTurningPowerScale = pf.createDouble("TurningPowerScale", 1.0);
+        this.precisionTranslationScale = pf.createDouble("PrecisionTranslationScale", 0.1);
+        this.extremePrecisionTranslationScale = pf.createDouble(
                 "ExtremePrecisionTranslationScale", 0.15);
-        precisionRotationScale = pf.createPersistentProperty("PrecisionRotationScale", 0.2);
+        precisionRotationScale = pf.createDouble("PrecisionRotationScale", 0.2);
 
         this.addRequirements(drive);
     }
@@ -110,7 +111,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
         XYPair translationIntent = new XYPair(xIntent, yIntent);
 
-        if (DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
+        if (MatchState.getAlliance().orElse(Alliance.BLUE) == Alliance.RED) {
             translationIntent.rotate(180);
         }
 

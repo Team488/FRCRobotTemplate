@@ -11,9 +11,8 @@ import competition.subsystems.pose.PoseSubsystem;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.wpilibj.Preferences;
+import org.wpilib.fields.Fields;
+import org.wpilib.preferences.Preferences;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
@@ -67,7 +66,7 @@ public abstract class CommonModule {
 
     @Provides
     @Singleton
-    public static AprilTagFieldLayout fieldLayout() {
+    public static Fields fieldLayout() {
         // Initialize the contract to use if this is a fresh robot. Assume competition since that's the safest.
         if (!Preferences.containsKey("AprilTagFieldLayout")) {
             Preferences.setString("AprilTagFieldLayout", "2026_welded");
@@ -77,10 +76,10 @@ public abstract class CommonModule {
         switch (chosenField) {
             case "2026_andymark":
                 log.info("Using 2026 Andymark April Tag Field Layout.");
-                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+                return Fields.FRC_2026_REBUILT_ANDY_MARK;
             default:
                 log.info("Using 2026 Welded April Tag Field Layout default for competition.");
-                return AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+                return Fields.FRC_2026_REBUILT_WELDED;
         }
     }
 

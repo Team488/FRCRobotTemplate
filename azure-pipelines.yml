@@ -14,9 +14,11 @@ jobs:
       displayName: 'Checkout sources'
       submodules: true
       clean: true
+    - script: git clone --branch 2027 --single-branch https://github.com/Team488/SeriouslyCommonLib.git ../SeriouslyCommonLib
+      displayName: Checkout SeriouslyCommonLib 2027
     - task: JavaToolInstaller@0
       inputs:
-        versionSpec: '17'
+        versionSpec: '25'
         jdkArchitectureOption: 'x64'
         jdkSourceOption: 'PreInstalled'
     - task: Cache@2
@@ -30,7 +32,7 @@ jobs:
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build'
+        tasks: 'build -DuseLocalCommonLib=true'
         options: '--warn'
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)

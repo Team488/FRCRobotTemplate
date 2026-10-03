@@ -27,8 +27,6 @@ public class Robot extends BaseRobot {
 
     Robot() {
         super(LOOP_INTERVAL);
-        // WPILib 2027 initializes robots in their constructor; SCL still exposes the old hook.
-        robotInit();
     }
 
     @Override

@@ -32,7 +32,7 @@ jobs:
         gradleOptions: '-Xmx3072m'
         publishJUnitResults: true
         testResultsFiles: '**/TEST-*.xml'
-        tasks: 'build -DuseLocalCommonLib=true'
+        tasks: 'build'
         options: '--warn'
       env:
         GRADLE_USER_HOME: $(GRADLE_USER_HOME)

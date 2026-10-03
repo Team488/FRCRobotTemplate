@@ -15,7 +15,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-// Keep MapleSim sources for re-enabling once a compatible vendor release is available.
+// MapleSim currently targets WPILib 2026; use the basic simulator on 2027.
 sourceSets.main.java {
     exclude 'competition/simulation/MapleSimulator.java'
     exclude 'competition/injection/modules/MapleSimulatorModule.java'

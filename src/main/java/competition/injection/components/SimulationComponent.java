@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import competition.electrical_contract.ElectricalContract;
 import competition.injection.modules.CommonModule;
-import competition.injection.modules.NoopSimulatorModule;
+import competition.injection.modules.BasicSimulatorModule;
 import dagger.BindsInstance;
 import dagger.Component;
 import xbot.common.injection.modules.MockDevicesModule;
@@ -17,7 +17,7 @@ import xbot.common.injection.modules.SimulationModule;
         MockDevicesModule.class,
         RealControlsModule.class,
         CommonModule.class,
-        NoopSimulatorModule.class
+        BasicSimulatorModule.class
 })
 public abstract class SimulationComponent extends BaseRobotComponent {
     @Component.Factory

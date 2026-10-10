@@ -1,7 +1,7 @@
 package competition.electrical_contract;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.measure.Distance;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;

@@ -6,9 +6,9 @@ import javax.inject.Singleton;
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.controls.sensors.XXboxController.XXboxControllerFactory;
 import xbot.common.logging.RobotAssertionManager;
-import xbot.common.properties.DoubleProperty;
-import xbot.common.properties.Property;
-import xbot.common.properties.PropertyFactory;
+import org.wpilib.tunable.TunableDouble;
+import xbot.common.properties.TunableLevel;
+import xbot.common.properties.TunableFactory;
 
 /**
  * This class is the glue that binds the controls on the physical operator interface to the commands and command groups
@@ -20,12 +20,12 @@ public class OperatorInterface {
     public XXboxController operatorGamepad;
     public XXboxController setupDebugGamepad;
 
-    final DoubleProperty driverDeadband;
-    final DoubleProperty operatorDeadband;
+    final TunableDouble driverDeadband;
+    final TunableDouble operatorDeadband;
 
     @Inject
     public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager,
-                             PropertyFactory pf) {
+                             TunableFactory tf) {
         driverGamepad = controllerFactory.create(0);
         driverGamepad.setLeftInversion(false, true);
         driverGamepad.setRightInversion(true, true);
@@ -38,10 +38,10 @@ public class OperatorInterface {
         setupDebugGamepad.setLeftInversion(false,true);
         setupDebugGamepad.setRightInversion(true,true);
 
-        pf.setPrefix("OperatorInterface");
-        pf.setDefaultLevel(Property.PropertyLevel.Debug);
-        driverDeadband = pf.createPersistentProperty("Driver Deadband", 0.12);
-        operatorDeadband = pf.createPersistentProperty("Operator Deadband", 0.15);
+        tf.setPrefix("OperatorInterface");
+        tf.setDefaultLevel(TunableLevel.Debug);
+        driverDeadband = tf.createDouble("Driver Deadband", 0.12);
+        operatorDeadband = tf.createDouble("Operator Deadband", 0.15);
     }
 
     public double getDriverGamepadTypicalDeadband() {

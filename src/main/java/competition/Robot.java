@@ -13,11 +13,10 @@ import competition.injection.components.DaggerSimulationComponent;
 import competition.operator_interface.OperatorInterface;
 import competition.simulation.BaseSimulator;
 import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.wpilibj.Preferences;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import org.wpilib.preferences.Preferences;
+import org.wpilib.simulation.DriverStationSim;
 import xbot.common.command.BaseRobot;
 import xbot.common.math.FieldPose;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class Robot extends BaseRobot {
 
@@ -90,7 +89,7 @@ public class Robot extends BaseRobot {
         return new FieldPose(
             -2.33*PoseSubsystem.INCHES_IN_A_METER, 
             -4.58*PoseSubsystem.INCHES_IN_A_METER, 
-            BasePoseSubsystem.FACING_TOWARDS_DRIVERS
+            -180 // Facing towards the drivers.
             );
     }
 

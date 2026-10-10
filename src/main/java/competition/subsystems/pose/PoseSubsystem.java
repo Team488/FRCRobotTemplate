@@ -4,13 +4,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import org.wpilib.math.estimator.SwerveDrivePoseEstimator;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.SwerveModulePosition;
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
-import xbot.common.math.WrappedRotation2d;
-import xbot.common.properties.PropertyFactory;
+import org.wpilib.math.geometry.Rotation2d;
+import xbot.common.properties.TunableFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 import java.util.Optional;
@@ -24,8 +24,8 @@ public class PoseSubsystem extends BasePoseSubsystem {
     private final DriveSubsystem drive;
 
     @Inject
-    public PoseSubsystem(XGyroFactory gyroFactory, PropertyFactory propManager, DriveSubsystem drive) {
-        super(gyroFactory, propManager);
+    public PoseSubsystem(XGyroFactory gyroFactory, TunableFactory tf, DriveSubsystem drive) {
+        super(gyroFactory, tf);
         this.drive = drive;
 
         onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();
@@ -91,7 +91,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         };
     }
 
-    public void setCurrentPosition(double newXPositionMeters, double newYPositionMeters, WrappedRotation2d heading) {
+    public void setCurrentPosition(double newXPositionMeters, double newYPositionMeters, Rotation2d heading) {
         super.setCurrentPosition(newXPositionMeters, newYPositionMeters);
         super.setCurrentHeading(heading.getDegrees());
         onlyWheelsGyroSwerveOdometry.resetPosition(
@@ -107,7 +107,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
         setCurrentPosition(
                 newPoseInMeters.getTranslation().getX(),
                 newPoseInMeters.getTranslation().getY(),
-                WrappedRotation2d.fromRotation2d(newPoseInMeters.getRotation())
+                newPoseInMeters.getRotation()
         );
     }
 

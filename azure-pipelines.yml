@@ -14,9 +14,11 @@ jobs:
       displayName: 'Checkout sources'
       submodules: true
       clean: true
+    - script: git clone --branch main --single-branch https://github.com/Team488/SeriouslyCommonLib.git ../SeriouslyCommonLib
+      displayName: Checkout SeriouslyCommonLib main
     - task: JavaToolInstaller@0
       inputs:
-        versionSpec: '17'
+        versionSpec: '25'
         jdkArchitectureOption: 'x64'
         jdkSourceOption: 'PreInstalled'
     - task: Cache@2

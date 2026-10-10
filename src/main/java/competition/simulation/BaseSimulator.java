@@ -1,6 +1,6 @@
 package competition.simulation;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Pose2d;
 import xbot.common.subsystems.pose.SimulatedPositionSupplier;
 
 public interface BaseSimulator extends SimulatedPositionSupplier {

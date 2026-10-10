@@ -5,12 +5,12 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
+import org.wpilib.math.kinematics.SwerveDriveKinematics;
+import org.wpilib.math.kinematics.SwerveModuleVelocity;
+import org.wpilib.command2.InstantCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xbot.common.command.BaseRobot;
@@ -22,9 +22,9 @@ import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
-import xbot.common.properties.DoubleProperty;
-import xbot.common.properties.Property;
-import xbot.common.properties.PropertyFactory;
+import org.wpilib.tunable.TunableDouble;
+import xbot.common.properties.TunableLevel;
+import xbot.common.properties.TunableFactory;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 @Singleton
@@ -36,32 +36,32 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     private boolean lookAtPointActive = false;
     private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
-    private final DoubleProperty autoInterstitialDistanceErrorThresholdInMeters;
-    private final DoubleProperty autoInterstitialRotationErrorThresholdInDegrees;
-    private final DoubleProperty autoEndDistanceErrorThresholdInMeters;
-    private final DoubleProperty autoEndRotationErrorThresholdInDegrees;
-    private final DoubleProperty maxAutoTargetSpeedMps;
-    private final DoubleProperty maxAutoFuelIntakeTargetSpeedMps;
-    private final DoubleProperty interstitialSpeedMps;
+    private final TunableDouble autoInterstitialDistanceErrorThresholdInMeters;
+    private final TunableDouble autoInterstitialRotationErrorThresholdInDegrees;
+    private final TunableDouble autoEndDistanceErrorThresholdInMeters;
+    private final TunableDouble autoEndRotationErrorThresholdInDegrees;
+    private final TunableDouble maxAutoTargetSpeedMps;
+    private final TunableDouble maxAutoFuelIntakeTargetSpeedMps;
+    private final TunableDouble interstitialSpeedMps;
 
     @Inject
-    public DriveSubsystem(PIDManagerFactory pidFactory, PropertyFactory pf,
+    public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory tf,
                           @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
                           @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve,
                           DataFrameRegistry dataFrameRegistry) {
 
-        super(pidFactory, pf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
+        super(pidFactory, tf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
         log.info("Creating DriveSubsystem");
 
-        pf.setPrefix(this.getPrefix());
-        pf.setDefaultLevel(Property.PropertyLevel.Important);
-        this.maxAutoTargetSpeedMps = pf.createPersistentProperty("MaxAutoTargetSpeedMetersPerSecond", 2.0);
-        this.maxAutoFuelIntakeTargetSpeedMps = pf.createPersistentProperty("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
-        this.interstitialSpeedMps = pf.createPersistentProperty("InterstitialSpeedMetersPerSecond", 0.4);
-        this.autoInterstitialDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
-        this.autoInterstitialRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
-        this.autoEndDistanceErrorThresholdInMeters = pf.createPersistentProperty("autoEndDistanceErrorThresholdInMeters", 0.25);
-        this.autoEndRotationErrorThresholdInDegrees = pf.createPersistentProperty("autoEndRotationErrorThresholdInDegrees", 5.0);
+        tf.setPrefix(this.getPrefix());
+        tf.setDefaultLevel(TunableLevel.Important);
+        this.maxAutoTargetSpeedMps = tf.createDouble("MaxAutoTargetSpeedMetersPerSecond", 2.0);
+        this.maxAutoFuelIntakeTargetSpeedMps = tf.createDouble("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
+        this.interstitialSpeedMps = tf.createDouble("InterstitialSpeedMetersPerSecond", 0.4);
+        this.autoInterstitialDistanceErrorThresholdInMeters = tf.createDouble("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
+        this.autoInterstitialRotationErrorThresholdInDegrees = tf.createDouble("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
+        this.autoEndDistanceErrorThresholdInMeters = tf.createDouble("autoEndDistanceErrorThresholdInMeters", 0.25);
+        this.autoEndRotationErrorThresholdInDegrees = tf.createDouble("autoEndRotationErrorThresholdInDegrees", 5.0);
     }
 
     @Override
@@ -191,22 +191,22 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
      * Gets the current robot-relative chassis speeds by converting the current swerve module states
      * through inverse kinematics. This is needed by PathPlanner's AutoBuilder.
      *
-     * @return The current robot-relative ChassisSpeeds.
+     * @return The current robot-relative ChassisVelocities.
      */
-    public ChassisSpeeds getRobotRelativeSpeeds() {
+    public ChassisVelocities getRobotRelativeSpeeds() {
         var states = getCurrentSwerveStates();
-        return getSwerveDriveKinematics().toChassisSpeeds(states.toArray());
+        return getSwerveDriveKinematics().toChassisVelocities(states.toArray());
     }
 
     /**
-     * Drives the robot using the given robot-relative ChassisSpeeds. Converts the ChassisSpeeds
+     * Drives the robot using the given robot-relative ChassisVelocities. Converts the ChassisVelocities
      * to individual swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
      *
      * @param chassisSpeeds The desired robot-relative chassis speeds.
      */
-    public void driveWithChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-        SwerveModuleState[] moduleStates = getSwerveDriveKinematics().toSwerveModuleStates(chassisSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, getMaxTargetSpeedMetersPerSecond());
+    public void driveWithChassisVelocities(ChassisVelocities chassisSpeeds) {
+        SwerveModuleVelocity[] moduleStates = getSwerveDriveKinematics().toSwerveModuleVelocities(chassisSpeeds);
+        moduleStates = SwerveDriveKinematics.desaturateWheelVelocities(moduleStates, getMaxTargetSpeedMetersPerSecond());
 
         aKitLog.record("DesiredSwerveState", moduleStates);
         this.getFrontLeftSwerveModuleSubsystem().setTargetState(moduleStates[0]);

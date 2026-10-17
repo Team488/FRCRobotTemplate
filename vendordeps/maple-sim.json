@@ -1,0 +1,47 @@
+{
+  "fileName": "maple-sim.json",
+  "name": "maplesim",
+  "version": "0.4.0-beta",
+  "uuid": "befec78a-5aa5-51f3-887e-96c00c3046a8",
+  "wpilibYear": "2027_alpha7",
+  "mavenUrls": [
+    "https://shenzhen-robotics-alliance.github.io/maple-sim/vendordep/repos/releases",
+    "https://repo1.maven.org/maven2",
+    "https://frcmaven.wpi.edu/artifactory/release"
+  ],
+  "jsonUrl": "",
+  "javaDependencies": [
+    {
+      "groupId": "org.ironmaple",
+      "artifactId": "maplesim-java",
+      "version": "0.4.0-beta"
+    },
+    {
+      "groupId": "org.dyn4j",
+      "artifactId": "dyn4j",
+      "version": "5.0.2"
+    },
+    {
+      "groupId": "edu.wpi.first.wpimath",
+      "artifactId": "wpimath-java",
+      "version": "2026.2.1"
+    },
+    {
+      "groupId": "edu.wpi.first.wpiunits",
+      "artifactId": "wpiunits-java",
+      "version": "2026.2.1"
+    },
+    {
+      "groupId": "edu.wpi.first.wpiutil",
+      "artifactId": "wpiutil-java",
+      "version": "2026.2.1"
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-annotations",
+      "version": "2.19.2"
+    }
+  ],
+  "jniDependencies": [],
+  "cppDependencies": []
+}

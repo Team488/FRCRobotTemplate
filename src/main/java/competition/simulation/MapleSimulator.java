@@ -1,6 +1,5 @@
 package competition.simulation;
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
 import javax.inject.Inject;
@@ -15,25 +14,27 @@ import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import competition.Robot;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
+import org.wpilib.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
-import xbot.common.logic.TimeStableValidator;
 
+import java.util.Arrays;
+
+/**
+ * MapleSim 2026 integration; LegacyWpilibAdapter converts values at the WPILib 2027 boundary.
+ * SimulationComponent still selects BasicDrivetrainSimulator.
+ * Running MapleSim on 2027 requires a compatible runtime, including native libraries.
+ */
 @Singleton
 public class MapleSimulator implements BaseSimulator {
     final PoseSubsystem pose;
     final DriveSubsystem drive;
 
     protected final AKitLogger aKitLog;
-
-    final Distance humanLoadingDistanceThreshold = Meters.of(0.2);
-    final TimeStableValidator humanLoadValidator = new TimeStableValidator(1);
 
     // maple-sim stuff ----------------------------
     final DriveTrainSimulationConfig config;
@@ -48,7 +49,7 @@ public class MapleSimulator implements BaseSimulator {
 
         @SuppressWarnings("unchecked")
         var ourConfig = new DriveTrainSimulationConfig(
-                Units.Kilograms.of((double)45.0F),
+                Units.Kilograms.of(45),
                 Units.Meters.of(0.76),
                 Units.Meters.of(0.76),
                 Units.Meters.of(0.52),
@@ -62,11 +63,11 @@ public class MapleSimulator implements BaseSimulator {
         );
 
         // TODO: custom things to provide here like motor ratios and what have you
-        config = ourConfig.withCustomModuleTranslations(new Translation2d[] {
-                drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
+        config = ourConfig.withCustomModuleTranslations(new edu.wpi.first.math.geometry.Translation2d[] {
+                LegacyWpilibAdapter.toLegacyTranslation(drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation()),
+                LegacyWpilibAdapter.toLegacyTranslation(drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation()),
+                LegacyWpilibAdapter.toLegacyTranslation(drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation()),
+                LegacyWpilibAdapter.toLegacyTranslation(drive.getRearRightSwerveModuleSubsystem().getModuleTranslation())
         });
 
         // starting middle ish of the field on blue
@@ -74,7 +75,7 @@ public class MapleSimulator implements BaseSimulator {
 
         // Creating the SelfControlledSwerveDriveSimulation instance
         this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
-                new SwerveDriveSimulation(config, startingPose));
+                new SwerveDriveSimulation(config, LegacyWpilibAdapter.toLegacyPose(startingPose)));
         SimulatedArena.getInstance().addDriveTrainSimulation(
                 swerveDriveSimulation.getDriveTrainSimulation());
 
@@ -86,38 +87,46 @@ public class MapleSimulator implements BaseSimulator {
         SimulatedArena.overrideSimulationTimings(Seconds.of(Robot.LOOP_INTERVAL), 5);
     }
 
+    @Override
     public void update() {
         this.updateDriveSimulation();
     }
 
     protected void updateDriveSimulation() {
         // drive simulated robot from requested robot commands
-        swerveDriveSimulation.runSwerveStates(drive.getTargetSwerveStates().toArray());
+        swerveDriveSimulation.runSwerveStates(Arrays.stream(drive.getTargetSwerveStates().toArray())
+                .map(LegacyWpilibAdapter::toLegacyState)
+                .toArray(edu.wpi.first.math.kinematics.SwerveModuleState[]::new));
 
         // Advance the physics world, then update MapleSim's odometry from the new sensor values.
         SimulatedArena.getInstance().simulationPeriodic();
         swerveDriveSimulation.periodic();
 
         // this is where the robot really is in the sim
-        aKitLog.record("FieldSimulation/Robot", swerveDriveSimulation.getActualPoseInSimulationWorld());
+        aKitLog.record("FieldSimulation/Robot", getGroundTruthPose());
 
         // tell the pose subsystem about where the robot has moved based on odometry
-        pose.ingestSimulatedSwerveModulePositions(swerveDriveSimulation.getLatestModulePositions());
+        pose.ingestSimulatedSwerveModulePositions(Arrays.stream(swerveDriveSimulation.getLatestModulePositions())
+                .map(LegacyWpilibAdapter::fromLegacyPosition)
+                .toArray(SwerveModulePosition[]::new));
 
-        aKitLog.record("RobotVelocity", swerveDriveSimulation.getActualSpeedsFieldRelative());
+        aKitLog.record("RobotVelocity", LegacyWpilibAdapter.fromLegacyVelocities(
+                swerveDriveSimulation.getActualSpeedsFieldRelative()));
 
         // update gyro reading from sim
-        ((MockGyro) pose.imu).setYaw(this.swerveDriveSimulation.getOdometryEstimatedPose().getRotation().getMeasure());
+        ((MockGyro) pose.imu).setYaw(LegacyWpilibAdapter.fromLegacyHeading(
+                this.swerveDriveSimulation.getOdometryEstimatedPose().getRotation()));
     }
 
     @Override
     public void resetPosition(Pose2d pose) {
-        this.swerveDriveSimulation.getDriveTrainSimulation().setSimulationWorldPose(pose);
+        this.swerveDriveSimulation.getDriveTrainSimulation().setSimulationWorldPose(
+                LegacyWpilibAdapter.toLegacyPose(pose));
         this.pose.setCurrentPoseInMeters(pose);
     }
 
     @Override
     public Pose2d getGroundTruthPose() {
-        return this.swerveDriveSimulation.getActualPoseInSimulationWorld();
+        return LegacyWpilibAdapter.fromLegacyPose(this.swerveDriveSimulation.getActualPoseInSimulationWorld());
     }
 }

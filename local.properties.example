@@ -1,0 +1,3 @@
+# Copy this file to "local.properties" (gitignored) to use your local ../SeriouslyCommonLib checkout.
+# After changing it, reload the Gradle project in your IDE.
+useLocalCommonLib=true

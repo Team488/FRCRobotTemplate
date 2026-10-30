@@ -23,7 +23,7 @@ sourceSets.main.java {
 
 // When in doubt, use the latest version from
 // https://dev.azure.com/Team488/Team%20488%20Builds/_artifacts/feed/XBot
-def SeriouslyCommonLibVersion = '20261003.9'
+def SeriouslyCommonLibVersion = '20261010.5'
 
 def ROBOT_MAIN_CLASS = "competition.Main"
 
@@ -76,7 +76,7 @@ repositories {
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 4.
+// Also defines JUnit 5.
 dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
@@ -96,7 +96,9 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
     testImplementation "org.mockito:mockito-core:3.12.4"
 
     // SeriouslyCommonLib - use the 2027 checkout with -DuseLocalCommonLib=true (see settings.gradle)
@@ -182,6 +184,7 @@ task checkstyle(type: Checkstyle) {
 }
 
 test {
+    useJUnitPlatform()
     reports {
         junitXml.required = true
     }               

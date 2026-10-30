@@ -170,3 +170,5 @@ simgui-ds.json
 simgui-window.json
 simgui.json
 ctre_sim
+# Local developer toggles (e.g. useLocalCommonLib=true)
+local.properties

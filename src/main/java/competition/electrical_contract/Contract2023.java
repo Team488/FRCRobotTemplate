@@ -1,6 +1,7 @@
 package competition.electrical_contract;
 
 import competition.subsystems.pose.PoseSubsystem;
+import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
@@ -8,7 +9,6 @@ import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.units.Units;
 import org.wpilib.units.measure.Distance;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
-import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -51,28 +51,28 @@ public class Contract2023 extends ElectricalContract {
             case "FrontLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.SparkMax,
-                    CANBusId.RIO,
+                    CANPort.CAN_S0,
                     31,
                     driveMotorControllerOutputConfig
             );
             case "FrontRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.SparkMax,
-                    CANBusId.RIO,
+                    CANPort.CAN_S0,
                     29,
                     driveMotorControllerOutputConfig
             );
             case "RearLeftDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.SparkMax,
-                    CANBusId.RIO,
+                    CANPort.CAN_S0,
                     38,
                     driveMotorControllerOutputConfig
             );
             case "RearRightDrive" -> new CANMotorControllerInfo(
                     getDriveControllerName(swerveInstance),
                     MotorControllerType.SparkMax,
-                    CANBusId.RIO,
+                    CANPort.CAN_S0,
                     21,
                     driveMotorControllerOutputConfig
             );
@@ -90,7 +90,7 @@ public class Contract2023 extends ElectricalContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
-                            CANBusId.RIO,
+                            CANPort.CAN_S0,
                             30,
                             steerMotorControllerOutputConfig
                     );
@@ -98,7 +98,7 @@ public class Contract2023 extends ElectricalContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
-                            CANBusId.RIO,
+                            CANPort.CAN_S0,
                             28,
                             steerMotorControllerOutputConfig
                     );
@@ -106,7 +106,7 @@ public class Contract2023 extends ElectricalContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
-                            CANBusId.RIO,
+                            CANPort.CAN_S0,
                             39,
                             steerMotorControllerOutputConfig
                     );
@@ -114,7 +114,7 @@ public class Contract2023 extends ElectricalContract {
                     new CANMotorControllerInfo(
                             getDriveControllerName(swerveInstance),
                             MotorControllerType.SparkMax,
-                            CANBusId.RIO,
+                            CANPort.CAN_S0,
                             20,
                             steerMotorControllerOutputConfig
                     );
@@ -124,17 +124,15 @@ public class Contract2023 extends ElectricalContract {
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
-        double simulationScalingValue = 1.0;
-
         return switch (swerveInstance.label()) {
             case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 51, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 51, false);
             case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 52, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 52, false);
             case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 53, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 53, false);
             case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), 54, false, simulationScalingValue);
+                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 54, false);
             default -> null;
         };
     }

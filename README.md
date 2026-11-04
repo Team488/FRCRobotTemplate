@@ -7,3 +7,18 @@ To find out more about the library, visit the [Seriously Common Lib repo](https:
 ## Up-front warning
 
 This template, like our library as a whole, is a work-in-progress. See the library readme for more information.
+
+## Electrical report and web tool
+
+`./gradlew electricalReport` lists every CAN device, I/O channel and power connection in a robot's
+electrical contract (`--args="--contract 2025"` for another robot, `--json` for JSON). The list of
+robots is in `src/main/java/electrical/report/Main.java`; keep it in sync with the `ContractToUse`
+switch in `competition.Robot`.
+
+- Tag mechanism getters with `@ReadyWhen("Name")` (a `Hardware` constant) so robots without that
+  mechanism leave them out.
+- Put wiring the code doesn't use (CAN daisy-chain order, non-motor PDH loads, converter branches)
+  in the year's contract by overriding the `XElectricalReportContract` methods.
+- The **Electrical snapshots** GitHub workflow publishes every robot's contract as JSON on each
+  merge to `main` (branch `electrical-snapshots`). Point the electrical web tool
+  (Team488/electrical-contract-web, `snapshotSource` in `infra/cdk.json`) at that folder.

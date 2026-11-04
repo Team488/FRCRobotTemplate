@@ -2,6 +2,8 @@ package competition.electrical_contract;
 
 import javax.inject.Inject;
 
+import xbot.common.injection.electrical_contract.XElectricalReportContract.CanBusOrderEntry;
+
 import competition.subsystems.pose.PoseSubsystem;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
@@ -189,8 +191,7 @@ public class Contract2026 extends ElectricalContract {
     // --- CAN Bus Connection Order (used only by the electrical report tool) ---
     // Lists every CAN device with its physical daisy-chain position.
     // busId + canId must uniquely identify the device returned by the corresponding getter.
-    public static record CanBusOrderEntry(CANBusId busId, int canId, String deviceName, int busPosition) {}
-
+    @Override
     public List<CanBusOrderEntry> getCanBusConnectionOrder() {
         return List.of(
                 new CanBusOrderEntry(CANBusId.Canivore, 30, "FrontLeftDrive/Drive",              1),

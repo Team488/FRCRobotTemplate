@@ -5,15 +5,14 @@ import org.wpilib.units.measure.Distance;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
-import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
+import xbot.common.injection.electrical_contract.XElectricalReportContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
  * The electrical contract hierarchy:
@@ -34,7 +33,19 @@ import java.util.Set;
  * Specialized contracts (RoboxContract, etc.) extend the closest matching year and
  * override the hardware or behavior that differs.
  */
-public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract {
+/*
+ * Electrical report (./gradlew electricalReport, see electrical.report.Main): tag each
+ * mechanism getter with the Hardware it belongs to, so robots without that mechanism leave
+ * it out of their report and the electrical web tool:
+ *
+ *     @ReadyWhen("Shooter")
+ *     public abstract CANMotorControllerInfo getShooterMotor();
+ *
+ * Wiring the robot code doesn't use (CAN daisy-chain order, non-motor PDH loads, converter
+ * branches) goes in the year's contract by overriding the XElectricalReportContract methods.
+ */
+public abstract class ElectricalContract
+        implements XSwerveDriveElectricalContract, XCameraElectricalContract, XElectricalReportContract {
     private final Set<Hardware> readinessSet;
 
     protected ElectricalContract(Set<Hardware> readinessSet) {
@@ -43,6 +54,16 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public boolean isReady(Hardware hardware) {
         return readinessSet.contains(hardware);
+    }
+
+    @Override
+    public boolean isReady(String hardwareName) {
+        return readinessSet.stream().anyMatch(h -> h.name().equals(hardwareName));
+    }
+
+    @Override
+    public Set<String> getHardwareNames() {
+        return Arrays.stream(Hardware.values()).map(Enum::name).collect(Collectors.toSet());
     }
 
     // TODO: Remove these later
@@ -54,24 +75,6 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
     public abstract IMUInfo getIMUInfo();
-
-    /**
-     * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
-     * Override this method in specific contract implementations to specify these connections.
-     * Multiple non-motor devices may share a PDH port (e.g., two buck converters on one port).
-     */
-    public Map<PDHPort, List<String>> getAdditionalPDHConnections() {
-        return new HashMap<>();
-    }
-
-    /**
-     * Returns power branch connections for intermediate converters (e.g., buck converters, VRMs).
-     * Maps converter name to the list of devices it powers.
-     * Override this method in specific contract implementations to document the power chain.
-     */
-    public Map<String, List<String>> getAdditionalPowerBranches() {
-        return new HashMap<>();
-    }
 
     public abstract Distance getRadiusOfRobot();
 

@@ -28,6 +28,7 @@ import xbot.common.injection.electrical_contract.MotorControllerType;
 import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputConfig;
+import xbot.common.injection.electrical_contract.XElectricalReportContract.CanBusOrderEntry;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
@@ -144,9 +145,7 @@ public class Contract2026 extends ElectricalContract {
     // --- CAN Bus Connection Order (used only by the electrical report tool) ---
     // Lists every CAN device with its physical daisy-chain position.
     // busId + canId must uniquely identify the device returned by the corresponding getter.
-    public static record CanBusOrderEntry(CANBusId busId, int canId, String deviceName, int busPosition) {
-    }
-
+    @Override
     public List<CanBusOrderEntry> getCanBusConnectionOrder() {
         var busId = CANBusId.fromPort(CANPort.CAN_S0);
         return List.of(new CanBusOrderEntry(busId, 30, "FrontLeftDrive/Drive", 1), new CanBusOrderEntry(busId, 53, "FrontLeftDrive/SteeringEncoder", 2),

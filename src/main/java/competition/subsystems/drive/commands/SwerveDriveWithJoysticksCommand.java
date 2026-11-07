@@ -2,26 +2,28 @@ package competition.subsystems.drive.commands;
 
 import javax.inject.Inject;
 
-import competition.operator_interface.OperatorInterface;
-import competition.subsystems.drive.DriveSubsystem;
+import org.wpilib.driverstation.Alliance;
+import org.wpilib.driverstation.MatchState;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.driverstation.MatchState;
-import org.wpilib.driverstation.Alliance;
-import competition.subsystems.pose.PoseSubsystem;
+import org.wpilib.tunable.TunableDouble;
+
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.logic.HumanVsMachineDecider;
 import xbot.common.logic.HumanVsMachineDecider.HumanVsMachineDeciderFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
-import org.wpilib.tunable.TunableDouble;
-import xbot.common.properties.TunableLevel;
 import xbot.common.properties.TunableFactory;
+import xbot.common.properties.TunableLevel;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule.HeadingModuleFactory;
 import xbot.common.subsystems.drive.swerve.SwerveDriveRotationAdvisor;
 import xbot.common.subsystems.drive.swerve.SwerveSuggestedRotation;
+
+import competition.operator_interface.OperatorInterface;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
 
 public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
@@ -42,11 +44,8 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
     HumanVsMachineDecider hvmDecider;
 
     @Inject
-    public SwerveDriveWithJoysticksCommand(
-            OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, TunableFactory tf,
-            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory,
-            SwerveDriveRotationAdvisor.Factory advisorFactory
-    ) {
+    public SwerveDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem drive, PoseSubsystem pose, TunableFactory tf,
+            HeadingModuleFactory headingModuleFactory, HumanVsMachineDeciderFactory hvmFactory, SwerveDriveRotationAdvisor.Factory advisorFactory) {
         tf.setPrefix(this);
         this.drive = drive;
         this.xGyro = pose.imu;
@@ -60,8 +59,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         this.overallDrivingPowerScale = tf.createDouble("DrivingPowerScale", 1.0);
         this.overallTurningPowerScale = tf.createDouble("TurningPowerScale", 1.0);
         this.precisionTranslationScale = tf.createDouble("PrecisionTranslationScale", 0.1);
-        this.extremePrecisionTranslationScale = tf.createDouble(
-                "ExtremePrecisionTranslationScale", 0.15);
+        this.extremePrecisionTranslationScale = tf.createDouble("ExtremePrecisionTranslationScale", 0.15);
         precisionRotationScale = tf.createDouble("PrecisionRotationScale", 0.2);
 
         this.addRequirements(drive);
@@ -93,12 +91,7 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         }
 
         // Field oriented drive will process the actual swerve movements for us
-        drive.fieldOrientedDrive(
-                translationIntent,
-                rotationIntent,
-                pose.getCurrentHeading().getDegrees(),
-                new XYPair(0,0)
-        );
+        drive.fieldOrientedDrive(translationIntent, rotationIntent, pose.getCurrentHeading().getDegrees(), new XYPair(0, 0));
 
         aKitLog.record("HumanTranslationIntentX", translationIntent.x);
         aKitLog.record("HumanTranslationIntentY", translationIntent.y);
@@ -134,15 +127,12 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
         // Apparently, we need to invert the x input here as it has been inverted for other commands already
         // And of course, we must rotate -90 (similar to how we got raw translation) for default alignment
         Translation2d joystickInput;
-        if (xGyro != null && xGyro.isBroken()){
+        if (xGyro != null && xGyro.isBroken()) {
             joystickInput = new Translation2d();
         } else {
             joystickInput = oi.driverGamepad.getRightVector();
         }
-        Translation2d processedInput = new Translation2d(
-                -joystickInput.getX(),
-                joystickInput.getY()
-        ).rotateBy(Rotation2d.fromDegrees(-90));
+        Translation2d processedInput = new Translation2d(-joystickInput.getX(), joystickInput.getY()).rotateBy(Rotation2d.fromDegrees(-90));
 
         SwerveSuggestedRotation suggested = advisor.getSuggestedRotationValue(processedInput, triggerRotateIntent);
         return processSuggestedRotationValueIntoPower(suggested);
@@ -176,14 +166,14 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
         return switch (suggested.type) {
-            case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
-            case HumanControlHeadingPower -> {
-                if (drive.isPrecisionRotationActive()) {
-                    yield suggested.value *= precisionRotationScale.get();
-                } else {
-                    yield suggested.value;
-                }
+        case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
+        case HumanControlHeadingPower -> {
+            if (drive.isPrecisionRotationActive()) {
+                yield suggested.value *= precisionRotationScale.get();
+            } else {
+                yield suggested.value;
             }
+        }
         };
     }
 }

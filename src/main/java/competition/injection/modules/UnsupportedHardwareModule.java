@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+
 import xbot.common.controls.sensors.XLaserCAN.XLaserCANFactory;
 
 /** Hardware whose real adapter is unavailable in SCL's 2027 alpha branch. */

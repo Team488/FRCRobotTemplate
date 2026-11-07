@@ -1,14 +1,19 @@
 package competition.electrical_contract;
 
-import competition.subsystems.pose.PoseSubsystem;
+import java.util.EnumSet;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.units.Units;
 import org.wpilib.units.measure.Distance;
-import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
-import org.wpilib.hardware.bus.CANPort;
+
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
@@ -18,9 +23,7 @@ import xbot.common.injection.electrical_contract.SparkMaxMotorControllerOutputCo
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
-import javax.inject.Inject;
-import java.util.EnumSet;
-import java.util.Set;
+import competition.subsystems.pose.PoseSubsystem;
 
 import static org.wpilib.units.Units.Amps;
 import static org.wpilib.units.Units.Inches;
@@ -44,96 +47,46 @@ public class Contract2023 extends ElectricalContract {
 
     @Override
     public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
-        var driveMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig()
-                .withSmartCurrentLimit(Amps.of(60));
+        var driveMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(60));
 
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    31,
-                    driveMotorControllerOutputConfig
-            );
-            case "FrontRightDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    29,
-                    driveMotorControllerOutputConfig
-            );
-            case "RearLeftDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    38,
-                    driveMotorControllerOutputConfig
-            );
-            case "RearRightDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    21,
-                    driveMotorControllerOutputConfig
-            );
-            default -> null;
+        case "FrontLeftDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 31,
+                driveMotorControllerOutputConfig);
+        case "FrontRightDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 29,
+                driveMotorControllerOutputConfig);
+        case "RearLeftDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 38,
+                driveMotorControllerOutputConfig);
+        case "RearRightDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 21,
+                driveMotorControllerOutputConfig);
+        default -> null;
         };
     }
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-        var steerMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig()
-                .withSmartCurrentLimit(Amps.of(40));
+        var steerMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            30,
-                            steerMotorControllerOutputConfig
-                    );
-            case "FrontRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            28,
-                            steerMotorControllerOutputConfig
-                    );
-            case "RearLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            39,
-                            steerMotorControllerOutputConfig
-                    );
-            case "RearRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            20,
-                            steerMotorControllerOutputConfig
-                    );
-            default -> null;
+        case "FrontLeftDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 30,
+                steerMotorControllerOutputConfig);
+        case "FrontRightDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 28,
+                steerMotorControllerOutputConfig);
+        case "RearLeftDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 39,
+                steerMotorControllerOutputConfig);
+        case "RearRightDrive" -> new CANMotorControllerInfo(getDriveControllerName(swerveInstance), MotorControllerType.SparkMax, CANPort.CAN_S0, 20,
+                steerMotorControllerOutputConfig);
+        default -> null;
         };
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 51, false);
-            case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 52, false);
-            case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 53, false);
-            case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 54, false);
-            default -> null;
+        case "FrontLeftDrive" -> new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 51, false);
+        case "FrontRightDrive" -> new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 52, false);
+        case "RearLeftDrive" -> new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 53, false);
+        case "RearRightDrive" -> new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 54, false);
+        default -> null;
         };
     }
 
@@ -141,11 +94,11 @@ public class Contract2023 extends ElectricalContract {
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
-            case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
-            case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
-            case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
-            default -> new Translation2d(0, 0);
+        case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
+        case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
+        case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
+        case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
+        default -> new Translation2d(0, 0);
         };
     }
 
@@ -166,40 +119,23 @@ public class Contract2023 extends ElectricalContract {
         double sideAprilCameraZDisplacement = 11 / PoseSubsystem.INCHES_IN_A_METER;
         double sideAprilCameraPitch = Math.toRadians(-25);
 
-        return new CameraInfo[]{
-                new CameraInfo("Apriltag_Left_Camera",
-                        "AprilTagLeft",
-                        new Transform3d(new Translation3d(
-                                sideAprilCameraXDisplacement,
-                                sideAprilCameraYDisplacement,
-                                sideAprilCameraZDisplacement),
+        return new CameraInfo[] {
+                new CameraInfo("Apriltag_Left_Camera", "AprilTagLeft",
+                        new Transform3d(new Translation3d(sideAprilCameraXDisplacement, sideAprilCameraYDisplacement, sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Right_Camera",
-                        "AprilTagRight",
-                        new Transform3d(new Translation3d(
-                                -sideAprilCameraXDisplacement,
-                                sideAprilCameraYDisplacement,
-                                sideAprilCameraZDisplacement),
+                new CameraInfo("Apriltag_Right_Camera", "AprilTagRight",
+                        new Transform3d(new Translation3d(-sideAprilCameraXDisplacement, sideAprilCameraYDisplacement, sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Front_Camera",
-                        "AprilTagFront",
-                        new Transform3d(new Translation3d(
-                                0.0,
-                                13.125 / PoseSubsystem.INCHES_IN_A_METER,
-                                14.0 / PoseSubsystem.INCHES_IN_A_METER),
+                new CameraInfo("Apriltag_Front_Camera", "AprilTagFront",
+                        new Transform3d(new Translation3d(0.0, 13.125 / PoseSubsystem.INCHES_IN_A_METER, 14.0 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-30), Math.toRadians(0))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Back_Camera",
-                        "AprilTagBack",
-                        new Transform3d(new Translation3d(
-                                0,
-                                -12.959212 / PoseSubsystem.INCHES_IN_A_METER,
-                                17.768664 / PoseSubsystem.INCHES_IN_A_METER),
+                new CameraInfo("Apriltag_Back_Camera", "AprilTagBack",
+                        new Transform3d(new Translation3d(0, -12.959212 / PoseSubsystem.INCHES_IN_A_METER, 17.768664 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
-                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
-        };
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)), };
     }
 
     @Override

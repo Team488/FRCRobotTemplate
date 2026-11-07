@@ -1,29 +1,30 @@
 package competition.simulation;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Seconds;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.COTS;
-import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
-
-import competition.Robot;
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
 import xbot.common.advantage.AKitLogger;
 import xbot.common.controls.sensors.mock_adapters.MockGyro;
 import xbot.common.logic.TimeStableValidator;
+
+import competition.Robot;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
+
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Seconds;
 
 @Singleton
 public class MapleSimulator implements BaseSimulator {
@@ -47,36 +48,20 @@ public class MapleSimulator implements BaseSimulator {
         aKitLog = new AKitLogger("Simulator/");
 
         @SuppressWarnings("unchecked")
-        var ourConfig = new DriveTrainSimulationConfig(
-                Units.Kilograms.of((double)45.0F),
-                Units.Meters.of(0.76),
-                Units.Meters.of(0.76),
-                Units.Meters.of(0.52),
-                Units.Meters.of(0.52),
-                COTS.ofPigeon2(),
-                COTS.ofMark4(
-                        DCMotor.getKrakenX60(1),
-                        DCMotor.getKrakenX60(1),
-                        COTS.WHEELS.SLS_PRINTED_WHEELS.cof,
-                        3)
-        );
+        var ourConfig = new DriveTrainSimulationConfig(Units.Kilograms.of((double) 45.0F), Units.Meters.of(0.76), Units.Meters.of(0.76), Units.Meters.of(0.52),
+                Units.Meters.of(0.52), COTS.ofPigeon2(), COTS.ofMark4(DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), COTS.WHEELS.SLS_PRINTED_WHEELS.cof, 3));
 
         // TODO: custom things to provide here like motor ratios and what have you
-        config = ourConfig.withCustomModuleTranslations(new Translation2d[] {
-                drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation(),
-                drive.getRearRightSwerveModuleSubsystem().getModuleTranslation()
-        });
+        config = ourConfig.withCustomModuleTranslations(new Translation2d[] { drive.getFrontLeftSwerveModuleSubsystem().getModuleTranslation(),
+                drive.getFrontRightSwerveModuleSubsystem().getModuleTranslation(), drive.getRearLeftSwerveModuleSubsystem().getModuleTranslation(),
+                drive.getRearRightSwerveModuleSubsystem().getModuleTranslation() });
 
         // starting middle ish of the field on blue
-        var startingPose = new Pose2d(7, 7 , new Rotation2d());
+        var startingPose = new Pose2d(7, 7, new Rotation2d());
 
         // Creating the SelfControlledSwerveDriveSimulation instance
-        this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(
-                new SwerveDriveSimulation(config, startingPose));
-        SimulatedArena.getInstance().addDriveTrainSimulation(
-                swerveDriveSimulation.getDriveTrainSimulation());
+        this.swerveDriveSimulation = new SelfControlledSwerveDriveSimulation(new SwerveDriveSimulation(config, startingPose));
+        SimulatedArena.getInstance().addDriveTrainSimulation(swerveDriveSimulation.getDriveTrainSimulation());
 
         // Tell the robot it's starting in the same spot
         pose.setCurrentPoseInMeters(startingPose);

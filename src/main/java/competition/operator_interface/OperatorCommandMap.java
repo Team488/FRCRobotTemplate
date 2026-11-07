@@ -10,20 +10,26 @@ import xbot.common.subsystems.autonomous.SetAutonomousCommand;
 public class OperatorCommandMap {
 
     @Inject
-    public OperatorCommandMap() {}
+    public OperatorCommandMap() {
+    }
 
     @Inject
-    public void setupOperatorCommands(OperatorInterface operatorInterface) {}
+    public void setupOperatorCommands(OperatorInterface operatorInterface) {
+    }
 
     @Inject
-    public void setupDriveCommands(OperatorInterface operatorInterface) {}
+    public void setupDriveCommands(OperatorInterface operatorInterface) {
+    }
 
     @Inject
-    public void setupOperatorGamepad(OperatorInterface operatorInterface) {}
+    public void setupOperatorGamepad(OperatorInterface operatorInterface) {
+    }
 
     @Inject
-    public void setupDebugGamepad(OperatorInterface operatorInterface) {}
+    public void setupDebugGamepad(OperatorInterface operatorInterface) {
+    }
 
     @Inject
-    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider) {}
+    public void setupAutoCommands(Provider<SetAutonomousCommand> setAutonomousCommandProvider) {
+    }
 }

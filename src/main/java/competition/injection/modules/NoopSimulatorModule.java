@@ -2,10 +2,11 @@ package competition.injection.modules;
 
 import javax.inject.Singleton;
 
-import competition.simulation.BaseSimulator;
-import competition.simulation.NoopSimulator;
 import dagger.Binds;
 import dagger.Module;
+
+import competition.simulation.BaseSimulator;
+import competition.simulation.NoopSimulator;
 
 /** Provides a safe simulator placeholder where physics simulation is not run. */
 @Module

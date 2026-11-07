@@ -1,7 +1,13 @@
 package competition.electrical_contract;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.units.measure.Distance;
+
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
@@ -9,11 +15,6 @@ import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /*
  * The electrical contract hierarchy:
@@ -47,27 +48,31 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     // TODO: Remove these later
     public abstract boolean isDriveReady();
+
     public abstract boolean areCanCodersReady();
 
     public abstract CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance);
+
     public abstract CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance);
+
     public abstract DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance);
+
     public abstract Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance);
+
     public abstract IMUInfo getIMUInfo();
 
     /**
-     * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.)
-     * Override this method in specific contract implementations to specify these connections.
-     * Multiple non-motor devices may share a PDH port (e.g., two buck converters on one port).
+     * Returns additional PDH connections for non-motor devices (e.g., VRMs, PCMs, buck converters, etc.) Override this
+     * method in specific contract implementations to specify these connections. Multiple non-motor devices may share a PDH
+     * port (e.g., two buck converters on one port).
      */
     public Map<PDHPort, List<String>> getAdditionalPDHConnections() {
         return new HashMap<>();
     }
 
     /**
-     * Returns power branch connections for intermediate converters (e.g., buck converters, VRMs).
-     * Maps converter name to the list of devices it powers.
-     * Override this method in specific contract implementations to document the power chain.
+     * Returns power branch connections for intermediate converters (e.g., buck converters, VRMs). Maps converter name to
+     * the list of devices it powers. Override this method in specific contract implementations to document the power chain.
      */
     public Map<String, List<String>> getAdditionalPowerBranches() {
         return new HashMap<>();

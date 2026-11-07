@@ -2,10 +2,12 @@ package competition.simulation.commands;
 
 import javax.inject.Inject;
 
-import competition.simulation.BaseSimulator;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
+
 import xbot.common.command.BaseCommand;
+
+import competition.simulation.BaseSimulator;
 
 public class ResetSimulatedPoseCommand extends BaseCommand {
     BaseSimulator simulator;

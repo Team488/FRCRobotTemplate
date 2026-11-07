@@ -1,20 +1,22 @@
 package competition.subsystems;
 
-import competition.BaseCompetitionTest;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mockito;
-import xbot.common.advantage.DataFrameRefreshable;
-import xbot.common.command.BaseSubsystem;
-import xbot.common.controls.actuators.XCANMotorController;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
+
+import xbot.common.advantage.DataFrameRefreshable;
+import xbot.common.command.BaseSubsystem;
+import xbot.common.controls.actuators.XCANMotorController;
+
+import competition.BaseCompetitionTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -119,8 +121,9 @@ public class GenericSubsystemTest extends BaseCompetitionTest {
         // Check that each motor controller periodic method was called
         for (Object subsystem : subsystems) {
             for (Object motorController : subsystemMotorControllerMap.get(subsystem)) {
-                Mockito.verify((XCANMotorController)motorController, Mockito.atLeastOnce()
-                        .description("Subsystem " + subsystem.getClass().getName() + " did not call periodic on a motor controller.")).periodic();
+                Mockito.verify((XCANMotorController) motorController,
+                        Mockito.atLeastOnce().description("Subsystem " + subsystem.getClass().getName() + " did not call periodic on a motor controller."))
+                        .periodic();
             }
         }
     }

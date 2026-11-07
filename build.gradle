@@ -5,6 +5,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'org.hidetake.ssh' version "2.9.0"
+    id 'com.diffplug.spotless' version '8.10.4'
 }
 
 java {
@@ -168,6 +169,24 @@ task('copyResources') {
 checkstyle {
     toolVersion = '10.6.0'
     configFile = file('config/checkstyle/checkstyle.xml')
+}
+
+// Spotless auto-fixes the formatting rules that overlap with config/checkstyle/checkstyle.xml
+// (import grouping/order, line length, no tabs) by reusing the same Eclipse formatter profile
+// that VS Code is configured to use (see .vscode/settings.json). Unlike SCL, this repo doesn't
+// vendor any of the legacy hardware-adapter classes checkstyle_suppressions.xml exempts (nav6,
+// navx, CANTalon, etc.) or have a generated/ source directory, so there's nothing to exclude.
+spotless {
+    java {
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        // '\\#' is Spotless's marker for static imports; placing it last keeps them in their
+        // own group at the bottom of the file, matching config/checkstyle/checkstyle.xml's
+        // ImportOrder(option = bottom, sortStaticImportsAlphabetically = true).
+        importOrder('java', 'javax', '', 'org.wpilib', 'dagger', 'xbot', 'competition', '\\#')
+        eclipse().configFile('xboteclipseprofile.xml')
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 // Configure basedir for all checkstyle tasks (main, test, and custom)

@@ -7,7 +7,6 @@ import org.wpilib.tunable.TunableDouble;
 
 import xbot.common.controls.sensors.XXboxController;
 import xbot.common.controls.sensors.XXboxController.XXboxControllerFactory;
-import xbot.common.logging.RobotAssertionManager;
 import xbot.common.properties.TunableFactory;
 import xbot.common.properties.TunableLevel;
 
@@ -25,7 +24,7 @@ public class OperatorInterface {
     final TunableDouble operatorDeadband;
 
     @Inject
-    public OperatorInterface(XXboxControllerFactory controllerFactory, RobotAssertionManager assertionManager, TunableFactory tf) {
+    public OperatorInterface(XXboxControllerFactory controllerFactory, TunableFactory tf) {
         driverGamepad = controllerFactory.create(0);
         driverGamepad.setLeftInversion(false, true);
         driverGamepad.setRightInversion(true, true);

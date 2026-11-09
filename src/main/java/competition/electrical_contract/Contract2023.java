@@ -1,6 +1,7 @@
 package competition.electrical_contract;
 
 import competition.subsystems.pose.PoseSubsystem;
+import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
@@ -8,12 +9,13 @@ import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.units.Units;
 import org.wpilib.units.measure.Distance;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
-import org.wpilib.hardware.bus.CANPort;
+import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.CameraInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.MotorControllerType;
+import xbot.common.injection.electrical_contract.PowerSource;
 import xbot.common.injection.electrical_contract.SparkMaxMotorControllerOutputConfig;
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
@@ -48,34 +50,26 @@ public class Contract2023 extends ElectricalContract {
                 .withSmartCurrentLimit(Amps.of(60));
 
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    31,
-                    driveMotorControllerOutputConfig
-            );
-            case "FrontRightDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    29,
-                    driveMotorControllerOutputConfig
-            );
-            case "RearLeftDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    38,
-                    driveMotorControllerOutputConfig
-            );
-            case "RearRightDrive" -> new CANMotorControllerInfo(
-                    getDriveControllerName(swerveInstance),
-                    MotorControllerType.SparkMax,
-                    CANPort.CAN_S0,
-                    21,
-                    driveMotorControllerOutputConfig
-            );
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 31)
+                    .withOutputConfig(driveMotorControllerOutputConfig)
+                    .build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 29)
+                    .withOutputConfig(driveMotorControllerOutputConfig)
+                    .build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 38)
+                    .withOutputConfig(driveMotorControllerOutputConfig)
+                    .build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 21)
+                    .withOutputConfig(driveMotorControllerOutputConfig)
+                    .build();
             default -> null;
         };
     }
@@ -86,38 +80,26 @@ public class Contract2023 extends ElectricalContract {
                 .withSmartCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            30,
-                            steerMotorControllerOutputConfig
-                    );
-            case "FrontRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            28,
-                            steerMotorControllerOutputConfig
-                    );
-            case "RearLeftDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            39,
-                            steerMotorControllerOutputConfig
-                    );
-            case "RearRightDrive" ->
-                    new CANMotorControllerInfo(
-                            getDriveControllerName(swerveInstance),
-                            MotorControllerType.SparkMax,
-                            CANPort.CAN_S0,
-                            20,
-                            steerMotorControllerOutputConfig
-                    );
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 30)
+                    .withOutputConfig(steerMotorControllerOutputConfig)
+                    .build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 28)
+                    .withOutputConfig(steerMotorControllerOutputConfig)
+                    .build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 39)
+                    .withOutputConfig(steerMotorControllerOutputConfig)
+                    .build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
+                    .withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 20)
+                    .withOutputConfig(steerMotorControllerOutputConfig)
+                    .build();
             default -> null;
         };
     }
@@ -125,14 +107,18 @@ public class Contract2023 extends ElectricalContract {
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 51, false);
-            case "FrontRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 52, false);
-            case "RearLeftDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 53, false);
-            case "RearRightDrive" ->
-                    new DeviceInfo(getSteeringEncoderControllerName(swerveInstance), CANPort.CAN_S0, 54, false);
+            case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
+                    .withCanBus(CANPort.CAN_S0, 51)
+                    .build();
+            case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
+                    .withCanBus(CANPort.CAN_S0, 52)
+                    .build();
+            case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
+                    .withCanBus(CANPort.CAN_S0, 53)
+                    .build();
+            case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
+                    .withCanBus(CANPort.CAN_S0, 54)
+                    .build();
             default -> null;
         };
     }
@@ -206,7 +192,11 @@ public class Contract2023 extends ElectricalContract {
     public IMUInfo getIMUInfo() {
         // TODO: VERIFY ON THE ROBOT BEFORE DEPLOYING: FLAT is a provisional SystemCore IMU mounting orientation.
         // Replace this with the actual controller mounting orientation; incorrect orientation corrupts heading/pose.
-        return new IMUInfo(MountOrientation.FLAT);
+        return IMUInfo.builder("IMU", XGyro.ImuType.onboard)
+                .withDeviceId(1)
+                .withMountOrientation(MountOrientation.FLAT)
+                .withPowerFrom(PowerSource.RIO)
+                .build();
     }
 
     @Override

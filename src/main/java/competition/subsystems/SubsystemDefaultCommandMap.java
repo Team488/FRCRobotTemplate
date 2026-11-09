@@ -13,7 +13,8 @@ import competition.subsystems.drive.commands.SwerveDriveWithJoysticksCommand;
 public class SubsystemDefaultCommandMap {
 
     @Inject
-    public SubsystemDefaultCommandMap() {}
+    public SubsystemDefaultCommandMap() {
+    }
 
     @Inject
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, SwerveDriveWithJoysticksCommand command) {

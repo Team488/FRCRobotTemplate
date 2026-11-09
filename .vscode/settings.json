@@ -2,6 +2,21 @@
   "java.import.gradle.enabled": true,
   "java.autobuild.enabled": false,
   "java.configuration.updateBuildConfiguration": "automatic",
+  "java.format.settings.url": "xboteclipseprofile.xml",
+  "java.format.settings.profile": "XbotProfile",
+  "java.completion.importOrder": [
+    "java",
+    "javax",
+    "",
+    "org.wpilib",
+    "dagger",
+    "xbot",
+    "competition",
+    "#"
+  ],
+  "[java]": {
+    "editor.formatOnSave": true
+  },
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,

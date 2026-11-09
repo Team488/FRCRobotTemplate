@@ -2,17 +2,16 @@ package competition.injection.modules;
 
 import javax.inject.Singleton;
 
-import competition.electrical_contract.ElectricalContract;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.pose.PoseSubsystem;
+import org.wpilib.fields.Fields;
+import org.wpilib.preferences.Preferences;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import org.wpilib.fields.Fields;
-import org.wpilib.preferences.Preferences;
+
 import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.FrontLeftDrive;
 import xbot.common.injection.swerve.FrontRightDrive;
@@ -27,6 +26,10 @@ import xbot.common.subsystems.drive.swerve.ISwerveAdvisorPoseSupport;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 import xbot.common.subsystems.pose.GameField;
 
+import competition.electrical_contract.ElectricalContract;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
+
 @Module(subcomponents = { SwerveComponent.class })
 public abstract class CommonModule {
     @SuppressWarnings("unused")
@@ -35,33 +38,25 @@ public abstract class CommonModule {
     @Provides
     @Singleton
     public static @FrontLeftDrive SwerveComponent frontLeftSwerveComponent(SwerveComponent.Builder builder) {
-        return builder
-                .swerveInstance(new SwerveInstance("FrontLeftDrive"))
-                .build();
+        return builder.swerveInstance(new SwerveInstance("FrontLeftDrive")).build();
     }
 
     @Provides
     @Singleton
     public static @FrontRightDrive SwerveComponent frontRightSwerveComponent(SwerveComponent.Builder builder) {
-        return builder
-                .swerveInstance(new SwerveInstance("FrontRightDrive"))
-                .build();
+        return builder.swerveInstance(new SwerveInstance("FrontRightDrive")).build();
     }
 
     @Provides
     @Singleton
     public static @RearLeftDrive SwerveComponent rearLeftSwerveComponent(SwerveComponent.Builder builder) {
-        return builder
-                .swerveInstance(new SwerveInstance("RearLeftDrive"))
-                .build();
+        return builder.swerveInstance(new SwerveInstance("RearLeftDrive")).build();
     }
 
     @Provides
     @Singleton
     public static @RearRightDrive SwerveComponent rearRightSwerveComponent(SwerveComponent.Builder builder) {
-        return builder
-                .swerveInstance(new SwerveInstance("RearRightDrive"))
-                .build();
+        return builder.swerveInstance(new SwerveInstance("RearRightDrive")).build();
     }
 
     @Provides
@@ -74,12 +69,12 @@ public abstract class CommonModule {
 
         String chosenField = Preferences.getString("FieldLayout", "2026_welded");
         switch (chosenField) {
-            case "2026_andymark":
-                log.info("Using 2026 Andymark April Tag Field Layout.");
-                return Fields.FRC_2026_REBUILT_ANDY_MARK;
-            default:
-                log.info("Using 2026 Welded April Tag Field Layout default for competition.");
-                return Fields.FRC_2026_REBUILT_WELDED;
+        case "2026_andymark":
+            log.info("Using 2026 Andymark April Tag Field Layout.");
+            return Fields.FRC_2026_REBUILT_ANDY_MARK;
+        default:
+            log.info("Using 2026 Welded April Tag Field Layout default for competition.");
+            return Fields.FRC_2026_REBUILT_WELDED;
         }
     }
 

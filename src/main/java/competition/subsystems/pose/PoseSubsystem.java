@@ -1,19 +1,21 @@
 package competition.subsystems.pose;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import competition.subsystems.drive.DriveSubsystem;
 import org.wpilib.math.estimator.SwerveDrivePoseEstimator;
 import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.SwerveModulePosition;
+
 import xbot.common.controls.sensors.XGyro.XGyroFactory;
-import org.wpilib.math.geometry.Rotation2d;
 import xbot.common.properties.TunableFactory;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
-import java.util.Optional;
+import competition.subsystems.drive.DriveSubsystem;
 
 @Singleton
 public class PoseSubsystem extends BasePoseSubsystem {
@@ -31,7 +33,6 @@ public class PoseSubsystem extends BasePoseSubsystem {
         onlyWheelsGyroSwerveOdometry = initializeSwerveOdometry();
     }
 
-
     @Override
     protected double getLeftDriveDistance() {
         return drive.getLeftTotalDistance();
@@ -42,29 +43,18 @@ public class PoseSubsystem extends BasePoseSubsystem {
         return drive.getRightTotalDistance();
     }
 
-
     private SwerveDrivePoseEstimator initializeSwerveOdometry() {
-        return new SwerveDrivePoseEstimator(
-                drive.getSwerveDriveKinematics(),
-                getCurrentHeading(),
-                getSwerveModulePositions(),
-                new Pose2d());
+        return new SwerveDrivePoseEstimator(drive.getSwerveDriveKinematics(), getCurrentHeading(), getSwerveModulePositions(), new Pose2d());
     }
 
     @Override
     protected void updateOdometry() {
-        onlyWheelsGyroSwerveOdometry.update(
-                this.getCurrentHeading(),
-                getSwerveModulePositions()
-        );
+        onlyWheelsGyroSwerveOdometry.update(this.getCurrentHeading(), getSwerveModulePositions());
 
         aKitLog.record("WheelsOnlyEstimate", onlyWheelsGyroSwerveOdometry.getEstimatedPosition());
 
         Translation2d positionSource = onlyWheelsGyroSwerveOdometry.getEstimatedPosition().getTranslation();
-        Pose2d estimatedPosition = new Pose2d(
-                positionSource,
-                getCurrentHeading()
-        );
+        Pose2d estimatedPosition = new Pose2d(positionSource, getCurrentHeading());
         aKitLog.record("RobotPose", estimatedPosition);
 
         totalDistanceX = estimatedPosition.getX();
@@ -83,32 +73,20 @@ public class PoseSubsystem extends BasePoseSubsystem {
         if (simulatedModulePositions.isPresent()) {
             return simulatedModulePositions.get();
         }
-        return new SwerveModulePosition[] {
-                drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
-                drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(),
-                drive.getRearLeftSwerveModuleSubsystem().getCurrentPosition(),
-                drive.getRearRightSwerveModuleSubsystem().getCurrentPosition()
-        };
+        return new SwerveModulePosition[] { drive.getFrontLeftSwerveModuleSubsystem().getCurrentPosition(),
+                drive.getFrontRightSwerveModuleSubsystem().getCurrentPosition(), drive.getRearLeftSwerveModuleSubsystem().getCurrentPosition(),
+                drive.getRearRightSwerveModuleSubsystem().getCurrentPosition() };
     }
 
     public void setCurrentPosition(double newXPositionMeters, double newYPositionMeters, Rotation2d heading) {
         super.setCurrentPosition(newXPositionMeters, newYPositionMeters);
         super.setCurrentHeading(heading.getDegrees());
-        onlyWheelsGyroSwerveOdometry.resetPosition(
-                heading,
-                getSwerveModulePositions(),
-                new Pose2d(
-                        newXPositionMeters,
-                        newYPositionMeters,
-                        this.getCurrentHeading()));
+        onlyWheelsGyroSwerveOdometry.resetPosition(heading, getSwerveModulePositions(),
+                new Pose2d(newXPositionMeters, newYPositionMeters, this.getCurrentHeading()));
     }
 
     public void setCurrentPoseInMeters(Pose2d newPoseInMeters) {
-        setCurrentPosition(
-                newPoseInMeters.getTranslation().getX(),
-                newPoseInMeters.getTranslation().getY(),
-                newPoseInMeters.getRotation()
-        );
+        setCurrentPosition(newPoseInMeters.getTranslation().getX(), newPoseInMeters.getTranslation().getY(), newPoseInMeters.getRotation());
     }
 
     // used by the physics simulator to mock what the swerve modules are doing

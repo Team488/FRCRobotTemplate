@@ -5,14 +5,17 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.wpilib.command2.InstantCommand;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveDriveKinematics;
 import org.wpilib.math.kinematics.SwerveModuleVelocity;
-import org.wpilib.command2.InstantCommand;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.wpilib.tunable.TunableDouble;
+
 import xbot.common.command.BaseRobot;
 import xbot.common.command.DataFrameRegistry;
 import xbot.common.injection.swerve.FrontLeftDrive;
@@ -22,9 +25,8 @@ import xbot.common.injection.swerve.RearRightDrive;
 import xbot.common.injection.swerve.SwerveComponent;
 import xbot.common.math.PIDDefaults;
 import xbot.common.math.PIDManager.PIDManagerFactory;
-import org.wpilib.tunable.TunableDouble;
-import xbot.common.properties.TunableLevel;
 import xbot.common.properties.TunableFactory;
+import xbot.common.properties.TunableLevel;
 import xbot.common.subsystems.drive.BaseSwerveDriveSubsystem;
 
 @Singleton
@@ -45,10 +47,9 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     private final TunableDouble interstitialSpeedMps;
 
     @Inject
-    public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory tf,
-                          @FrontLeftDrive SwerveComponent frontLeftSwerve, @FrontRightDrive SwerveComponent frontRightSwerve,
-                          @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve,
-                          DataFrameRegistry dataFrameRegistry) {
+    public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory tf, @FrontLeftDrive SwerveComponent frontLeftSwerve,
+            @FrontRightDrive SwerveComponent frontRightSwerve, @RearLeftDrive SwerveComponent rearLeftSwerve, @RearRightDrive SwerveComponent rearRightSwerve,
+            DataFrameRegistry dataFrameRegistry) {
 
         super(pidFactory, tf, frontLeftSwerve, frontRightSwerve, rearLeftSwerve, rearRightSwerve, dataFrameRegistry);
         log.info("Creating DriveSubsystem");
@@ -66,8 +67,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
 
     @Override
     protected PIDDefaults getPositionalPIDDefaults() {
-        return new PIDDefaults(
-                1.08, // P
+        return new PIDDefaults(1.08, // P
                 0, // I
                 4.0, // D
                 0.0, // F
@@ -81,8 +81,7 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     @Override
     protected PIDDefaults getHeadingPIDDefaults() {
         var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
-        return new PIDDefaults(
-                0.008, // P
+        return new PIDDefaults(0.008, // P
                 0.0005, // I
                 0.01, // D
                 0.0, // F
@@ -166,16 +165,14 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
         return new InstantCommand(() -> {
             setStaticHeadingTarget(staticHeadingTarget.get());
             setStaticHeadingTargetActive(true);
-        }
-        );
+        });
     }
 
     public InstantCommand createSetLookAtPointTargetCommand(Supplier<Translation2d> lookAtPointTarget) {
         return new InstantCommand(() -> {
             setLookAtPointTarget(lookAtPointTarget.get());
             setLookAtPointTargetActive(true);
-        }
-        );
+        });
     }
 
     public InstantCommand createClearAllHeadingTargetsCommand() {
@@ -188,8 +185,8 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     /** The follow methods are stole directly from Junjie's SCL PR which is probably 99.5% AI Generated */
 
     /**
-     * Gets the current robot-relative chassis speeds by converting the current swerve module states
-     * through inverse kinematics. This is needed by PathPlanner's AutoBuilder.
+     * Gets the current robot-relative chassis speeds by converting the current swerve module states through inverse
+     * kinematics. This is needed by PathPlanner's AutoBuilder.
      *
      * @return The current robot-relative ChassisVelocities.
      */
@@ -199,10 +196,11 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     }
 
     /**
-     * Drives the robot using the given robot-relative ChassisVelocities. Converts the ChassisVelocities
-     * to individual swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
+     * Drives the robot using the given robot-relative ChassisVelocities. Converts the ChassisVelocities to individual
+     * swerve module states and applies them. This is needed by PathPlanner's AutoBuilder.
      *
-     * @param chassisSpeeds The desired robot-relative chassis speeds.
+     * @param chassisSpeeds
+     *            The desired robot-relative chassis speeds.
      */
     public void driveWithChassisVelocities(ChassisVelocities chassisSpeeds) {
         SwerveModuleVelocity[] moduleStates = getSwerveDriveKinematics().toSwerveModuleVelocities(chassisSpeeds);

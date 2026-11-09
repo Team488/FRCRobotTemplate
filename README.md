@@ -7,3 +7,10 @@ To find out more about the library, visit the [Seriously Common Lib repo](https:
 ## Up-front warning
 
 This template, like our library as a whole, is a work-in-progress. See the library readme for more information.
+
+## Development setup
+
+Code formatting is auto-fixed by Spotless, using the same Eclipse formatter profile VS Code is
+configured to use. Run `git config core.hooksPath githooks` once per clone so a misformatted
+commit gets caught (and fixed in your working tree for you to review) before it lands. Install the
+recommended `redhat.java` VS Code extension if prompted, for format-on-save.

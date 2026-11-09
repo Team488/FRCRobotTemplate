@@ -2,10 +2,11 @@ package competition.injection.modules;
 
 import javax.inject.Singleton;
 
-import competition.simulation.BaseSimulator;
-import competition.simulation.MapleSimulator;
 import dagger.Binds;
 import dagger.Module;
+
+import competition.simulation.BaseSimulator;
+import competition.simulation.MapleSimulator;
 
 /** Provides the physics-backed simulator used by the simulation component. */
 @Module

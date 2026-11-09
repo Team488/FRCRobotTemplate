@@ -1,16 +1,22 @@
 package competition.electrical_contract;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 
-import competition.subsystems.pose.PoseSubsystem;
 import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Translation3d;
-import org.wpilib.units.measure.Distance;
 import org.wpilib.units.Units;
-import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
+import org.wpilib.units.measure.Distance;
+
 import xbot.common.controls.sensors.XGyro;
 import xbot.common.injection.electrical_contract.CANBusId;
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
@@ -25,11 +31,7 @@ import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputCon
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import competition.subsystems.pose.PoseSubsystem;
 
 import static org.wpilib.units.Units.Amps;
 import static org.wpilib.units.Units.Inches;
@@ -48,130 +50,84 @@ public class Contract2026 extends ElectricalContract {
     }
 
     @Override
-    public boolean isDriveReady() { return true; }
+    public boolean isDriveReady() {
+        return true;
+    }
 
     @Override
-    public boolean areCanCodersReady() { return true; }
+    public boolean areCanCodersReady() {
+        return true;
+    }
 
     @Override
     public IMUInfo getIMUInfo() {
         // TODO: VERIFY ON THE ROBOT BEFORE DEPLOYING: FLAT is a provisional SystemCore IMU mounting orientation.
         // Replace this with the actual controller mounting orientation; incorrect orientation corrupts heading/pose.
-        return IMUInfo.builder("IMU", XGyro.ImuType.onboard)
-                .withDeviceId(1)
-                .withMountOrientation(MountOrientation.FLAT)
-                .withPowerFrom(PowerSource.RIO)
-                .build();
+        return IMUInfo.builder("IMU", XGyro.ImuType.onboard).withDeviceId(1).withMountOrientation(MountOrientation.FLAT).withPowerFrom(PowerSource.RIO).build();
     }
 
     public DeviceInfo pigeon2() {
-        return DeviceInfo.builder("Pigeon2.0")
-                .withCanBus(CANPort.CAN_S0, 56)
-                .build();
+        return DeviceInfo.builder("Pigeon2.0").withCanBus(CANPort.CAN_S0, 56).build();
     }
 
     public DeviceInfo candle() {
-        return DeviceInfo.builder("CANdle")
-                .withCanBus(CANPort.CAN_S0, 57)
-                .build();
+        return DeviceInfo.builder("CANdle").withCanBus(CANPort.CAN_S0, 57).build();
     }
 
     @Override
     public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
-        var motorConfig = new TalonFxMotorControllerOutputConfig()
-                .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
+        var motorConfig = new TalonFxMotorControllerOutputConfig().withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
                 .withStatorCurrentLimit(Amps.of(45));
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 30)
-                    .withPdhPort(PDHPort.PDH10)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 38)
-                    .withPdhPort(PDHPort.PDH18)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 28)
-                    .withPdhPort(PDHPort.PDH08)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 20)
-                    .withPdhPort(PDHPort.PDH00)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            default -> null;
+        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 30).withPdhPort(PDHPort.PDH10).withOutputConfig(motorConfig).build();
+        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 38).withPdhPort(PDHPort.PDH18).withOutputConfig(motorConfig).build();
+        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 28).withPdhPort(PDHPort.PDH08).withOutputConfig(motorConfig).build();
+        case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 20).withPdhPort(PDHPort.PDH00).withOutputConfig(motorConfig).build();
+        default -> null;
         };
     }
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-        var motorConfig = new TalonFxMotorControllerOutputConfig()
-                .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+        var motorConfig = new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                 .withStatorCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 31)
-                    .withPdhPort(PDHPort.PDH11)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 39)
-                    .withPdhPort(PDHPort.PDH19)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 29)
-                    .withPdhPort(PDHPort.PDH09)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance))
-                    .withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 21)
-                    .withPdhPort(PDHPort.PDH01)
-                    .withOutputConfig(motorConfig)
-                    .build();
-            default -> null;
+        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 31).withPdhPort(PDHPort.PDH11).withOutputConfig(motorConfig).build();
+        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 39).withPdhPort(PDHPort.PDH19).withOutputConfig(motorConfig).build();
+        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 29).withPdhPort(PDHPort.PDH09).withOutputConfig(motorConfig).build();
+        case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                .withCanBus(CANPort.CAN_S0, 21).withPdhPort(PDHPort.PDH01).withOutputConfig(motorConfig).build();
+        default -> null;
         };
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
-                    .withCanBus(CANPort.CAN_S0, 53)
-                    .build();
-            case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
-                    .withCanBus(CANPort.CAN_S0, 54)
-                    .build();
-            case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
-                    .withCanBus(CANPort.CAN_S0, 52)
-                    .build();
-            case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance))
-                    .withCanBus(CANPort.CAN_S0, 51)
-                    .build();
-            default -> null;
+        case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
+        case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
+        case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
+        case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
+        default -> null;
         };
     }
 
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
-            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
-            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
-            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
-            default -> new Translation2d(0, 0);
+        case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+        case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+        case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+        case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
+        default -> new Translation2d(0, 0);
         };
     }
 
@@ -188,37 +144,24 @@ public class Contract2026 extends ElectricalContract {
     // --- CAN Bus Connection Order (used only by the electrical report tool) ---
     // Lists every CAN device with its physical daisy-chain position.
     // busId + canId must uniquely identify the device returned by the corresponding getter.
-    public static record CanBusOrderEntry(CANBusId busId, int canId, String deviceName, int busPosition) {}
+    public static record CanBusOrderEntry(CANBusId busId, int canId, String deviceName, int busPosition) {
+    }
 
     public List<CanBusOrderEntry> getCanBusConnectionOrder() {
         var busId = CANBusId.fromPort(CANPort.CAN_S0);
-        return List.of(
-                new CanBusOrderEntry(busId, 30, "FrontLeftDrive/Drive",              1),
-                new CanBusOrderEntry(busId, 53, "FrontLeftDrive/SteeringEncoder",    2),
-                new CanBusOrderEntry(busId, 31, "FrontLeftDrive/Steering",           3),
-                new CanBusOrderEntry(busId, 29, "RearLeftDrive/Steering",            4),
-                new CanBusOrderEntry(busId, 52, "RearLeftDrive/SteeringEncoder",     5),
-                new CanBusOrderEntry(busId, 28, "RearLeftDrive/Drive",               6),
-                new CanBusOrderEntry(busId, 20, "RearRightDrive/Drive",              7),
-                new CanBusOrderEntry(busId, 51, "RearRightDrive/SteeringEncoder",    8),
-                new CanBusOrderEntry(busId, 21, "RearRightDrive/Steering",           9),
-                new CanBusOrderEntry(busId, 39, "FrontRightDrive/Steering",         10),
-                new CanBusOrderEntry(busId, 54, "FrontRightDrive/SteeringEncoder",  11),
-                new CanBusOrderEntry(busId, 38, "FrontRightDrive/Drive",            12),
-                new CanBusOrderEntry(busId, 56, "Pigeon",                           13),
-                new CanBusOrderEntry(busId, 57, "CANdle",                           14),
-                new CanBusOrderEntry(busId, 58, "IntakeDeployAbsoluteEncoderReady", 15),
-                new CanBusOrderEntry(busId, 34, "IntakeDeployMotor",                16),
-                new CanBusOrderEntry(busId, 32, "FuelIntakeMotor",                  17),
-                new CanBusOrderEntry(busId, 33, "HopperRoller",                     18),
-                new CanBusOrderEntry(busId, 37, "ShooterFeederMotor",               19),
-                new CanBusOrderEntry(busId, 25, "ClimberMotorLeft",                 20),
-                new CanBusOrderEntry(busId, 22, "ShooterLeftMotor",                 21),
-                new CanBusOrderEntry(busId, 23, "ShooterMiddleMotor",               22),
-                new CanBusOrderEntry(busId, 59, "ClimberAbsoluteEncoderReady",      23),
-                new CanBusOrderEntry(busId, 24, "ShooterRightMotor",                24),
-                new CanBusOrderEntry(busId, 26, "ClimberMotorRight",                25)
-        );
+        return List.of(new CanBusOrderEntry(busId, 30, "FrontLeftDrive/Drive", 1), new CanBusOrderEntry(busId, 53, "FrontLeftDrive/SteeringEncoder", 2),
+                new CanBusOrderEntry(busId, 31, "FrontLeftDrive/Steering", 3), new CanBusOrderEntry(busId, 29, "RearLeftDrive/Steering", 4),
+                new CanBusOrderEntry(busId, 52, "RearLeftDrive/SteeringEncoder", 5), new CanBusOrderEntry(busId, 28, "RearLeftDrive/Drive", 6),
+                new CanBusOrderEntry(busId, 20, "RearRightDrive/Drive", 7), new CanBusOrderEntry(busId, 51, "RearRightDrive/SteeringEncoder", 8),
+                new CanBusOrderEntry(busId, 21, "RearRightDrive/Steering", 9), new CanBusOrderEntry(busId, 39, "FrontRightDrive/Steering", 10),
+                new CanBusOrderEntry(busId, 54, "FrontRightDrive/SteeringEncoder", 11), new CanBusOrderEntry(busId, 38, "FrontRightDrive/Drive", 12),
+                new CanBusOrderEntry(busId, 56, "Pigeon", 13), new CanBusOrderEntry(busId, 57, "CANdle", 14),
+                new CanBusOrderEntry(busId, 58, "IntakeDeployAbsoluteEncoderReady", 15), new CanBusOrderEntry(busId, 34, "IntakeDeployMotor", 16),
+                new CanBusOrderEntry(busId, 32, "FuelIntakeMotor", 17), new CanBusOrderEntry(busId, 33, "HopperRoller", 18),
+                new CanBusOrderEntry(busId, 37, "ShooterFeederMotor", 19), new CanBusOrderEntry(busId, 25, "ClimberMotorLeft", 20),
+                new CanBusOrderEntry(busId, 22, "ShooterLeftMotor", 21), new CanBusOrderEntry(busId, 23, "ShooterMiddleMotor", 22),
+                new CanBusOrderEntry(busId, 59, "ClimberAbsoluteEncoderReady", 23), new CanBusOrderEntry(busId, 24, "ShooterRightMotor", 24),
+                new CanBusOrderEntry(busId, 26, "ClimberMotorRight", 25));
     }
 
     @Override
@@ -256,39 +199,21 @@ public class Contract2026 extends ElectricalContract {
         double sideAprilCameraZDisplacement = 0.19;
         double sideAprilCameraPitch = Math.toRadians(-25.5);
 
-        return new CameraInfo[]{
-                new CameraInfo("Apriltag_Left_Camera",
-                        "AprilTagLeft",
-                        new Transform3d(new Translation3d(
-                                sideAprilCameraXDisplacement,
-                                sideAprilCameraYDisplacement,
-                                sideAprilCameraZDisplacement),
+        return new CameraInfo[] {
+                new CameraInfo("Apriltag_Left_Camera", "AprilTagLeft",
+                        new Transform3d(new Translation3d(sideAprilCameraXDisplacement, sideAprilCameraYDisplacement, sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(90))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Right_Camera",
-                        "AprilTagRight",
-                        new Transform3d(new Translation3d(
-                                sideAprilCameraXDisplacement,
-                                -sideAprilCameraYDisplacement,
-                                sideAprilCameraZDisplacement),
+                new CameraInfo("Apriltag_Right_Camera", "AprilTagRight",
+                        new Transform3d(new Translation3d(sideAprilCameraXDisplacement, -sideAprilCameraYDisplacement, sideAprilCameraZDisplacement),
                                 new Rotation3d(0, sideAprilCameraPitch, Math.toRadians(270))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Front_Camera",
-                        "AprilTagFront",
-                        new Transform3d(new Translation3d(
-                                0,
-                                0.25 / PoseSubsystem.INCHES_IN_A_METER,
-                                20.075958 / PoseSubsystem.INCHES_IN_A_METER),
+                new CameraInfo("Apriltag_Front_Camera", "AprilTagFront",
+                        new Transform3d(new Translation3d(0, 0.25 / PoseSubsystem.INCHES_IN_A_METER, 20.075958 / PoseSubsystem.INCHES_IN_A_METER),
                                 new Rotation3d(0, Math.toRadians(-23), Math.toRadians(0))),
                         EnumSet.of(CameraCapabilities.APRIL_TAG)),
-                new CameraInfo("Apriltag_Back_Camera",
-                        "AprilTagBack",
-                        new Transform3d(new Translation3d(
-                                -0.3429,
-                                0,
-                                0.487),
-                                new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
-                        EnumSet.of(CameraCapabilities.APRIL_TAG)),
-        };
+                new CameraInfo("Apriltag_Back_Camera", "AprilTagBack",
+                        new Transform3d(new Translation3d(-0.3429, 0, 0.487), new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180))),
+                        EnumSet.of(CameraCapabilities.APRIL_TAG)), };
     }
 }

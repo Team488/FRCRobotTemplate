@@ -1,0 +1,22 @@
+{
+  "gitSha": "7602779047295c30004ea4ba07c16c168c22b896",
+  "generatedAt": "2026-11-10T04:27:41.592295237Z",
+  "contracts": [
+    {
+      "name": "Competition",
+      "file": "Competition.json"
+    },
+    {
+      "name": "2025",
+      "file": "2025.json"
+    },
+    {
+      "name": "2023",
+      "file": "2023.json"
+    },
+    {
+      "name": "Robox",
+      "file": "Robox.json"
+    }
+  ]
+}

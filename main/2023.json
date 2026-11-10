@@ -1,0 +1,162 @@
+{
+  "source": "competition.electrical_contract.Contract2023",
+  "contractName": "2023",
+  "robotName": "2023 Robot",
+  "gitSha": "7602779047295c30004ea4ba07c16c168c22b896",
+  "generatedAt": "2026-11-10T04:27:41.587554401Z",
+  "canDevices": [
+    {
+      "name": "DriveSubsystem/RearRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 20,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/RearRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 21,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 28,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 29,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 30,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 31,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 38,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 39,
+      "type": "SparkMax",
+      "kind": "motor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 51,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 52,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 53,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    },
+    {
+      "name": "DriveSubsystem/RearRightDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 54,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": null,
+      "definedIn": "Contract2023"
+    }
+  ],
+  "dio": [],
+  "pwm": [],
+  "additionalPdh": {},
+  "powerSources": {},
+  "powerBranches": {},
+  "canOrder": [],
+  "warnings": [
+    "DriveSubsystem/FrontLeftDrive/Drive (ID 31 on can_s0)",
+    "DriveSubsystem/FrontLeftDrive/Drive (ID 30 on can_s0)",
+    "DriveSubsystem/FrontLeftDrive/SteeringEncoder (ID 51 on can_s0)",
+    "DriveSubsystem/FrontRightDrive/Drive (ID 29 on can_s0)",
+    "DriveSubsystem/FrontRightDrive/Drive (ID 28 on can_s0)",
+    "DriveSubsystem/FrontRightDrive/SteeringEncoder (ID 52 on can_s0)",
+    "DriveSubsystem/RearLeftDrive/Drive (ID 38 on can_s0)",
+    "DriveSubsystem/RearLeftDrive/Drive (ID 39 on can_s0)",
+    "DriveSubsystem/RearLeftDrive/SteeringEncoder (ID 53 on can_s0)",
+    "DriveSubsystem/RearRightDrive/Drive (ID 21 on can_s0)",
+    "DriveSubsystem/RearRightDrive/Drive (ID 20 on can_s0)",
+    "DriveSubsystem/RearRightDrive/SteeringEncoder (ID 54 on can_s0)"
+  ],
+  "disabled": []
+}

@@ -1,0 +1,29 @@
+{
+  "source": "competition.electrical_contract.Contract2025",
+  "contractName": "2025",
+  "robotName": "2025 Robot",
+  "gitSha": "7602779047295c30004ea4ba07c16c168c22b896",
+  "generatedAt": "2026-11-10T04:27:41.584853495Z",
+  "canDevices": [],
+  "dio": [],
+  "pwm": [],
+  "additionalPdh": {},
+  "powerSources": {},
+  "powerBranches": {},
+  "canOrder": [],
+  "warnings": [],
+  "disabled": [
+    "DriveSubsystem/FrontLeftDrive/Drive",
+    "DriveSubsystem/FrontLeftDrive/Steering",
+    "DriveSubsystem/FrontLeftDrive/SteeringEncoder",
+    "DriveSubsystem/FrontRightDrive/Drive",
+    "DriveSubsystem/FrontRightDrive/Steering",
+    "DriveSubsystem/FrontRightDrive/SteeringEncoder",
+    "DriveSubsystem/RearLeftDrive/Drive",
+    "DriveSubsystem/RearLeftDrive/Steering",
+    "DriveSubsystem/RearLeftDrive/SteeringEncoder",
+    "DriveSubsystem/RearRightDrive/Drive",
+    "DriveSubsystem/RearRightDrive/Steering",
+    "DriveSubsystem/RearRightDrive/SteeringEncoder"
+  ]
+}

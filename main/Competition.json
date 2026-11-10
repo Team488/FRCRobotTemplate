@@ -1,0 +1,382 @@
+{
+  "source": "competition.electrical_contract.Contract2026",
+  "contractName": "Competition",
+  "robotName": "Competition",
+  "gitSha": "7602779047295c30004ea4ba07c16c168c22b896",
+  "generatedAt": "2026-11-10T04:27:41.575619112Z",
+  "canDevices": [
+    {
+      "name": "DriveSubsystem/RearRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 20,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH00",
+      "powerFrom": null,
+      "busPosition": 7,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/RearRightDrive/Steering",
+      "bus": "can_s0",
+      "canId": 21,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH01",
+      "powerFrom": null,
+      "busPosition": 9,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 28,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH08",
+      "powerFrom": null,
+      "busPosition": 6,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/Steering",
+      "bus": "can_s0",
+      "canId": 29,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH09",
+      "powerFrom": null,
+      "busPosition": 4,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/Drive",
+      "bus": "can_s0",
+      "canId": 30,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH10",
+      "powerFrom": null,
+      "busPosition": 1,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/Steering",
+      "bus": "can_s0",
+      "canId": 31,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH11",
+      "powerFrom": null,
+      "busPosition": 3,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/Drive",
+      "bus": "can_s0",
+      "canId": 38,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH18",
+      "powerFrom": null,
+      "busPosition": 12,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/Steering",
+      "bus": "can_s0",
+      "canId": 39,
+      "type": "TalonFx",
+      "kind": "motor",
+      "pdhPort": "PDH19",
+      "powerFrom": null,
+      "busPosition": 10,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/RearRightDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 51,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 8,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/RearLeftDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 52,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 5,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontLeftDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 53,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 2,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "DriveSubsystem/FrontRightDrive/SteeringEncoder",
+      "bus": "can_s0",
+      "canId": 54,
+      "type": "CANCoder",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 11,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "Pigeon2.0",
+      "bus": "can_s0",
+      "canId": 56,
+      "type": "Sensor",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 13,
+      "definedIn": "Contract2026"
+    },
+    {
+      "name": "CANdle",
+      "bus": "can_s0",
+      "canId": 57,
+      "type": "Sensor",
+      "kind": "can_sensor",
+      "pdhPort": null,
+      "powerFrom": null,
+      "busPosition": 14,
+      "definedIn": "Contract2026"
+    }
+  ],
+  "dio": [],
+  "pwm": [],
+  "additionalPdh": {
+    "PDH07": [
+      "No_Connect"
+    ],
+    "PDH15": [
+      "FrontBuck_Pwr"
+    ],
+    "PDH16": [
+      "BackBuck_Pwr"
+    ],
+    "PDH20": [
+      "RoboRio"
+    ],
+    "PDH21": [
+      "VRM1"
+    ],
+    "PDH22": [
+      "Radio_Power_Module"
+    ],
+    "PDH23": [
+      "Pigeon"
+    ]
+  },
+  "powerSources": {
+    "PDH00": [
+      "DriveSubsystem/RearRightDrive/Drive"
+    ],
+    "PDH01": [
+      "DriveSubsystem/RearRightDrive/Steering"
+    ],
+    "PDH08": [
+      "DriveSubsystem/RearLeftDrive/Drive"
+    ],
+    "PDH09": [
+      "DriveSubsystem/RearLeftDrive/Steering"
+    ],
+    "PDH10": [
+      "DriveSubsystem/FrontLeftDrive/Drive"
+    ],
+    "PDH11": [
+      "DriveSubsystem/FrontLeftDrive/Steering"
+    ],
+    "PDH18": [
+      "DriveSubsystem/FrontRightDrive/Drive"
+    ],
+    "PDH19": [
+      "DriveSubsystem/FrontRightDrive/Steering"
+    ]
+  },
+  "powerBranches": {
+    "BackBuckBoost_Pwr": [
+      "EthernetSwitch"
+    ],
+    "BackBuck_Pwr": [
+      "BackOrangePi"
+    ],
+    "FrontBuckBoost_Pwr": [
+      "Orin_Nano"
+    ],
+    "FrontBuck_Pwr": [
+      "FrontOrangePi"
+    ]
+  },
+  "canOrder": [
+    {
+      "bus": "can_s0",
+      "canId": 30,
+      "deviceName": "FrontLeftDrive/Drive",
+      "busPosition": 1
+    },
+    {
+      "bus": "can_s0",
+      "canId": 53,
+      "deviceName": "FrontLeftDrive/SteeringEncoder",
+      "busPosition": 2
+    },
+    {
+      "bus": "can_s0",
+      "canId": 31,
+      "deviceName": "FrontLeftDrive/Steering",
+      "busPosition": 3
+    },
+    {
+      "bus": "can_s0",
+      "canId": 29,
+      "deviceName": "RearLeftDrive/Steering",
+      "busPosition": 4
+    },
+    {
+      "bus": "can_s0",
+      "canId": 52,
+      "deviceName": "RearLeftDrive/SteeringEncoder",
+      "busPosition": 5
+    },
+    {
+      "bus": "can_s0",
+      "canId": 28,
+      "deviceName": "RearLeftDrive/Drive",
+      "busPosition": 6
+    },
+    {
+      "bus": "can_s0",
+      "canId": 20,
+      "deviceName": "RearRightDrive/Drive",
+      "busPosition": 7
+    },
+    {
+      "bus": "can_s0",
+      "canId": 51,
+      "deviceName": "RearRightDrive/SteeringEncoder",
+      "busPosition": 8
+    },
+    {
+      "bus": "can_s0",
+      "canId": 21,
+      "deviceName": "RearRightDrive/Steering",
+      "busPosition": 9
+    },
+    {
+      "bus": "can_s0",
+      "canId": 39,
+      "deviceName": "FrontRightDrive/Steering",
+      "busPosition": 10
+    },
+    {
+      "bus": "can_s0",
+      "canId": 54,
+      "deviceName": "FrontRightDrive/SteeringEncoder",
+      "busPosition": 11
+    },
+    {
+      "bus": "can_s0",
+      "canId": 38,
+      "deviceName": "FrontRightDrive/Drive",
+      "busPosition": 12
+    },
+    {
+      "bus": "can_s0",
+      "canId": 56,
+      "deviceName": "Pigeon",
+      "busPosition": 13
+    },
+    {
+      "bus": "can_s0",
+      "canId": 57,
+      "deviceName": "CANdle",
+      "busPosition": 14
+    },
+    {
+      "bus": "can_s0",
+      "canId": 58,
+      "deviceName": "IntakeDeployAbsoluteEncoderReady",
+      "busPosition": 15
+    },
+    {
+      "bus": "can_s0",
+      "canId": 34,
+      "deviceName": "IntakeDeployMotor",
+      "busPosition": 16
+    },
+    {
+      "bus": "can_s0",
+      "canId": 32,
+      "deviceName": "FuelIntakeMotor",
+      "busPosition": 17
+    },
+    {
+      "bus": "can_s0",
+      "canId": 33,
+      "deviceName": "HopperRoller",
+      "busPosition": 18
+    },
+    {
+      "bus": "can_s0",
+      "canId": 37,
+      "deviceName": "ShooterFeederMotor",
+      "busPosition": 19
+    },
+    {
+      "bus": "can_s0",
+      "canId": 25,
+      "deviceName": "ClimberMotorLeft",
+      "busPosition": 20
+    },
+    {
+      "bus": "can_s0",
+      "canId": 22,
+      "deviceName": "ShooterLeftMotor",
+      "busPosition": 21
+    },
+    {
+      "bus": "can_s0",
+      "canId": 23,
+      "deviceName": "ShooterMiddleMotor",
+      "busPosition": 22
+    },
+    {
+      "bus": "can_s0",
+      "canId": 59,
+      "deviceName": "ClimberAbsoluteEncoderReady",
+      "busPosition": 23
+    },
+    {
+      "bus": "can_s0",
+      "canId": 24,
+      "deviceName": "ShooterRightMotor",
+      "busPosition": 24
+    },
+    {
+      "bus": "can_s0",
+      "canId": 26,
+      "deviceName": "ClimberMotorRight",
+      "busPosition": 25
+    }
+  ],
+  "warnings": [],
+  "disabled": []
+}

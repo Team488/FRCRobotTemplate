@@ -11,9 +11,6 @@ import xbot.common.injection.electrical_contract.MotorControllerType;
  * ({@link XSwerveModuleWiringContract#getDriveMotorSpec()}, {@link XSwerveModuleWiringContract#getSteeringMotorSpec()})
  * are called once per motor and must build a fresh config each time rather than returning a shared instance.
  *
- * <p>
- * SCL candidate: target package {@code xbot.common.injection.electrical_contract}. See {@code package-info.java}.
- *
  * @param type
  *            The motor controller hardware, e.g. TalonFx or SparkMax.
  * @param outputConfig

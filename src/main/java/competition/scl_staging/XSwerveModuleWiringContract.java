@@ -18,10 +18,6 @@ import xbot.common.injection.swerve.SwerveInstance;
  * the concrete robot contract, as one-liners calling {@link #buildDriveMotor}, {@link #buildSteeringMotor} and
  * {@link #buildSteeringEncoder}. The electrical report labels each device with the class that declares its getter
  * ({@code definedIn}), and that label should point at the contract holding the actual wiring.
- *
- * <p>
- * SCL candidate: target package {@code xbot.common.injection.electrical_contract}, either as-is or folded into
- * {@link XSwerveDriveElectricalContract}. See {@code package-info.java}.
  */
 public interface XSwerveModuleWiringContract extends XSwerveDriveElectricalContract {
 

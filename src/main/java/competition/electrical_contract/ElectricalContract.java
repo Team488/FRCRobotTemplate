@@ -85,10 +85,8 @@ public abstract class ElectricalContract implements XSwerveModuleWiringContract,
     public abstract Distance getRadiusOfRobot();
 
     // --- Swerve ---
-    // The shared swerve construction lives in XSwerveModuleWiringContract (staged for SCL, see
-    // competition.scl_staging). Each year's contract implements its wiring/spec hooks and delegates getDriveMotor,
-    // getSteeringMotor and getSteeringEncoder to the build* defaults. The naming convention below is this
-    // template's choice, so it stays here rather than moving to SCL.
+    // The shared swerve construction lives in XSwerveModuleWiringContract. Each year's contract implements its
+    // wiring/spec hooks and delegates getDriveMotor, getSteeringMotor and getSteeringEncoder to the build* defaults.
 
     @Override
     public String getDriveControllerName(SwerveInstance swerveInstance) {

@@ -7,9 +7,6 @@ import xbot.common.injection.electrical_contract.PDHPort;
  * (controller type, output config, CAN bus, naming) comes from the contract's other swerve hooks; see
  * {@link XSwerveModuleWiringContract#getSwerveModuleWiring}.
  *
- * <p>
- * SCL candidate: target package {@code xbot.common.injection.electrical_contract}. See {@code package-info.java}.
- *
  * @param driveCanId
  *            CAN ID of the drive motor controller.
  * @param drivePdh

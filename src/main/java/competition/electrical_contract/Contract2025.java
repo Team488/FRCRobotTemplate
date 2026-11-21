@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
@@ -26,6 +25,8 @@ import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputCon
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
+import competition.scl_staging.SwerveModuleWiring;
+import competition.scl_staging.SwerveMotorSpec;
 import competition.subsystems.pose.PoseSubsystem;
 
 import static org.wpilib.units.Units.Amps;
@@ -50,14 +51,6 @@ public class Contract2025 extends ElectricalContract {
         return Units.Inches.of(18);
     }
 
-    TalonFxMotorControllerOutputConfig regularDriveMotorConfig = new TalonFxMotorControllerOutputConfig()
-            .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal).withStatorCurrentLimit(Amps.of(60))
-            .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
-    TalonFxMotorControllerOutputConfig invertedDriveMotorConfig = new TalonFxMotorControllerOutputConfig()
-            .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted).withStatorCurrentLimit(Amps.of(80))
-            .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
     @Override
     public boolean isDriveReady() {
         return false;
@@ -69,49 +62,59 @@ public class Contract2025 extends ElectricalContract {
     }
 
     @Override
-    public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+    public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 39).withOutputConfig(regularDriveMotorConfig).build();
-            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 31).withOutputConfig(regularDriveMotorConfig).build();
-            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 20).withOutputConfig(regularDriveMotorConfig).build();
-            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 29).withOutputConfig(regularDriveMotorConfig).build();
+            case "FrontLeftDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(29)
+                    .withSteering(28)
+                    .withEncoder(51)
+                    .build();
+            case "FrontRightDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(39)
+                    .withSteering(38)
+                    .withEncoder(54)
+                    .build();
+            case "RearLeftDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(20)
+                    .withSteering(21)
+                    .withEncoder(52)
+                    .build();
+            case "RearRightDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(31)
+                    .withSteering(30)
+                    .withEncoder(53)
+                    .build();
             default -> null;
         };
+    }
+
+    @Override
+    public SwerveMotorSpec getDriveMotorSpec() {
+        return new SwerveMotorSpec(MotorControllerType.TalonFx,
+                new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
+                        .withStatorCurrentLimit(Amps.of(60)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));
+    }
+
+    @Override
+    public SwerveMotorSpec getSteeringMotorSpec() {
+        return new SwerveMotorSpec(MotorControllerType.TalonFx,
+                new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(40)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));
+    }
+
+    @Override
+    public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+        return buildDriveMotor(swerveInstance);
     }
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-
-        TalonFxMotorControllerOutputConfig invertedSteeringMotorConfig = new TalonFxMotorControllerOutputConfig()
-                .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted).withStatorCurrentLimit(Amps.of(40))
-                .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
-        return switch (swerveInstance.label()) {
-            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 38).withOutputConfig(invertedSteeringMotorConfig).build();
-            case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 30).withOutputConfig(invertedSteeringMotorConfig).build();
-            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 21).withOutputConfig(invertedSteeringMotorConfig).build();
-            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                    .withCanBus(CANPort.CAN_S0, 28).withOutputConfig(invertedSteeringMotorConfig).build();
-            default -> null;
-        };
+        return buildSteeringMotor(swerveInstance);
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
-        return switch (swerveInstance.label()) {
-            case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
-            case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
-            case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
-            case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
-            default -> null;
-        };
+        return buildSteeringEncoder(swerveInstance);
     }
 
     @Override

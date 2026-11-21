@@ -12,8 +12,9 @@ import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XElectricalReportContract;
-import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
+
+import competition.scl_staging.XSwerveModuleWiringContract;
 
 /*
  * The electrical contract hierarchy:
@@ -45,7 +46,7 @@ import xbot.common.injection.swerve.SwerveInstance;
  * Wiring the robot code doesn't use (CAN daisy-chain order, non-motor PDH loads, converter
  * branches) goes in the year's contract by overriding the XElectricalReportContract methods.
  */
-public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract, XElectricalReportContract {
+public abstract class ElectricalContract implements XSwerveModuleWiringContract, XCameraElectricalContract, XElectricalReportContract {
     private final Set<Hardware> readinessSet;
 
     protected ElectricalContract(Set<Hardware> readinessSet) {
@@ -83,15 +84,22 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Distance getRadiusOfRobot();
 
-    protected String getDriveControllerName(SwerveInstance swerveInstance) {
+    // --- Swerve ---
+    // The shared swerve construction lives in XSwerveModuleWiringContract. Each year's contract implements its
+    // wiring/spec hooks and delegates getDriveMotor, getSteeringMotor and getSteeringEncoder to the build* defaults.
+
+    @Override
+    public String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
 
-    protected String getSteeringControllerName(SwerveInstance swerveInstance) {
+    @Override
+    public String getSteeringControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Steering";
     }
 
-    protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
+    @Override
+    public String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
     }
 }

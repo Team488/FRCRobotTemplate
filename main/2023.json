@@ -2,11 +2,11 @@
   "source": "competition.electrical_contract.Contract2023",
   "contractName": "2023",
   "robotName": "2023 Robot",
-  "gitSha": "1f9758544c28ed00002eaf3ad2188533728e8e01",
-  "generatedAt": "2026-11-21T20:03:35.523765618Z",
+  "gitSha": "0ce1c9bac670a5ad024f1f3fe292fb59eff799b0",
+  "generatedAt": "2026-11-21T22:56:06.569009915Z",
   "canDevices": [
     {
-      "name": "DriveSubsystem/RearRightDrive/Drive",
+      "name": "DriveSubsystem/RearRightDrive/Steering",
       "bus": "can_s0",
       "canId": 20,
       "type": "SparkMax",
@@ -28,7 +28,7 @@
       "definedIn": "Contract2023"
     },
     {
-      "name": "DriveSubsystem/FrontRightDrive/Drive",
+      "name": "DriveSubsystem/FrontRightDrive/Steering",
       "bus": "can_s0",
       "canId": 28,
       "type": "SparkMax",
@@ -50,7 +50,7 @@
       "definedIn": "Contract2023"
     },
     {
-      "name": "DriveSubsystem/FrontLeftDrive/Drive",
+      "name": "DriveSubsystem/FrontLeftDrive/Steering",
       "bus": "can_s0",
       "canId": 30,
       "type": "SparkMax",
@@ -83,7 +83,7 @@
       "definedIn": "Contract2023"
     },
     {
-      "name": "DriveSubsystem/RearLeftDrive/Drive",
+      "name": "DriveSubsystem/RearLeftDrive/Steering",
       "bus": "can_s0",
       "canId": 39,
       "type": "SparkMax",
@@ -146,16 +146,16 @@
   "canOrder": [],
   "warnings": [
     "DriveSubsystem/FrontLeftDrive/Drive (ID 31 on can_s0)",
-    "DriveSubsystem/FrontLeftDrive/Drive (ID 30 on can_s0)",
+    "DriveSubsystem/FrontLeftDrive/Steering (ID 30 on can_s0)",
     "DriveSubsystem/FrontLeftDrive/SteeringEncoder (ID 51 on can_s0)",
     "DriveSubsystem/FrontRightDrive/Drive (ID 29 on can_s0)",
-    "DriveSubsystem/FrontRightDrive/Drive (ID 28 on can_s0)",
+    "DriveSubsystem/FrontRightDrive/Steering (ID 28 on can_s0)",
     "DriveSubsystem/FrontRightDrive/SteeringEncoder (ID 52 on can_s0)",
     "DriveSubsystem/RearLeftDrive/Drive (ID 38 on can_s0)",
-    "DriveSubsystem/RearLeftDrive/Drive (ID 39 on can_s0)",
+    "DriveSubsystem/RearLeftDrive/Steering (ID 39 on can_s0)",
     "DriveSubsystem/RearLeftDrive/SteeringEncoder (ID 53 on can_s0)",
     "DriveSubsystem/RearRightDrive/Drive (ID 21 on can_s0)",
-    "DriveSubsystem/RearRightDrive/Drive (ID 20 on can_s0)",
+    "DriveSubsystem/RearRightDrive/Steering (ID 20 on can_s0)",
     "DriveSubsystem/RearRightDrive/SteeringEncoder (ID 54 on can_s0)"
   ],
   "disabled": []

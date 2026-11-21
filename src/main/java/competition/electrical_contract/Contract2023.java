@@ -51,10 +51,26 @@ public class Contract2023 extends ElectricalContract {
     @Override
     public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> SwerveModuleWiring.builder().withDrive(31).withSteering(30).withEncoder(51).build();
-            case "FrontRightDrive" -> SwerveModuleWiring.builder().withDrive(29).withSteering(28).withEncoder(52).build();
-            case "RearLeftDrive" -> SwerveModuleWiring.builder().withDrive(38).withSteering(39).withEncoder(53).build();
-            case "RearRightDrive" -> SwerveModuleWiring.builder().withDrive(21).withSteering(20).withEncoder(54).build();
+            case "FrontLeftDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(31)
+                    .withSteering(30)
+                    .withEncoder(51)
+                    .build();
+            case "FrontRightDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(29)
+                    .withSteering(28)
+                    .withEncoder(52)
+                    .build();
+            case "RearLeftDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(38)
+                    .withSteering(39)
+                    .withEncoder(53)
+                    .build();
+            case "RearRightDrive" -> SwerveModuleWiring.builder()
+                    .withDrive(21)
+                    .withSteering(20)
+                    .withEncoder(54)
+                    .build();
             default -> null;
         };
     }

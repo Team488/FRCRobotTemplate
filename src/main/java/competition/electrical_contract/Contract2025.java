@@ -25,6 +25,8 @@ import xbot.common.injection.electrical_contract.TalonFxMotorControllerOutputCon
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
+import competition.scl_staging.SwerveModuleWiring;
+import competition.scl_staging.SwerveMotorSpec;
 import competition.subsystems.pose.PoseSubsystem;
 
 import static org.wpilib.units.Units.Amps;
@@ -60,7 +62,7 @@ public class Contract2025 extends ElectricalContract {
     }
 
     @Override
-    protected SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
+    public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
         // drive CAN, steering CAN, encoder CAN
         case "FrontLeftDrive" -> SwerveModuleWiring.withoutPdh(29, 28, 51);
@@ -72,14 +74,14 @@ public class Contract2025 extends ElectricalContract {
     }
 
     @Override
-    protected SwerveMotorSpec getDriveMotorSpec() {
+    public SwerveMotorSpec getDriveMotorSpec() {
         return new SwerveMotorSpec(MotorControllerType.TalonFx,
                 new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
                         .withStatorCurrentLimit(Amps.of(60)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));
     }
 
     @Override
-    protected SwerveMotorSpec getSteeringMotorSpec() {
+    public SwerveMotorSpec getSteeringMotorSpec() {
         return new SwerveMotorSpec(MotorControllerType.TalonFx,
                 new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
                         .withStatorCurrentLimit(Amps.of(40)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));

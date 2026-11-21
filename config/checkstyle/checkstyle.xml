@@ -32,6 +32,10 @@
       <property name="allowMultipleEmptyLines" value="true"/>
     </module>
     <module name="AvoidStarImport"/>
+    <module name="ImportControl">
+      <property name="file" value="${config_loc}/import-control.xml"/>
+      <property name="path" value="^.*[\\/]competition[\\/]scl_staging[\\/].*$"/>
+    </module>
     <module name="ImportOrder">
       <property name="option" value="bottom"/>
       <property name="groups"

@@ -1,11 +1,14 @@
-package competition.electrical_contract;
+package competition.scl_staging;
 
 import xbot.common.injection.electrical_contract.PDHPort;
 
 /**
  * The per-module wiring of one swerve module: the only swerve values that differ between modules. Everything shared
  * (controller type, output config, CAN bus, naming) comes from the contract's other swerve hooks; see
- * {@link ElectricalContract#getSwerveModuleWiring}.
+ * {@link XSwerveModuleWiringContract#getSwerveModuleWiring}.
+ *
+ * <p>
+ * SCL candidate: target package {@code xbot.common.injection.electrical_contract}. See {@code package-info.java}.
  *
  * @param driveCanId
  *            CAN ID of the drive motor controller.

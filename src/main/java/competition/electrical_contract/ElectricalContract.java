@@ -4,18 +4,17 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.units.measure.Distance;
 
 import xbot.common.injection.electrical_contract.CANMotorControllerInfo;
 import xbot.common.injection.electrical_contract.DeviceInfo;
 import xbot.common.injection.electrical_contract.IMUInfo;
-import xbot.common.injection.electrical_contract.PDHPort;
 import xbot.common.injection.electrical_contract.XCameraElectricalContract;
 import xbot.common.injection.electrical_contract.XElectricalReportContract;
-import xbot.common.injection.electrical_contract.XSwerveDriveElectricalContract;
 import xbot.common.injection.swerve.SwerveInstance;
+
+import competition.scl_staging.XSwerveModuleWiringContract;
 
 /*
  * The electrical contract hierarchy:
@@ -47,7 +46,7 @@ import xbot.common.injection.swerve.SwerveInstance;
  * Wiring the robot code doesn't use (CAN daisy-chain order, non-motor PDH loads, converter
  * branches) goes in the year's contract by overriding the XElectricalReportContract methods.
  */
-public abstract class ElectricalContract implements XSwerveDriveElectricalContract, XCameraElectricalContract, XElectricalReportContract {
+public abstract class ElectricalContract implements XSwerveModuleWiringContract, XCameraElectricalContract, XElectricalReportContract {
     private final Set<Hardware> readinessSet;
 
     protected ElectricalContract(Set<Hardware> readinessSet) {
@@ -85,67 +84,24 @@ public abstract class ElectricalContract implements XSwerveDriveElectricalContra
 
     public abstract Distance getRadiusOfRobot();
 
-    // --- Swerve hooks ---
-    // A year's contract describes its swerve drive with these three hooks, then implements getDriveMotor,
-    // getSteeringMotor and getSteeringEncoder as one-line calls to buildDriveMotor / buildSteeringMotor /
-    // buildSteeringEncoder. Those one-liners stay in the year's contract (rather than being implemented once here)
-    // because the electrical report labels each device with the class that declares its getter, and that label
-    // should point at the contract holding the actual wiring.
+    // --- Swerve ---
+    // The shared swerve construction lives in XSwerveModuleWiringContract (staged for SCL, see
+    // competition.scl_staging). Each year's contract implements its wiring/spec hooks and delegates getDriveMotor,
+    // getSteeringMotor and getSteeringEncoder to the build* defaults. The naming convention below is this
+    // template's choice, so it stays here rather than moving to SCL.
 
-    /**
-     * The per-module wiring (CAN IDs, PDH ports) for the given module, or null for an unknown module.
-     */
-    protected abstract SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance);
-
-    /** Controller type and output config shared by all drive motors. Called per motor; return a fresh config. */
-    protected abstract SwerveMotorSpec getDriveMotorSpec();
-
-    /** Controller type and output config shared by all steering motors. Called per motor; return a fresh config. */
-    protected abstract SwerveMotorSpec getSteeringMotorSpec();
-
-    /** The CAN bus all swerve devices sit on. */
-    protected CANPort getSwerveCanBus() {
-        return CANPort.CAN_S0;
-    }
-
-    protected CANMotorControllerInfo buildDriveMotor(SwerveInstance swerveInstance) {
-        var wiring = getSwerveModuleWiring(swerveInstance);
-        if (wiring == null) {
-            return null;
-        }
-        return buildSwerveMotor(getDriveControllerName(swerveInstance), wiring.driveCanId(), wiring.drivePdh(), getDriveMotorSpec());
-    }
-
-    protected CANMotorControllerInfo buildSteeringMotor(SwerveInstance swerveInstance) {
-        var wiring = getSwerveModuleWiring(swerveInstance);
-        if (wiring == null) {
-            return null;
-        }
-        return buildSwerveMotor(getSteeringControllerName(swerveInstance), wiring.steeringCanId(), wiring.steeringPdh(), getSteeringMotorSpec());
-    }
-
-    protected DeviceInfo buildSteeringEncoder(SwerveInstance swerveInstance) {
-        var wiring = getSwerveModuleWiring(swerveInstance);
-        if (wiring == null) {
-            return null;
-        }
-        return DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(getSwerveCanBus(), wiring.encoderCanId()).build();
-    }
-
-    private CANMotorControllerInfo buildSwerveMotor(String name, int canId, PDHPort pdhPort, SwerveMotorSpec spec) {
-        return CANMotorControllerInfo.builder(name).withType(spec.type()).withCanBus(getSwerveCanBus(), canId).withPdhPort(pdhPort)
-                .withOutputConfig(spec.outputConfig()).build();
-    }
-
-    protected String getDriveControllerName(SwerveInstance swerveInstance) {
+    @Override
+    public String getDriveControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Drive";
     }
 
-    protected String getSteeringControllerName(SwerveInstance swerveInstance) {
+    @Override
+    public String getSteeringControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/Steering";
     }
 
-    protected String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
+    @Override
+    public String getSteeringEncoderControllerName(SwerveInstance swerveInstance) {
         return "DriveSubsystem/" + swerveInstance.label() + "/SteeringEncoder";
     }
 }

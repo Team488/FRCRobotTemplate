@@ -24,6 +24,8 @@ import xbot.common.injection.electrical_contract.SparkMaxMotorControllerOutputCo
 import xbot.common.injection.swerve.SwerveInstance;
 import xbot.common.subsystems.vision.CameraCapabilities;
 
+import competition.scl_staging.SwerveModuleWiring;
+import competition.scl_staging.SwerveMotorSpec;
 import competition.subsystems.pose.PoseSubsystem;
 
 import static org.wpilib.units.Units.Amps;
@@ -47,7 +49,7 @@ public class Contract2023 extends ElectricalContract {
     }
 
     @Override
-    protected SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
+    public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
         // drive CAN, steering CAN, encoder CAN
         case "FrontLeftDrive" -> SwerveModuleWiring.withoutPdh(31, 30, 51);
@@ -59,12 +61,12 @@ public class Contract2023 extends ElectricalContract {
     }
 
     @Override
-    protected SwerveMotorSpec getDriveMotorSpec() {
+    public SwerveMotorSpec getDriveMotorSpec() {
         return new SwerveMotorSpec(MotorControllerType.SparkMax, new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(60)));
     }
 
     @Override
-    protected SwerveMotorSpec getSteeringMotorSpec() {
+    public SwerveMotorSpec getSteeringMotorSpec() {
         return new SwerveMotorSpec(MotorControllerType.SparkMax, new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(40)));
     }
 

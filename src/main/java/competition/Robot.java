@@ -56,13 +56,13 @@ public class Robot extends BaseRobot {
     private ElectricalContract selectElectricalContract() {
         String chosenContract = Preferences.getString("ContractToUse", "Competition");
         ElectricalContract contract = switch (chosenContract) {
-        case "Robox" -> new RoboxContract();
-        case "2023" -> new Contract2023();
-        case "2025" -> new Contract2025();
-        default -> {
-            // By default, use the newest contract
-            yield new Contract2026();
-        }
+            case "Robox" -> new RoboxContract();
+            case "2023" -> new Contract2023();
+            case "2025" -> new Contract2025();
+            default -> {
+                // By default, use the newest contract
+                yield new Contract2026();
+            }
         };
 
         System.out.println("Using " + contract.getClass().getName());

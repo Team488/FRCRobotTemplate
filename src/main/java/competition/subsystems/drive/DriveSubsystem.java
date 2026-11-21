@@ -14,7 +14,6 @@ import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveDriveKinematics;
 import org.wpilib.math.kinematics.SwerveModuleVelocity;
-import org.wpilib.tunable.TunableDouble;
 
 import xbot.common.command.BaseRobot;
 import xbot.common.command.DataFrameRegistry;
@@ -38,13 +37,6 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
     private boolean lookAtPointActive = false;
     private boolean lookAtPointInverted = false;
     private boolean staticHeadingActive = false;
-    private final TunableDouble autoInterstitialDistanceErrorThresholdInMeters;
-    private final TunableDouble autoInterstitialRotationErrorThresholdInDegrees;
-    private final TunableDouble autoEndDistanceErrorThresholdInMeters;
-    private final TunableDouble autoEndRotationErrorThresholdInDegrees;
-    private final TunableDouble maxAutoTargetSpeedMps;
-    private final TunableDouble maxAutoFuelIntakeTargetSpeedMps;
-    private final TunableDouble interstitialSpeedMps;
 
     @Inject
     public DriveSubsystem(PIDManagerFactory pidFactory, TunableFactory tf, @FrontLeftDrive SwerveComponent frontLeftSwerve,
@@ -56,13 +48,6 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
 
         tf.setPrefix(this.getPrefix());
         tf.setDefaultLevel(TunableLevel.Important);
-        this.maxAutoTargetSpeedMps = tf.createDouble("MaxAutoTargetSpeedMetersPerSecond", 2.0);
-        this.maxAutoFuelIntakeTargetSpeedMps = tf.createDouble("MaxAutoFuelIntakeTargetSpeedMetersPerSecond", 1.0);
-        this.interstitialSpeedMps = tf.createDouble("InterstitialSpeedMetersPerSecond", 0.4);
-        this.autoInterstitialDistanceErrorThresholdInMeters = tf.createDouble("autoInterstitialDistanceErrorThresholdInMeters", 0.4);
-        this.autoInterstitialRotationErrorThresholdInDegrees = tf.createDouble("autoInterstitialRotationErrorThresholdInDegrees", 10.0);
-        this.autoEndDistanceErrorThresholdInMeters = tf.createDouble("autoEndDistanceErrorThresholdInMeters", 0.25);
-        this.autoEndRotationErrorThresholdInDegrees = tf.createDouble("autoEndRotationErrorThresholdInDegrees", 5.0);
     }
 
     @Override
@@ -135,34 +120,6 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
 
     public boolean getLookAtPointInverted() {
         return lookAtPointInverted;
-    }
-
-    public double getMaxAutoTargetSpeedMetersPerSecond() {
-        return this.maxAutoTargetSpeedMps.get();
-    }
-
-    public double getMaxAutoFuelIntakeTargetSpeedMetersPerSecond() {
-        return this.maxAutoFuelIntakeTargetSpeedMps.get();
-    }
-
-    public double getInterstitialSpeedMetersPerSecond() {
-        return this.interstitialSpeedMps.get();
-    }
-
-    public double getAutoInterstitialDistanceErrorThresholdInMeters() {
-        return this.autoInterstitialDistanceErrorThresholdInMeters.get();
-    }
-
-    public double getAutoInterstitialRotationErrorThresholdInDegrees() {
-        return this.autoInterstitialRotationErrorThresholdInDegrees.get();
-    }
-
-    public double getAutoEndDistanceErrorThresholdInMeters() {
-        return this.autoEndDistanceErrorThresholdInMeters.get();
-    }
-
-    public double getAutoEndRotationErrorThresholdInDegrees() {
-        return this.autoEndRotationErrorThresholdInDegrees.get();
     }
 
     public InstantCommand createSetStaticHeadingTargetCommand(Supplier<Rotation2d> staticHeadingTarget) {

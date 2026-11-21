@@ -1,6 +1,7 @@
 
 package competition;
 
+import org.wpilib.hardware.hal.RobotMode;
 import org.wpilib.preferences.Preferences;
 import org.wpilib.simulation.DriverStationSim;
 
@@ -56,15 +57,11 @@ public class Robot extends BaseRobot {
     private ElectricalContract selectElectricalContract() {
         String chosenContract = Preferences.getString("ContractToUse", "Competition");
         ElectricalContract contract = switch (chosenContract) {
-        case "Robox" -> new RoboxContract();
-        case "2023" -> new Contract2023();
-        case "2025" -> new Contract2025();
-        default -> {
-            // By default, use the newest contract
-            yield new Contract2026();
-        }
+            case "Robox" -> new RoboxContract();
+            case "2023" -> new Contract2023();
+            case "2025" -> new Contract2025();
+            default -> new Contract2026(); // By default, use the newest contract
         };
-
         System.out.println("Using " + contract.getClass().getName());
         return contract;
     }
@@ -76,11 +73,12 @@ public class Robot extends BaseRobot {
     @Override
     public void simulationInit() {
         super.simulationInit();
+
         // Automatically enables the robot; remove this line of code if you want the robot
-        // to start in a disabled state (as it would on the field). However, this does save you the
-        // hassle of navigating to the DS window and re-enabling the simulated robot.
+        // to start in a disabled state
+        DriverStationSim.setRobotMode(RobotMode.TELEOPERATED);
         DriverStationSim.setEnabled(true);
-        //webots.setFieldPoseOffset(getFieldOrigin());
+        DriverStationSim.notifyNewData();
     }
 
     @SuppressWarnings("unused")

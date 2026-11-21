@@ -64,12 +64,12 @@ public class Contract2025 extends ElectricalContract {
     @Override
     public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        // drive CAN, steering CAN, encoder CAN
-        case "FrontLeftDrive" -> SwerveModuleWiring.withoutPdh(29, 28, 51);
-        case "FrontRightDrive" -> SwerveModuleWiring.withoutPdh(39, 38, 54);
-        case "RearLeftDrive" -> SwerveModuleWiring.withoutPdh(20, 21, 52);
-        case "RearRightDrive" -> SwerveModuleWiring.withoutPdh(31, 30, 53);
-        default -> null;
+            // drive CAN, steering CAN, encoder CAN
+            case "FrontLeftDrive" -> SwerveModuleWiring.withoutPdh(29, 28, 51);
+            case "FrontRightDrive" -> SwerveModuleWiring.withoutPdh(39, 38, 54);
+            case "RearLeftDrive" -> SwerveModuleWiring.withoutPdh(20, 21, 52);
+            case "RearRightDrive" -> SwerveModuleWiring.withoutPdh(31, 30, 53);
+            default -> null;
         };
     }
 
@@ -106,11 +106,11 @@ public class Contract2025 extends ElectricalContract {
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> new Translation2d(Inches.of(12), Inches.of(12));
-        case "FrontRightDrive" -> new Translation2d(Inches.of(12), Inches.of(-12));
-        case "RearLeftDrive" -> new Translation2d(Inches.of(-12), Inches.of(12));
-        case "RearRightDrive" -> new Translation2d(Inches.of(-12), Inches.of(-12));
-        default -> new Translation2d(0, 0);
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(12), Inches.of(12));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(12), Inches.of(-12));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-12), Inches.of(12));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-12), Inches.of(-12));
+            default -> new Translation2d(0, 0);
         };
     }
 

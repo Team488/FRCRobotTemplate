@@ -81,12 +81,12 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        // drive CAN, drive PDH, steering CAN, steering PDH, encoder CAN
-        case "FrontLeftDrive" -> new SwerveModuleWiring(30, PDHPort.PDH10, 31, PDHPort.PDH11, 53);
-        case "FrontRightDrive" -> new SwerveModuleWiring(38, PDHPort.PDH18, 39, PDHPort.PDH19, 54);
-        case "RearLeftDrive" -> new SwerveModuleWiring(28, PDHPort.PDH08, 29, PDHPort.PDH09, 52);
-        case "RearRightDrive" -> new SwerveModuleWiring(20, PDHPort.PDH00, 21, PDHPort.PDH01, 51);
-        default -> null;
+            // drive CAN, drive PDH, steering CAN, steering PDH, encoder CAN
+            case "FrontLeftDrive" -> new SwerveModuleWiring(30, PDHPort.PDH10, 31, PDHPort.PDH11, 53);
+            case "FrontRightDrive" -> new SwerveModuleWiring(38, PDHPort.PDH18, 39, PDHPort.PDH19, 54);
+            case "RearLeftDrive" -> new SwerveModuleWiring(28, PDHPort.PDH08, 29, PDHPort.PDH09, 52);
+            case "RearRightDrive" -> new SwerveModuleWiring(20, PDHPort.PDH00, 21, PDHPort.PDH01, 51);
+            default -> null;
         };
     }
 
@@ -120,11 +120,11 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
-        case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
-        case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
-        case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
-        default -> new Translation2d(0, 0);
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
+            default -> new Translation2d(0, 0);
         };
     }
 

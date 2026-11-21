@@ -166,14 +166,14 @@ public class SwerveDriveWithJoysticksCommand extends BaseCommand {
 
     private double processSuggestedRotationValueIntoPower(SwerveSuggestedRotation suggested) {
         return switch (suggested.type) {
-        case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
-        case HumanControlHeadingPower -> {
-            if (drive.isPrecisionRotationActive()) {
-                yield suggested.value *= precisionRotationScale.get();
-            } else {
-                yield suggested.value;
+            case DesiredHeading -> headingModule.calculateHeadingPower(suggested.value);
+            case HumanControlHeadingPower -> {
+                if (drive.isPrecisionRotationActive()) {
+                    yield suggested.value *= precisionRotationScale.get();
+                } else {
+                    yield suggested.value;
+                }
             }
-        }
         };
     }
 }

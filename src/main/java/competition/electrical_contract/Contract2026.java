@@ -81,10 +81,10 @@ public class Contract2026 extends ElectricalContract {
     @Override
     public SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-            case "FrontLeftDrive" -> SwerveModuleWiring.builder().drive(30, PDHPort.PDH10).steering(31, PDHPort.PDH11).encoder(53).build();
-            case "FrontRightDrive" -> SwerveModuleWiring.builder().drive(38, PDHPort.PDH18).steering(39, PDHPort.PDH19).encoder(54).build();
-            case "RearLeftDrive" -> SwerveModuleWiring.builder().drive(28, PDHPort.PDH08).steering(29, PDHPort.PDH09).encoder(52).build();
-            case "RearRightDrive" -> SwerveModuleWiring.builder().drive(20, PDHPort.PDH00).steering(21, PDHPort.PDH01).encoder(51).build();
+            case "FrontLeftDrive" -> SwerveModuleWiring.builder().withDrive(30, PDHPort.PDH10).withSteering(31, PDHPort.PDH11).withEncoder(53).build();
+            case "FrontRightDrive" -> SwerveModuleWiring.builder().withDrive(38, PDHPort.PDH18).withSteering(39, PDHPort.PDH19).withEncoder(54).build();
+            case "RearLeftDrive" -> SwerveModuleWiring.builder().withDrive(28, PDHPort.PDH08).withSteering(29, PDHPort.PDH09).withEncoder(52).build();
+            case "RearRightDrive" -> SwerveModuleWiring.builder().withDrive(20, PDHPort.PDH00).withSteering(21, PDHPort.PDH01).withEncoder(51).build();
             default -> null;
         };
     }

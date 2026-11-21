@@ -11,8 +11,8 @@ import xbot.common.injection.electrical_contract.PDHPort;
  * Build with named steps so each ID is labeled where it's written:
  *
  * <pre>
- * SwerveModuleWiring.builder().drive(30, PDHPort.PDH10).steering(31, PDHPort.PDH11).encoder(53).build();
- * SwerveModuleWiring.builder().drive(31).steering(30).encoder(51).build(); // PDH ports not tracked
+ * SwerveModuleWiring.builder().withDrive(30, PDHPort.PDH10).withSteering(31, PDHPort.PDH11).withEncoder(53).build();
+ * SwerveModuleWiring.builder().withDrive(31).withSteering(30).withEncoder(51).build(); // PDH ports not tracked
  * </pre>
  *
  * @param driveCanId
@@ -45,31 +45,31 @@ public record SwerveModuleWiring(int driveCanId, PDHPort drivePdh, int steeringC
         }
 
         /** The drive motor's CAN ID, with no PDH port recorded. */
-        public Builder drive(int canId) {
-            return drive(canId, null);
+        public Builder withDrive(int canId) {
+            return withDrive(canId, null);
         }
 
         /** The drive motor's CAN ID and the PDH port powering it. */
-        public Builder drive(int canId, PDHPort pdhPort) {
+        public Builder withDrive(int canId, PDHPort pdhPort) {
             this.driveCanId = canId;
             this.drivePdh = pdhPort;
             return this;
         }
 
         /** The steering motor's CAN ID, with no PDH port recorded. */
-        public Builder steering(int canId) {
-            return steering(canId, null);
+        public Builder withSteering(int canId) {
+            return withSteering(canId, null);
         }
 
         /** The steering motor's CAN ID and the PDH port powering it. */
-        public Builder steering(int canId, PDHPort pdhPort) {
+        public Builder withSteering(int canId, PDHPort pdhPort) {
             this.steeringCanId = canId;
             this.steeringPdh = pdhPort;
             return this;
         }
 
         /** The absolute steering encoder's CAN ID. */
-        public Builder encoder(int canId) {
+        public Builder withEncoder(int canId) {
             this.encoderCanId = canId;
             return this;
         }

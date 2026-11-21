@@ -67,30 +67,34 @@ public class DriveSubsystem extends BaseSwerveDriveSubsystem {
 
     @Override
     protected PIDDefaults getPositionalPIDDefaults() {
-        return new PIDDefaults(1.08, // P
-                0, // I
-                4.0, // D
-                0.0, // F
-                0.6, // Max output
-                -0.6, // Min output
-                0.05, // Error threshold
-                0.005, // Derivative threshold
-                0.2); // Time threshold
+        return new PIDDefaults.Builder()
+                .withP(1.08)
+                .withI(0)
+                .withD(4.0)
+                .withF(0.0)
+                .withMaxOutput(0.6)
+                .withMinOutput(-0.6)
+                .withErrorThreshold(0.05)
+                .withDerivativeThreshold(0.005)
+                .withTimeThreshold(0.2)
+                .build();
     }
 
     @Override
     protected PIDDefaults getHeadingPIDDefaults() {
         var errorThreshold = BaseRobot.isSimulation() ? 5.0 : 2.0;
-        return new PIDDefaults(0.008, // P
-                0.0005, // I
-                0.01, // D
-                0.0, // F
-                0.75, // Max output
-                -0.75, // Min output
-                errorThreshold, // Error threshold
-                0.2, // Derivative threshold
-                0.2, // Time threshold
-                10); // IZone
+        return new PIDDefaults.Builder()
+                .withP(0.008)
+                .withI(0.0005)
+                .withD(0.01)
+                .withF(0.0)
+                .withMaxOutput(0.75)
+                .withMinOutput(-0.75)
+                .withErrorThreshold(errorThreshold)
+                .withDerivativeThreshold(0.2)
+                .withTimeThreshold(0.2)
+                .withIZone(10)
+                .build();
     }
 
     public Translation2d getLookAtPointTarget() {

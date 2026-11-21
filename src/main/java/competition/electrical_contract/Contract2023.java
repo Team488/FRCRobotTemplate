@@ -52,15 +52,15 @@ public class Contract2023 extends ElectricalContract {
         var driveMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(60));
 
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 31).withOutputConfig(driveMotorControllerOutputConfig).build();
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 29).withOutputConfig(driveMotorControllerOutputConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 38).withOutputConfig(driveMotorControllerOutputConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 21).withOutputConfig(driveMotorControllerOutputConfig).build();
-        default -> null;
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 31).withOutputConfig(driveMotorControllerOutputConfig).build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 29).withOutputConfig(driveMotorControllerOutputConfig).build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 38).withOutputConfig(driveMotorControllerOutputConfig).build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 21).withOutputConfig(driveMotorControllerOutputConfig).build();
+            default -> null;
         };
     }
 
@@ -69,26 +69,26 @@ public class Contract2023 extends ElectricalContract {
         var steerMotorControllerOutputConfig = new SparkMaxMotorControllerOutputConfig().withSmartCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 30).withOutputConfig(steerMotorControllerOutputConfig).build();
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 28).withOutputConfig(steerMotorControllerOutputConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 39).withOutputConfig(steerMotorControllerOutputConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
-                .withCanBus(CANPort.CAN_S0, 20).withOutputConfig(steerMotorControllerOutputConfig).build();
-        default -> null;
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 30).withOutputConfig(steerMotorControllerOutputConfig).build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 28).withOutputConfig(steerMotorControllerOutputConfig).build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 39).withOutputConfig(steerMotorControllerOutputConfig).build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.SparkMax)
+                    .withCanBus(CANPort.CAN_S0, 20).withOutputConfig(steerMotorControllerOutputConfig).build();
+            default -> null;
         };
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
-        case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
-        case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
-        case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
-        default -> null;
+            case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
+            case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
+            case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
+            case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
+            default -> null;
         };
     }
 
@@ -96,11 +96,11 @@ public class Contract2023 extends ElectricalContract {
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         // Update these XYPairs with the swerve module locations!!! (In inches)
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
-        case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
-        case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
-        case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
-        default -> new Translation2d(0, 0);
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(15), Inches.of(15));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(15), Inches.of(-15));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-15), Inches.of(15));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-15), Inches.of(-15));
+            default -> new Translation2d(0, 0);
         };
     }
 

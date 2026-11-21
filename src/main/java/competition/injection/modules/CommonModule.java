@@ -69,12 +69,12 @@ public abstract class CommonModule {
 
         String chosenField = Preferences.getString("FieldLayout", "2026_welded");
         switch (chosenField) {
-        case "2026_andymark":
-            log.info("Using 2026 Andymark April Tag Field Layout.");
-            return Fields.FRC_2026_REBUILT_ANDY_MARK;
-        default:
-            log.info("Using 2026 Welded April Tag Field Layout default for competition.");
-            return Fields.FRC_2026_REBUILT_WELDED;
+            case "2026_andymark":
+                log.info("Using 2026 Andymark April Tag Field Layout.");
+                return Fields.FRC_2026_REBUILT_ANDY_MARK;
+            default:
+                log.info("Using 2026 Welded April Tag Field Layout default for competition.");
+                return Fields.FRC_2026_REBUILT_WELDED;
         }
     }
 

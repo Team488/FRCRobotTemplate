@@ -80,15 +80,15 @@ public class Contract2026 extends ElectricalContract {
         var motorConfig = new TalonFxMotorControllerOutputConfig().withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake)
                 .withStatorCurrentLimit(Amps.of(45));
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 30).withPdhPort(PDHPort.PDH10).withOutputConfig(motorConfig).build();
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 38).withPdhPort(PDHPort.PDH18).withOutputConfig(motorConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 28).withPdhPort(PDHPort.PDH08).withOutputConfig(motorConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 20).withPdhPort(PDHPort.PDH00).withOutputConfig(motorConfig).build();
-        default -> null;
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 30).withPdhPort(PDHPort.PDH10).withOutputConfig(motorConfig).build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 38).withPdhPort(PDHPort.PDH18).withOutputConfig(motorConfig).build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 28).withPdhPort(PDHPort.PDH08).withOutputConfig(motorConfig).build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 20).withPdhPort(PDHPort.PDH00).withOutputConfig(motorConfig).build();
+            default -> null;
         };
     }
 
@@ -98,37 +98,37 @@ public class Contract2026 extends ElectricalContract {
                 .withStatorCurrentLimit(Amps.of(40));
 
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 31).withPdhPort(PDHPort.PDH11).withOutputConfig(motorConfig).build();
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 39).withPdhPort(PDHPort.PDH19).withOutputConfig(motorConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 29).withPdhPort(PDHPort.PDH09).withOutputConfig(motorConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 21).withPdhPort(PDHPort.PDH01).withOutputConfig(motorConfig).build();
-        default -> null;
+            case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 31).withPdhPort(PDHPort.PDH11).withOutputConfig(motorConfig).build();
+            case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 39).withPdhPort(PDHPort.PDH19).withOutputConfig(motorConfig).build();
+            case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 29).withPdhPort(PDHPort.PDH09).withOutputConfig(motorConfig).build();
+            case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
+                    .withCanBus(CANPort.CAN_S0, 21).withPdhPort(PDHPort.PDH01).withOutputConfig(motorConfig).build();
+            default -> null;
         };
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
-        case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
-        case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
-        case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
-        default -> null;
+            case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
+            case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
+            case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
+            case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
+            default -> null;
         };
     }
 
     @Override
     public Translation2d getSwerveModuleOffsets(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
-        case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
-        case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
-        case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
-        default -> new Translation2d(0, 0);
+            case "FrontLeftDrive" -> new Translation2d(Inches.of(11), Inches.of(10));
+            case "FrontRightDrive" -> new Translation2d(Inches.of(11), Inches.of(-10));
+            case "RearLeftDrive" -> new Translation2d(Inches.of(-11), Inches.of(10));
+            case "RearRightDrive" -> new Translation2d(Inches.of(-11), Inches.of(-10));
+            default -> new Translation2d(0, 0);
         };
     }
 

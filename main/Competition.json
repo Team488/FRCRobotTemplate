@@ -2,8 +2,8 @@
   "source": "competition.electrical_contract.Contract2026",
   "contractName": "Competition",
   "robotName": "Competition",
-  "gitSha": "7602779047295c30004ea4ba07c16c168c22b896",
-  "generatedAt": "2026-11-10T04:27:41.575619112Z",
+  "gitSha": "1f9758544c28ed00002eaf3ad2188533728e8e01",
+  "generatedAt": "2026-11-21T20:03:35.515308501Z",
   "canDevices": [
     {
       "name": "DriveSubsystem/RearRightDrive/Drive",

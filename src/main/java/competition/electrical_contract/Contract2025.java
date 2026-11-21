@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.hardware.imu.OnboardIMU.MountOrientation;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
@@ -50,14 +49,6 @@ public class Contract2025 extends ElectricalContract {
         return Units.Inches.of(18);
     }
 
-    TalonFxMotorControllerOutputConfig regularDriveMotorConfig = new TalonFxMotorControllerOutputConfig()
-            .withInversionType(CANMotorControllerOutputConfig.InversionType.Normal).withStatorCurrentLimit(Amps.of(60))
-            .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
-    TalonFxMotorControllerOutputConfig invertedDriveMotorConfig = new TalonFxMotorControllerOutputConfig()
-            .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted).withStatorCurrentLimit(Amps.of(80))
-            .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
     @Override
     public boolean isDriveReady() {
         return false;
@@ -69,49 +60,44 @@ public class Contract2025 extends ElectricalContract {
     }
 
     @Override
-    public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+    protected SwerveModuleWiring getSwerveModuleWiring(SwerveInstance swerveInstance) {
         return switch (swerveInstance.label()) {
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 39).withOutputConfig(regularDriveMotorConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 31).withOutputConfig(regularDriveMotorConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 20).withOutputConfig(regularDriveMotorConfig).build();
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getDriveControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 29).withOutputConfig(regularDriveMotorConfig).build();
+        // drive CAN, steering CAN, encoder CAN
+        case "FrontLeftDrive" -> SwerveModuleWiring.withoutPdh(29, 28, 51);
+        case "FrontRightDrive" -> SwerveModuleWiring.withoutPdh(39, 38, 54);
+        case "RearLeftDrive" -> SwerveModuleWiring.withoutPdh(20, 21, 52);
+        case "RearRightDrive" -> SwerveModuleWiring.withoutPdh(31, 30, 53);
         default -> null;
         };
+    }
+
+    @Override
+    protected SwerveMotorSpec getDriveMotorSpec() {
+        return new SwerveMotorSpec(MotorControllerType.TalonFx,
+                new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Normal)
+                        .withStatorCurrentLimit(Amps.of(60)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));
+    }
+
+    @Override
+    protected SwerveMotorSpec getSteeringMotorSpec() {
+        return new SwerveMotorSpec(MotorControllerType.TalonFx,
+                new TalonFxMotorControllerOutputConfig().withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted)
+                        .withStatorCurrentLimit(Amps.of(40)).withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake));
+    }
+
+    @Override
+    public CANMotorControllerInfo getDriveMotor(SwerveInstance swerveInstance) {
+        return buildDriveMotor(swerveInstance);
     }
 
     @Override
     public CANMotorControllerInfo getSteeringMotor(SwerveInstance swerveInstance) {
-
-        TalonFxMotorControllerOutputConfig invertedSteeringMotorConfig = new TalonFxMotorControllerOutputConfig()
-                .withInversionType(CANMotorControllerOutputConfig.InversionType.Inverted).withStatorCurrentLimit(Amps.of(40))
-                .withNeutralMode(CANMotorControllerOutputConfig.NeutralMode.Brake);
-
-        return switch (swerveInstance.label()) {
-        case "FrontRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 38).withOutputConfig(invertedSteeringMotorConfig).build();
-        case "RearRightDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 30).withOutputConfig(invertedSteeringMotorConfig).build();
-        case "RearLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 21).withOutputConfig(invertedSteeringMotorConfig).build();
-        case "FrontLeftDrive" -> CANMotorControllerInfo.builder(getSteeringControllerName(swerveInstance)).withType(MotorControllerType.TalonFx)
-                .withCanBus(CANPort.CAN_S0, 28).withOutputConfig(invertedSteeringMotorConfig).build();
-        default -> null;
-        };
+        return buildSteeringMotor(swerveInstance);
     }
 
     @Override
     public DeviceInfo getSteeringEncoder(SwerveInstance swerveInstance) {
-        return switch (swerveInstance.label()) {
-        case "FrontRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 54).build();
-        case "RearRightDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 53).build();
-        case "RearLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 52).build();
-        case "FrontLeftDrive" -> DeviceInfo.builder(getSteeringEncoderControllerName(swerveInstance)).withCanBus(CANPort.CAN_S0, 51).build();
-        default -> null;
-        };
+        return buildSteeringEncoder(swerveInstance);
     }
 
     @Override
